@@ -1,239 +1,312 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>导航 | ZWei</title>
-<meta name="generator" content="Jekyll v4.3.4" />
-<meta property="og:title" content="导航" />
-<meta property="og:locale" content="en_US" />
-<meta name="description" content="专注于计算科学、材料科学与物理学的学术博客，分享前沿研究见解与专业知识。" />
-<meta property="og:description" content="专注于计算科学、材料科学与物理学的学术博客，分享前沿研究见解与专业知识。" />
-<link rel="canonical" href="http://localhost:4000/nav/" />
-<meta property="og:url" content="http://localhost:4000/nav/" />
-<meta property="og:site_name" content="ZWei" />
-<meta property="og:type" content="website" />
-<meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="导航" />
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"专注于计算科学、材料科学与物理学的学术博客，分享前沿研究见解与专业知识。","headline":"导航","url":"http://localhost:4000/nav/"}</script>
-<!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="ZWei" /><link rel="stylesheet" href="/assets/css/copy-button.css">
-  
-   <!-- 添加 MathJax 支持，之前网页上数学公式不显示，现这段代码后能够正常显示。 -->
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-      tex2jax: {
-        inlineMath: [['$','$'], ['\\(','\\)']],
-        displayMath: [['$$','$$'], ['\\[','\\]']],
-        processEscapes: true
-      },
-      TeX: {
-        extensions: ["AMSmath.js", "AMSsymbols.js"]
-      }
-    });
-  </script>
-   <!-- MathJax.js本来是个网页，我下载到了本地，然后修改了路径，现在可以正常显示了。 -->
-  <script type="text/javascript" async
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-  </script>
-</head><body><!-- 网站头部区域 -->
-<header class="site-header">
-  <!-- wrapper类用于控制内容宽度和居中 -->
-  <div class="wrapper">
-    <!-- 网站标题，点击可返回首页 -->
-    <a class="site-title" rel="author" href="/">ZWei</a>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Navigation Hub</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --background: #f5f6fa;
+            --card-bg: #ffffff;
+        }
 
-    <!-- 导航菜单区域 -->
-    <nav class="site-nav">
-      <!-- 汉堡菜单按钮 -->
-      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
-      <label for="nav-trigger">
-        <span class="menu-icon">
-          <svg viewBox="0 0 18 15" width="18px" height="15px">
-            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
-          </svg>
-        </span>
-      </label>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-      <div class="trigger">
-        <!-- 获取所有页面路径 --><!-- 遍历所有页面 --><!-- 获取当前页面信息 --><!-- 如果页面有标题，则显示在导航栏中 --><!-- 获取当前页面信息 --><!-- 如果页面有标题，则显示在导航栏中 --><a class="page-link" href="/about/">简介</a><!-- 获取当前页面信息 --><!-- 如果页面有标题，则显示在导航栏中 --><a class="page-link" href="/blog/">博客</a><!-- 获取当前页面信息 --><!-- 如果页面有标题，则显示在导航栏中 --><!-- 获取当前页面信息 --><!-- 如果页面有标题，则显示在导航栏中 --><!-- 获取当前页面信息 --><!-- 如果页面有标题，则显示在导航栏中 --><a class="page-link" href="/nav/">导航</a><!-- 获取当前页面信息 --><!-- 如果页面有标题，则显示在导航栏中 --><a class="page-link" href="/projects/">项目</a><!-- 获取当前页面信息 --><!-- 如果页面有标题，则显示在导航栏中 --><!-- 获取当前页面信息 --><!-- 如果页面有标题，则显示在导航栏中 --></div>
-    </nav>
-  </div>
-</header>
-<main class="page-content" aria-label="Content">
-      <div class="wrapper">
-        <article class="post">
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            background: var(--background);
+            padding: 20px;
+        }
 
-  <header class="post-header">
-    <h1 class="post-title">导航</h1>
-  </header>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-  <div class="post-content">
-    <link rel="stylesheet" href="/assets/css/nav-style.css" />
+        .search-box {
+            margin: 2rem 0;
+            text-align: center;
+        }
 
-<div class="page-wrapper">
-  <div class="main-content">
-    <input type="text" class="search-box" id="searchBox" placeholder="搜索导航..." onkeyup="searchLinks()" />
+        #searchInput {
+            width: 60%;
+            padding: 12px 20px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
 
-    <div class="sidebar-nav">
-      <a href="#literature">文献检索</a>
-      <a href="#open-access">开放获取</a>
-      <a href="#tuc">TUC 常用</a>
-      <a href="#tools">科研工具</a>
-      <a href="#life">生活服务</a>
-      <a href="#ai">AI工具</a>
+        #searchInput:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+            width: 70%;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .category-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .link-list {
+            list-style: none;
+        }
+
+        .link-item {
+            margin: 0.5rem 0;
+        }
+
+        .link-item a {
+            color: #34495e;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+        }
+
+        /* New collapsible styles */
+        .link-item.hidden {
+            display: none;
+        }
+        .more-indicator {
+            color: #95a5a6;
+            font-style: italic;
+            margin-top: 0.5rem;
+            cursor: pointer;
+        }
+        .category-card:hover .hidden {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .link-item a:hover {
+            background: #f0f8ff;
+            padding-left: 15px;
+        }
+
+        .link-item a::before {
+            content: "➤";
+            color: var(--secondary-color);
+            margin-right: 10px;
+            transition: margin 0.2s ease;
+        }
+
+        .link-item a:hover::before {
+            margin-right: 15px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1rem;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 style="text-align: center; color: var(--primary-color); margin: 2rem 0">Smart Navigation Hub</h1>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search websites...">
+            </div>
+        </header>
+
+        <div class="category-grid" id="categoriesContainer">
+            <!-- Categories content generated dynamically by JavaScript -->
+        </div>
     </div>
 
-    <div class="nav-container">
-      <div class="nav-section" id="literature">
-        <div class="nav-title">文献检索</div>
-        <div class="nav-links">
-          <a href="https://www.webofscience.com/" class="nav-link">Web of Science</a>
-          <a href="https://scholar.google.com/" class="nav-link">Google Scholar</a>
-          <a href="https://www.sciencedirect.com/" class="nav-link">Science Direct</a>
-          <a href="https://link.springer.com/" class="nav-link">Springer</a>
-          <a href="https://ieeexplore.ieee.org/" class="nav-link">IEEE Xplore</a>
-          <a href="https://www.scopus.com/" class="nav-link">Scopus</a>
-          <a href="https://arxiv.org/" class="nav-link">arXiv</a>
-          <a href="https://www.proquest.com/" class="nav-link">ProQuest</a>
-          <a href="https://www.emerald.com/insight/" class="nav-link">Emerald</a>
-        </div>
-      </div>
+    <footer>
+        <p>© 2024 Smart Navigation - ${totalLinks} curated resources</p>
+        <p>Usage tips: Ctrl+D to bookmark, Double-click category titles to edit</p>
+    </footer>
 
-      <div class="nav-section" id="open-access">
-        <div class="nav-title">开放获取</div>
-        <div class="nav-links">
-          <a href="https://sci-hub.se/" class="nav-link">Sci-Hub</a>
-          <a href="https://z-library.sk/" class="nav-link">Z-library</a>
-          <a href="https://libgen.is/" class="nav-link">LibGen</a>
-          <a href="https://www.researchgate.net/" class="nav-link">ResearchGate</a>
-          <a href="https://zh.annas-archive.li/" class="nav-link">安娜的档案</a>
-          <a href="https://ac.scmor.com/" class="nav-link">學術導航</a>
-        </div>
-      </div>
+    <script>
+        // Website data configuration (add new content here)
+        const siteData = [
+            {
+                category: "Academic Resources",
+                links: [
+                    { name: "Google Scholar", url: "https://scholar.google.com/schhp?hl=en&as_sdt=0,5" },
+                    { name: "Web of Science", url: "https://www.webofscience.com/wos/woscc/basic-search" },
+                    { name: "Shanghai Library", url: "https://z.library.sh.cn/next" },
+                    { name: "TUC Library", url: "https://www.tu-chemnitz.de/ub/index.html.en#" },
+                    { name: "SLUB Dresden", url: "https://www.slub-dresden.de/" },
+                    { name: "ProQuest", url: "https://www.proquest.com/?accountid=1" },
+                    { name: "Science Direct", url: "https://www.sciencedirect.com/" },
+                    { name: "Springer", url: "https://link.springer.com/" },
+                    { name: "Wiley", url: "https://onlinelibrary.wiley.com/" },
+                    { name: "Scopus", url: "https://www.scopus.com/search/form.uri?display=basic&zone=header&origin=searchbasic#basic" },
+                    { name: "Emerald", url: "https://www.emerald.com/insight/" },
+                    { name: "EBSCO", url: "https://www.ebsco.com/" },
+                    { name: "arxiv", url: "https://arxiv.org/" },
+                    { name: "IEEE Xplore", url: "https://ieeexplore.ieee.org/Xplore/home.jsp" },
+                    { name: "APS Advancing Physics", url: "https://www.aps.org/" },
+                    { name: "Libgen", url: "https://libgen.is" },
+                    { name: "Z-library", url: "https://z-library.sk/" },
+                    { name: "Sci-Hub 1", url: "https://sci-hub.se" },
+                    { name: "Sci-Hub 2", url: "https://sci-hub.ee/" },
+                    { name: "Academic Navigation", url: "https://ac.scmor.com/" },
+                    { name: "Anna's Archive", url: "https://zh.annas-archive.li/" },
+                    { name: "ResearchGate", url: "https://www.researchgate.net/" }
+                ]
+            },
+            {
+                category: "TUC",
+                links: [
+                    { name: "SB-Service", url: "https://campus.tu-chemnitz.de/qisserver/pages/cs/sys/portal/hisinoneStartPage.faces?chco=y" },
+                    { name: "OPAL", url: "https://bildungsportal.sachsen.de/opal/home/?5&ajax=true" },
+                    { name: "TUC Mail", url: "https://mail.tu-chemnitz.de/SOGo/" },
+                    { name: "TUC Cloud", url: "https://tuc.cloud/index.php/apps/files/files" },
+                    { name: "Speiseplan", url: "https://www.swcz.de/bilderspeiseplan/" },
+                    { name: "swcz.de", url: "https://www.swcz.de/" },
+                    { name: "CSN", url: "https://www.csn.tu-chemnitz.de/secure/user/" },
+                    { name: "Deutschlandsemesterticket", url: "https://abo.ride-ticketing.de/app/subscription?partnerId=35e9b2855e1721fd6cb06488eb05ef80&bookingId=e24f7f9995f3ffe564ebc09304f7700b" }
+                ]
+            },
+            {
+                category: "AI Tools",
+                links: [
+                    { name: "ChatGPT", url: "https://chatgpt.com/" },
+                    { name: "DeepSeek", url: "https://chat.deepseek.com/" },
+                    { name: "Gemini", url: "https://gemini.google.com/app" },
+                    { name: "Grok", url: "https://grok.com/" },
+                    { name: "Hugging Face", url: "https://huggingface.co" },
+                    { name: "Matbench Discovery", url: "https://matbench-discovery.materialsproject.org/" },
+                    { name: "Mistral", url: "https://chat.mistral.ai/chat" },
+                    { name: "Perplexity", url: "https://perplexity.ai" },
+                    { name: "Claude AI", url: "https://claude.ai/new" },
+                    { name: "NotebookLM", url: "https://notebooklm.google.com/" },
+                    { name: "Ollama", url: "https://ollama.com/" },
+                    { name: "Google AI Studio", url: "https://aistudio.google.com/prompts/new_chat" },
+                    { name: "LM Studio", url: "https://lmstudio.ai/" },
+                    { name: "Tongyi", url: "https://www.tongyi.com/" }
+                ]
+            },
+            {
+                category: "德语学习",
+                links: [
+                    { name: "德语助手", url: "https://www.godic.net/" },
+                    { name: "德语语法", url: "https://deutsch.lingolia.com/en/" },
+                    { name: "Duolingo", url: "https://www.duolingo.com/learn" },
+                    { name: "德国之声学德语", url: "https://learngerman.dw.com/en/overview" },
+                    { name: "德语字典", url: "https://www.duden.de/" },
+                    { name: "德语在线练习", url: "https://www.schubert-verlag.de/aufgaben/uebungen_a1/a1_uebungen_index.htm" },
+                    { name: "德语新闻简报", url: "https://www.nachrichtenleicht.de/" },
+                    { name: "Goethe Institut", url: "https://www.goethe.de/en/index.html" },
+                    { name: "德语论坛", url: "https://www.germanforum.com/" }
+                ]
+            }
+        ];
 
-      <div class="nav-section" id="tuc">
-        <div class="nav-title">TUC 常用</div>
-        <div class="nav-links">
-          <a href="https://www.tu-chemnitz.de/" class="nav-link">TU Chemnitz</a>
-          <a href="https://campus.tu-chemnitz.de/" class="nav-link">SB-Service</a>
-          <a href="https://mail.tu-chemnitz.de/" class="nav-link">TUC Mail</a>
-          <a href="https://tuc.cloud/" class="nav-link">TUC Cloud</a>
-          <a href="https://www.swcz.de/bilderspeiseplan/" class="nav-link">Speiseplan</a>
-          <a href="https://bildungsportal.sachsen.de/opal/" class="nav-link">OPAL</a>
-        </div>
-      </div>
+        // Dynamically generate categories
+        function renderCategories() {
+            const container = document.getElementById('categoriesContainer');
+            let totalLinks = 0;
 
-      <div class="nav-section" id="tools">
-        <div class="nav-title">科研工具</div>
-        <div class="nav-links">
-          <a href="https://www.abinit.org/" class="nav-link">Abinit</a>
-          <a href="https://www.lammps.org/" class="nav-link">LAMMPS</a>
-          <a href="https://www.python.org/" class="nav-link">Python</a>
-          <a href="https://jupyter.org/" class="nav-link">Jupyter</a>
-          <a href="https://www.overleaf.com/" class="nav-link">Overleaf</a>
-          <a href="https://github.com/" class="nav-link">GitHub</a>
-          <a href="https://gitlab.hrz.tu-chemnitz.de/" class="nav-link">GitLab TUC</a>
-        </div>
-      </div>
+            container.innerHTML = siteData.map(category => `
+                <div class="category-card">
+                    <h2 class="category-title">${category.category}</h2>
+                    <ul class="link-list">
+                        ${category.links.map((link, index) => {
+                            totalLinks++;
+                            return `<li class="link-item${index >= 5 ? ' hidden' : ''}" data-index="${index}">
+                                <a href="${link.url}" target="_blank">${link.name}</a>
+                            </li>`;
+                        }).join('')}
+                        ${category.links.length > 5 ? 
+                            `<div class="more-indicator">Show all ${category.links.length} links...</div>` : ''}
+                    </ul>
+                </div>
+            `).join('');
 
-      <div class="nav-section" id="life">
-        <div class="nav-title">生活服务</div>
-        <div class="nav-links">
-          <a href="https://www.booking.com/" class="nav-link">Booking</a>
-          <a href="https://www.airbnb.com/" class="nav-link">Airbnb</a>
-          <a href="https://www.bahn.de/" class="nav-link">德铁DB</a>
-          <a href="https://www.cvag.de/" class="nav-link">CVAG</a>
-          <a href="https://www.ctrip.com/" class="nav-link">携程</a>
-          <a href="https://www.skyscanner.de/" class="nav-link">Skyscanner</a>
-        </div>
-      </div>
+            // Update footer stats
+            document.querySelector('footer p').textContent = 
+                `© 2024 Smart Navigation - ${totalLinks} quality websites collected`;
+        }
 
-      <div class="nav-section" id="ai">
-        <div class="nav-title">AI工具</div>
-        <div class="nav-links">
-          <a href="https://chat.openai.com/" class="nav-link">ChatGPT</a>
-          <a href="https://claude.ai/" class="nav-link">Claude</a>
-          <a href="https://www.perplexity.ai/" class="nav-link">Perplexity</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const isSearching = searchTerm.length > 0;
 
-<script>
-function searchLinks() {
-  const searchText = document.getElementById('searchBox').value.toLowerCase();
-  const sections = document.getElementsByClassName('nav-section');
-  
-  for (let section of sections) {
-    const links = section.getElementsByClassName('nav-link');
-    let hasVisibleLinks = false;
-    
-    for (let link of links) {
-      const text = link.textContent.toLowerCase();
-      if (text.includes(searchText)) {
-        link.style.display = 'block';
-        hasVisibleLinks = true;
-      } else {
-        link.style.display = 'none';
-      }
-    }
-    
-    section.style.display = hasVisibleLinks ? 'block' : 'none';
-  }
-}
+            document.querySelectorAll('.category-card').forEach(card => {
+                let visibleCount = 0;
+                const links = card.querySelectorAll('.link-item');
+                
+                // Handle search matching
+                links.forEach(link => {
+                    const text = link.querySelector('a').textContent.toLowerCase();
+                    const match = text.includes(searchTerm);
+                    
+                    if (isSearching) {
+                        // When searching, show all matching items directly
+                        link.style.display = match ? 'block' : 'none';
+                        // Remove hidden class while searching to allow direct visibility
+                        if (match) link.classList.remove('hidden');
+                    } else {
+                        // When search is cleared, restore the collapse state
+                        const shouldHide = parseInt(link.dataset.index) >= 5;
+                        link.classList.toggle('hidden', shouldHide);
+                        // Reset to default display (not forced display:none)
+                        link.style.removeProperty('display');
+                    }
+                    
+                    if (match) visibleCount++;
+                });
 
-// 平滑滚动
-document.querySelectorAll('.sidebar-nav a').forEach(anchor => {
-  anchor.addEventListener('click', function (e) {
-    e.preventDefault();
-    const targetId = this.getAttribute('href').slice(1);
-    document.getElementById(targetId).scrollIntoView({
-      behavior: 'smooth'
-    });
-  });
-});
-</script>
+                // Update more-indicator display
+                const moreIndicator = card.querySelector('.more-indicator');
+                if (moreIndicator) {
+                    moreIndicator.style.display = (visibleCount > 5 && !isSearching) ? 'block' : 'none';
+                }
+            });
+        });
 
+        // Initialize rendering
+        renderCategories();
 
-  </div>
-
-</article>
-
-      </div>
-    </main><footer class="site-footer h-card">
-  <data class="u-url" href="/"></data>
-
-  <div class="wrapper">
-    <!-- <h2 class="footer-heading">ZWei</h2> -->
-
-    <div class="footer-col-wrapper">
-      <div class="footer-col footer-col-1">
-        <ul class="contact-list">
-          <!-- <li class="p-name">ZWei</li> -->
-          <li class="p-name">联系：</li><li><a class="u-email" href="mailto:zhwei@gmx.de">zhwei@gmx.de</a></li></ul>
-      </div>
-
-      <div class="footer-col footer-col-2"><ul class="social-media-list"><li>
-      <a href="https://github.com/weizhengqing">
-        <svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg>
-      </a>
-    </li><li>
-      <a href="https://orcid.org/0009-0007-3493-1400">
-        <svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#orcid"></use></svg>
-      </a>
-    </li></ul>
-</div>
-
-      <div class="footer-col footer-col-3">
-        <p>专注于计算科学、材料科学与物理学的学术博客，分享前沿研究见解与专业知识。</p>
-      </div>
-    </div>
-  </div>
-  <script src="/assets/js/copy-button.js"></script>
-</footer>
+        // Future expandable features:
+        // 1. localStorage to store custom added websites
+        // 2. Category drag and drop sorting functionality
+        // 3. Night mode toggle
+        // 4. Import/export configuration files
+    </script>
 </body>
-
 </html>
