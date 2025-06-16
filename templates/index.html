@@ -214,22 +214,33 @@
     <main>
       {% if config.extra.radion_title %}
       <header><h1>{{ config.extra.radion_title }}</h1></header>
-      {% endif %} {% for page in paginator.pages %} {{
-      post_macros::page_in_list(page=page) }} {% endfor %}
-
-      <nav aria-label="Pagination">
-        <p>
-          {% if paginator.previous %}
-          <a href="{{ paginator.previous }}">&laquo; Previous</a> | {% endif %}
-          <span
-            >Page {{ paginator.current_index }} of {{ paginator.number_pagers
-            }}</span
-          >
-          {% if paginator.next %} |
-          <a href="{{ paginator.next }}">Next &raquo;</a>
-          {% endif %}
-        </p>
-      </nav>
+      {% endif %} 
+      
+      {# 收集所有页面和子部分的页面 #}
+      {# 获取posts部分的所有页面 #}
+      {% set posts_section = get_section(path="posts/_index.md") %}
+      {% set all_posts = posts_section.pages %}
+      
+      {# 收集posts子目录中的页面 #}
+      {% for subsection_path in posts_section.subsections %}
+        {% set subsection = get_section(path=subsection_path) %}
+        {% set_global all_posts = all_posts | concat(with=subsection.pages) %}
+      {% endfor %}
+      
+      {# 按日期排序，最新的在前面，只显示最新的10篇 #}
+      {% set sorted_posts = all_posts | sort(attribute="date") | reverse | slice(end=10) %}
+      
+      {# 显示最新的10篇文章 #}
+      {% for page in sorted_posts %}
+        {{ post_macros::page_in_list(page=page) }}
+      {% endfor %}
+      
+      {# 如果有更多文章，显示查看更多链接 #}
+      {% if all_posts | length > 10 %}
+      <div class="more-posts">
+        <a href="{{ get_url(path='posts') }}" class="view-all-posts">查看所有文章 &raquo;</a>
+      </div>
+      {% endif %}
     </main>
     {% endblock content %}
   </body>

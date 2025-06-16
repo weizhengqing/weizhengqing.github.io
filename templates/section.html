@@ -1,0 +1,50 @@
+{% extends "index.html" %}
+
+{% block title %}{{ section.title }} | {{ config.title }}{% endblock title %}
+
+{% block content %}
+<h1>{{ section.title }}</h1>
+
+{% if section.content %}
+{{ section.content | safe }}
+{% endif %}
+
+{# 获取所有页面包括子部分的页面 #}
+{% set all_pages = section.pages %}
+{% for subsection_path in section.subsections %}
+  {% set subsection = get_section(path=subsection_path) %}
+  {% set_global all_pages = all_pages | concat(with=subsection.pages) %}
+{% endfor %}
+
+{# 按日期排序，最新的在前面 #}
+{% set sorted_pages = all_pages | sort(attribute="date") | reverse %}
+
+{# 显示文章列表 #}
+{% if paginator %}
+  {% for page in paginator.pages %}
+    {{ post_macros::page_in_list(page=page) }}
+  {% endfor %}
+  
+  {# 分页导航 #}
+  {% if paginator.number_pagers > 1 %}
+  <nav aria-label="分页导航" class="pagination">
+    <div class="pagination-wrapper">
+      {% if paginator.previous %}
+        <a href="{{ paginator.previous }}" class="pagination-link prev-page">&laquo; 上一页</a>
+      {% endif %}
+      
+      <span class="pagination-info">第 {{ paginator.current_index }} 页，共 {{ paginator.number_pagers }} 页</span>
+      
+      {% if paginator.next %}
+        <a href="{{ paginator.next }}" class="pagination-link next-page">下一页 &raquo;</a>
+      {% endif %}
+    </div>
+  </nav>
+  {% endif %}
+{% else %}
+  {# 如果没有分页器，显示所有页面 #}
+  {% for page in sorted_pages %}
+    {{ post_macros::page_in_list(page=page) }}
+  {% endfor %}
+{% endif %}
+{% endblock content %}

@@ -7,9 +7,9 @@ tags = ["zola", "static site", "tutorial", "blogging"]
 categories = ["technical"]
 +++
 
-# How to Publish New Posts to Your Zola Site
-
 Creating and publishing new content on your Zola static site is straightforward. This guide will walk you through the entire process from creating a new post to seeing it live on your website.
+
+<!-- more -->
 
 ## 1. Create a New Markdown File
 

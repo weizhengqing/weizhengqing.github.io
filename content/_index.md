@@ -1,3 +1,6 @@
 +++
-paginate_by = 5
+title = "Home"
+sort_by = "date"
+template = "index.html"
+transparent = true
 +++

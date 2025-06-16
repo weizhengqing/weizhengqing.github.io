@@ -1,6 +1,6 @@
 +++
 title = "Code Example"
-date = 2017-09-24
+date = 2025-06-15
 
 [taxonomies]
 categories = ["demo"]

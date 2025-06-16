@@ -1,6 +1,6 @@
 +++
 title = "Shortcodes Demos"
-date = 2017-09-24
+date = 2025-06-13
 
 [taxonomies]
 categories = ["demo"]

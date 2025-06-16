@@ -1,6 +1,6 @@
 +++
 title = "LaTeX Example" 
-date = 2017-09-24
+date = 2025-06-14
 description = '''A demonstration of providing a description on a per-page basis. 
 This page is about using the LaTeX shortcodes provided by radion.'''
 
