@@ -206,6 +206,19 @@
             class="social-icon"
           />
         </a>
+        {% endif %} {% if config.extra.orcid %}
+        <a
+          href="{{ config.extra.orcid }}"
+          class="feed-icon"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="{{ get_url(path='icons/orcid.svg') }}"
+            id="orcid-icon"
+            alt="ORCID"
+            class="social-icon"
+          />
+        </a>
         {% endif %}
       </aside>
     </header>

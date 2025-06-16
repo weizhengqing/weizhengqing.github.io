@@ -168,6 +168,17 @@ body.dark .social-icon {
   filter: invert(1);  /* 颜色反转，使图标在暗色背景上可见 */
 }
 
+/* ORCID图标特殊样式处理 */
+/* 浅色模式下ORCID图标保持原有绿色 */
+.light #orcid-icon {
+  filter: none;  /* 不应用任何滤镜，保持原有绿色 */
+}
+
+/* 暗色模式下ORCID图标变为灰色调 */
+.dark #orcid-icon {
+  filter: grayscale(1) brightness(1.2);  /* 去饱和度并提高亮度 */
+}
+
 /* 移除图片容器中外部链接的箭头图标 */
 figure a[href*="://"]::after,
 figure a[rel*="external"] {

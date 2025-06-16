@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98 96" width="98" height="96">
+  <style>
+    .orcid-bg { fill: #A6CE39; }
+    .orcid-fg { fill: #FFFFFF; }
+  </style>
+  <!-- ORCID circle background -->
+  <circle cx="49" cy="48" r="48" class="orcid-bg"/>
+  <!-- ORCID logo based on official design -->
+  <g class="orcid-fg">
+    <!-- The distinctive "iD" circle -->
+    <circle cx="30.5" cy="22.2" r="3.9"/>
+    <!-- The vertical bar -->
+    <rect x="27.5" y="30.5" width="6" height="41.7"/>
+    <!-- Letter "O" (simplified from official path) -->
+    <path d="M42,30.5 h16.2 c15.4,0 22.2,11 22.2,20.9 c0,10.7 -8.4,20.9 -22.1,20.9 h-16.3 V30.5 z M48.1,66.8 h9.5 c13.6,0 16.7,-10.3 16.7,-15.4 c0,-8.4 -5.3,-15.4 -17,-15.4 h-9.2 V66.8 z"/>
+  </g>
+</svg>
