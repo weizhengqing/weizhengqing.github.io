@@ -118,8 +118,13 @@ $language-colors: (
 // 亮色主题下的复制按钮样式
 .light .clipboard-button {
   border-width: 1px;           // 边框宽度
-  border-color: rgba(0, 0, 0, 0.5); // 边框颜色（半透明黑色）
+  border-color: transparent;   // 边框颜色（透明）
   background-color: #f3f3f3;   // 背景色（浅灰色）
+  
+  // 浅色主题下的SVG图标样式
+  svg {
+    fill: #f3f3f3;             // 图标填充颜色（浅灰色，适合浅色主题）
+  }
 }
 
 // 代码块容器样式
@@ -171,15 +176,25 @@ pre::-webkit-scrollbar {
   height: 8px;                 // 滚动条高度
 }
 
-// 滚动条滑块样式
+// 滚动条滑块样式（默认深色主题）
 pre::-webkit-scrollbar-thumb {
   background-color: #3D444D;   // 滑块背景色（中灰色）
   border-radius: 4px;          // 圆角滑块
 }
 
-// 滚动条轨道样式
+// 滚动条轨道样式（默认深色主题）
 pre::-webkit-scrollbar-track {
   background-color: #1E222A;   // 轨道背景色（深灰色）
+}
+
+// 浅色主题下的滚动条样式
+.light pre::-webkit-scrollbar-thumb {
+  background-color: #c1c8cd;   // 滑块背景色（浅灰色，适合浅色主题）
+  border-radius: 4px;          // 圆角滑块
+}
+
+.light pre::-webkit-scrollbar-track {
+  background-color: #f1f3f4;   // 轨道背景色（更浅的灰色）
 }
 
 // 链接中的代码元素悬停效果
