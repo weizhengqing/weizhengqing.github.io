@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>CompMat_Codebook - physics</title>
+    <subtitle>A blog about computational materials science</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://weizhengqing.github.io/tags/physics/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://weizhengqing.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-12-29T00:00:00+00:00</updated>
+    <id>https://weizhengqing.github.io/tags/physics/atom.xml</id>
+    <entry xml:lang="en">
+        <title>量子力学中的微分方程</title>
+        <published>2024-12-29T00:00:00+00:00</published>
+        <updated>2024-12-29T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://weizhengqing.github.io/posts/quantum-mechanics-differential-equations/"/>
+        <id>https://weizhengqing.github.io/posts/quantum-mechanics-differential-equations/</id>
+        
+        <summary type="html">&lt;p&gt;在量子力学中，研究一个粒子在一维系统中的稳态波函数和能级是通过求解时间无关的薛定谔方程（1.19）来实现的。在本章中，我们将对一个非常简单的系统——一维盒子中的粒子（第2.2节）——求解时间无关的薛定谔方程。由于薛定谔方程是一个微分方程，我们首先讨论微分方程。&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+</feed>

@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+    <!-- Enable responsiveness on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    
+    <meta name="description" content="A step-by-step guide to creating and publishing new blog posts on your Zola static site" />
+    <meta property="og:description" content="A step-by-step guide to creating and publishing new blog posts on your Zola static site" />
+    <meta property="twitter:description" content="A step-by-step guide to creating and publishing new blog posts on your Zola static site" />
+    
+
+    <!-- Title -->
+      
+
+    <title>
+    
+    How to Publish New Posts to Your Zola Site
+    
+</title>
+
+    <!-- Additional Facebook Meta Tags -->
+    <meta
+      property="og:url"
+      content="https:&#x2F;&#x2F;weizhengqing.github.io&#x2F;posts&#x2F;how-to-publish-new-posts&#x2F;"
+    />
+    <meta
+      property="og:type"
+      content="article"
+    />
+    <meta property="og:title" content="How to Publish New Posts to Your Zola Site" />
+    <meta
+      property="og:image"
+      content="https:&#x2F;&#x2F;weizhengqing.github.io/icons/favicon/web-app-manifest-512x512.png"
+    />
+
+    <!-- Additional Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      property="twitter:url"
+      content="https:&#x2F;&#x2F;weizhengqing.github.io&#x2F;posts&#x2F;how-to-publish-new-posts&#x2F;"
+    />
+    <meta name="twitter:title" content="How to Publish New Posts to Your Zola Site" />
+    <meta
+      name="twitter:image"
+      content="https:&#x2F;&#x2F;weizhengqing.github.io/icons/favicon/web-app-manifest-512x512.png"
+    />
+
+    <!-- Favicons -->
+    
+    <link
+      rel="icon"
+      type="image/png"
+      href="https:&#x2F;&#x2F;weizhengqing.github.io/icons/favicon/favicon-96x96.png"
+      sizes="96x96"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="https:&#x2F;&#x2F;weizhengqing.github.io/icons/favicon/favicon.svg"
+    />
+    <link
+      rel="shortcut icon"
+      href="https:&#x2F;&#x2F;weizhengqing.github.io/icons/favicon/favicon.ico"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="https:&#x2F;&#x2F;weizhengqing.github.io/icons/favicon/apple-touch-icon.png"
+    />
+    <meta name="apple-mobile-web-app-title" content="How to Publish New Posts to Your Zola Site" />
+    <link
+      rel="manifest"
+      href="https:&#x2F;&#x2F;weizhengqing.github.io/icons/favicon/site.webmanifest"
+    />
+    
+
+    <!-- RSS Feed -->
+    
+
+    <!-- Load Styles -->
+    <link
+      rel="stylesheet"
+      href="https://weizhengqing.github.io/site.css"
+    />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Pass Theme Preference as Data Attribute -->
+    <script src="https://weizhengqing.github.io/js/init-theme.js"></script>
+
+    <!-- Reference return to click position script -->
+    <script defer src="https://weizhengqing.github.io/js/reference-return.js"></script>
+
+    <!-- additional scripts -->
+    
+      
+        <script defer src="https://weizhengqing.github.io/js/codeblock.js"></script>
+      
+      
+        <script src="https://weizhengqing.github.io/js/toggle-theme.js"></script>
+      
+      
+<!-- MathJax script for rendering LaTeX math equations -->
+<script src="https://weizhengqing.github.io/js/mathjax-config.js"></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+  async
+></script>
+
+
+      
+<script type="text/javascript" src="https://weizhengqing.github.io/elasticlunr.min.js"></script>
+<script type="text/javascript" src="https://weizhengqing.github.io/js/search.js"></script>
+
+    
+  </head>
+
+  <body class="hack main container">
+    
+    
+         
+    <header class="nav-header">
+      <nav
+        itemscope
+        itemtype="http://schema.org/SiteNavigationElement"
+        class="navbar"
+      >
+        <section class="nav-links">
+          
+          <a
+            itemprop="url"
+            class=""
+            href="https://weizhengqing.github.io/"
+          >
+            <span itemprop="name">Home</span>
+          </a>
+          
+          <a
+            itemprop="url"
+            class=""
+            href="https://weizhengqing.github.io/categories"
+          >
+            <span itemprop="name">Categories</span>
+          </a>
+          
+          <a
+            itemprop="url"
+            class=""
+            href="https://weizhengqing.github.io/tags"
+          >
+            <span itemprop="name">Tags</span>
+          </a>
+          
+        </section>
+      </nav>
+      <aside class="user-actions-container">
+        
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          class="search-icon"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+          />
+        </svg>
+        <input type="text" id="search" placeholder="Search..." />
+        <section class="search-results" aria-live="polite">
+          <article class="search-results__items" role="list"></article>
+        </section>
+         
+        <a id="dark-mode-toggle" href="#">
+          <img
+            src="https://weizhengqing.github.io/icons/sun.svg"
+            id="sun-icon"
+            style="filter: invert(1)"
+            alt="Light mode"
+          />
+          <img
+            src="https://weizhengqing.github.io/icons/moon.svg"
+            id="moon-icon"
+            alt="Dark mode"
+          />
+        </a>
+          
+      </aside>
+    </header>
+     
+    
+
+<article itemscope itemtype="http://schema.org/BlogPosting">
+    <header>
+        <h1 itemprop="headline">How to Publish New Posts to Your Zola Site</h1>
+        <data class="muted">
+    <svg class="icon i-clock" viewBox="0 0 32 32"
+         width="16" height="16" fill="none" stroke="currentcolor"
+         stroke-linecap="round" stroke-linejoin="round" stroke-width="6.25%">
+        <circle cx="16" cy="16" r="14"/>
+        <path d="M16 8 L16 16 20 20"/>
+    </svg>
+    <data>2 minute read</data>
+    <svg class="icon i-edit" viewBox="0 0 32 32"
+         width="16" height="16" fill="none" stroke="currentcolor"
+         stroke-linecap="round" stroke-linejoin="round" stroke-width="6.25%">
+        <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z"/>
+    </svg>
+
+    Published: 2025-06-16
+</data>
+    </header>
+
+    <article itemprop="articleBody">
+        
+            <p>Creating and publishing new content on your Zola static site is straightforward. This guide will walk you through the entire process from creating a new post to seeing it live on your website.</p>
+
+            
+
+            <!-- Render the rest of the content after removing the summary portion -->
+            
+<span id="continue-reading"></span><h2 id="1-create-a-new-markdown-file"><a class="zola-anchor" href="#1-create-a-new-markdown-file" aria-label="Anchor link for: 1-create-a-new-markdown-file">1. Create a New Markdown File</a></h2>
+<p>Start by creating a new Markdown file in the <code>content</code> directory. The standard organization is:</p>
+<pre style="background-color:#2b303b;color:#6c7079;"><code><span style="color:#abb2bf;">content/
+</span><span style="color:#abb2bf;">  └── posts/
+</span><span style="color:#abb2bf;">      └── your-new-post.md
+</span></code></pre>
+<p>You can create this file using any text editor or IDE of your choice.</p>
+<h2 id="2-add-front-matter-metadata"><a class="zola-anchor" href="#2-add-front-matter-metadata" aria-label="Anchor link for: 2-add-front-matter-metadata">2. Add Front Matter Metadata</a></h2>
+<p>Every post needs front matter metadata at the beginning of the file. This is enclosed between <code>+++</code> markers:</p>
+<pre data-lang="markdown" style="background-color:#2b303b;color:#6c7079;" class="language-markdown "><code class="language-markdown" data-lang="markdown"><span style="color:#abb2bf;">+++
+</span><span style="color:#abb2bf;">title = &quot;Your Post Title&quot;
+</span><span style="color:#abb2bf;">date = 2025-06-16
+</span><span style="color:#abb2bf;">description = &quot;A brief description of your post&quot;
+</span><span style="color:#abb2bf;">[taxonomies]
+</span><span style="color:#abb2bf;">tags = [&quot;tag1&quot;, &quot;tag2&quot;]
+</span><span style="color:#abb2bf;">categories = [&quot;category&quot;]
+</span><span style="color:#abb2bf;">+++
+</span></code></pre>
+<p>Essential front matter fields include:</p>
+<ul>
+<li><code>title</code>: The title of your post</li>
+<li><code>date</code>: Publication date (format: YYYY-MM-DD)</li>
+<li><code>description</code>: A brief summary of your post (optional but recommended)</li>
+<li><code>taxonomies</code>: Optional section for categories and tags</li>
+</ul>
+<h2 id="3-write-your-content"><a class="zola-anchor" href="#3-write-your-content" aria-label="Anchor link for: 3-write-your-content">3. Write Your Content</a></h2>
+<p>After the front matter, write your post content using Markdown syntax. You can:</p>
+<ul>
+<li>Use <code>#</code> through <code>######</code> for different heading levels</li>
+<li>Create code blocks with triple backticks and specify the language</li>
+<li>Add images with <code>![alt text](image-path-or-url)</code></li>
+<li>Create links with <code>[link text](url)</code></li>
+</ul>
+<h2 id="4-add-images-and-other-resources"><a class="zola-anchor" href="#4-add-images-and-other-resources" aria-label="Anchor link for: 4-add-images-and-other-resources">4. Add Images and Other Resources</a></h2>
+<p>To include images or other resources in your post:</p>
+<ol>
+<li>
+<p>Create a resource folder in the <code>static</code> directory:</p>
+<pre style="background-color:#2b303b;color:#6c7079;"><code><span style="color:#abb2bf;">static/
+</span><span style="color:#abb2bf;">  └── images/
+</span><span style="color:#abb2bf;">      └── your-post-name/
+</span><span style="color:#abb2bf;">          └── image.jpg
+</span></code></pre>
+</li>
+<li>
+<p>Reference them in your post:</p>
+<pre data-lang="markdown" style="background-color:#2b303b;color:#6c7079;" class="language-markdown "><code class="language-markdown" data-lang="markdown"><span style="color:#abb2bf;">![Image description](/images/your-post-name/image.jpg)
+</span></code></pre>
+</li>
+</ol>
+<h2 id="5-preview-your-post"><a class="zola-anchor" href="#5-preview-your-post" aria-label="Anchor link for: 5-preview-your-post">5. Preview Your Post</a></h2>
+<p>Preview your post locally before publishing:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#6c7079;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#eb6772;">zola</span><span style="color:#abb2bf;"> serve
+</span></code></pre>
+<p>Then visit <code>http://127.0.0.1:1111</code> in your browser to see how your post will look.</p>
+<h2 id="6-publish-to-github-pages"><a class="zola-anchor" href="#6-publish-to-github-pages" aria-label="Anchor link for: 6-publish-to-github-pages">6. Publish to GitHub Pages</a></h2>
+<p>When you're satisfied with your post, commit and push your changes to GitHub:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#6c7079;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#eb6772;">git</span><span style="color:#abb2bf;"> add content/posts/your-new-post.md
+</span><span style="color:#eb6772;">git</span><span style="color:#abb2bf;"> add static/images/your-post-name/  </span><span style="font-style:italic;color:#5f697a;"># If you added images
+</span><span style="color:#eb6772;">git</span><span style="color:#abb2bf;"> commit</span><span style="color:#eb6772;"> -m </span><span style="color:#9acc76;">&quot;Add new post: Your Post Title&quot;
+</span><span style="color:#eb6772;">git</span><span style="color:#abb2bf;"> push origin main
+</span></code></pre>
+<p>GitHub Actions will automatically build your site and deploy it to GitHub Pages. Within a few minutes, your new post will be available at your site URL.</p>
+<h2 id="example-post"><a class="zola-anchor" href="#example-post" aria-label="Anchor link for: example-post">Example Post</a></h2>
+<p>Here's a simple example post:</p>
+<pre data-lang="markdown" style="background-color:#2b303b;color:#6c7079;" class="language-markdown "><code class="language-markdown" data-lang="markdown"><span style="color:#abb2bf;">+++
+</span><span style="color:#abb2bf;">title = &quot;Introduction to Zola Static Site Generator&quot;
+</span><span style="color:#abb2bf;">date = 2025-06-16
+</span><span style="color:#abb2bf;">[taxonomies]
+</span><span style="color:#abb2bf;">tags = [&quot;zola&quot;, &quot;static site&quot;, &quot;tutorial&quot;]
+</span><span style="color:#abb2bf;">categories = [&quot;technical&quot;]
+</span><span style="color:#abb2bf;">+++
+</span><span style="color:#abb2bf;">
+</span><span style="color:#5cb3fa;"># Introduction to Zola Static Site Generator
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">Zola is a fast, simple static site generator written in Rust. This post will introduce how to create and maintain a personal blog website using Zola.
+</span><span style="color:#abb2bf;">
+</span><span style="color:#5cb3fa;">## Why Choose Zola?
+</span><span style="color:#abb2bf;">
+</span><span style="color:#eb6772;">- </span><span style="color:#f0c678;">**Speed**</span><span style="color:#eb6772;">: Zola is written in Rust and builds sites incredibly fast
+</span><span style="color:#eb6772;">- </span><span style="color:#f0c678;">**Single Executable**</span><span style="color:#eb6772;">: No complex dependencies required
+</span><span style="color:#eb6772;">- </span><span style="color:#f0c678;">**Powerful Templates**</span><span style="color:#eb6772;">: Uses the Tera templating engine
+</span><span style="color:#eb6772;">
+</span><span style="color:#5cb3fa;">## Example Code
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">```</span><span style="color:#db9d63;">rust
+</span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">main</span><span style="color:#abb2bf;">() {
+</span><span style="color:#abb2bf;">    println!(</span><span style="color:#9acc76;">&quot;Hello, Zola!&quot;</span><span style="color:#abb2bf;">);
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
+<h2 id="summary"><a class="zola-anchor" href="#summary" aria-label="Anchor link for: summary">Summary</a></h2>
+<p>Zola is an excellent choice, especially for developers who prefer simple, efficient tools.</p>
+<pre style="background-color:#2b303b;color:#6c7079;"><code></code></pre>
+<p>By following these steps, you'll be able to consistently create and publish new content to your Zola-powered website!</p>
+
+
+
+        
+    </article>
+
+    <!-- Comment section -->
+    
+      
+    
+
+
+    <!-- Page footer -->
+    
+        <footer>
+            <hr>
+            <p>
+                
+                    Published by Zhengqing Wei
+                
+                
+                    
+                    in <a href="https://weizhengqing.github.io/categories/technical/">technical</a>
+                
+                
+                    and
+                    tagged
+                    
+                        <a href="https://weizhengqing.github.io/tags/tutorial/">tutorial</a>
+                        
+                            
+                                
+                                    and
+                                
+                            
+                        
+                    
+                        <a href="https://weizhengqing.github.io/tags/blogging/">blogging</a>
+                        
+                            
+                        
+                    
+                
+            </p>
+            
+            
+        </footer>
+    
+</article>
+
+
+  </body>
+</html>

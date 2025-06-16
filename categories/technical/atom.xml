@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>CompMat_Codebook - technical</title>
+    <subtitle>A blog about computational materials science</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://weizhengqing.github.io/categories/technical/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://weizhengqing.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-06-16T00:00:00+00:00</updated>
+    <id>https://weizhengqing.github.io/categories/technical/atom.xml</id>
+    <entry xml:lang="en">
+        <title>How to Publish New Posts to Your Zola Site</title>
+        <published>2025-06-16T00:00:00+00:00</published>
+        <updated>2025-06-16T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://weizhengqing.github.io/posts/how-to-publish-new-posts/"/>
+        <id>https://weizhengqing.github.io/posts/how-to-publish-new-posts/</id>
+        
+        <summary type="html">&lt;p&gt;Creating and publishing new content on your Zola static site is straightforward. This guide will walk you through the entire process from creating a new post to seeing it live on your website.&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+</feed>
