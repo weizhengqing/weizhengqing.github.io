@@ -1,21 +1,29 @@
 name: Zola on GitHub Pages
 
 on:
- push:
-  branches:
-   - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   build:
-    name: Publish site
+    name: Build and Deploy
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
     - name: Checkout main
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
+    
     - name: Build and deploy
       uses: shalzz/zola-deploy-action@v0.20.0
       env:
