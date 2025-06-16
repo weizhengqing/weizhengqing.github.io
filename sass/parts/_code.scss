@@ -1,0 +1,289 @@
+// 定义编程语言颜色映射
+// 每种语言都有其对应的品牌色或约定俗成的代表色
+$language-colors: (
+  "js": #e9c92c,          // JavaScript - 黄色
+  "shell": #4eaa25,       // Shell - 绿色
+  "json": dodgerblue,     // JSON - 蓝色
+  "python": #3572A5,      // Python - 蓝色
+  "css": #264de4,         // CSS - 深蓝色
+  // Go官方色
+  "go": #00ADD8,          // Go - 浅蓝色
+  "markdown": #0000ff,    // Markdown - 蓝色
+  // 调整以匹配Rust品牌
+  "rust": #ff4647,        // Rust - 红色
+  // Oracle Java颜色
+  "java": #f89820,        // Java - 橙色
+  "csharp": #178600,      // C# - 绿色
+  "ruby": #701516,        // Ruby - 深红色
+  "swift": #f05138,       // Swift - 橙红色
+  "php": #777bb4,         // PHP - 紫色
+  "typescript": #3178c6,  // TypeScript - 蓝色
+  "scala": #c22d40,       // Scala - 红色
+  "kotlin": #F18E33,      // Kotlin - 橙色
+  "lua": #000080,         // Lua - 深蓝色
+  "perl": #0298c3,        // Perl - 蓝色
+  "haskell": #5e5086,     // Haskell - 紫色
+  "r": #198ce7,           // R - 蓝色
+  "dart": #00d2b8,        // Dart - 绿松石色
+  "elixir": #6e4a7e,      // Elixir - 紫色
+  "clojure": #5881d8,     // Clojure - 蓝色
+  "sql": #ffcc00,         // SQL - 金黄色
+  "bash": #4eaa25,        // Bash - 绿色
+  "text": #151b23,        // 纯文本 - 深灰色
+  "gd": #3c76a2,          // GDScript - 蓝色
+  "cpp": #5d8dbf,         // C++ - 蓝色
+  "toml": #9c4221,        // TOML - 褐色
+);
+
+/// 根据背景颜色亮度获取适合的文本颜色函数
+/// 使用加权RGB值计算亮度，基于人眼对不同颜色的敏感度
+/// @param {Color} $color - 背景颜色
+@function get-text-color($color) {
+  // 提取RGB分量
+  $r: red($color);
+  $g: green($color);
+  $b: blue($color);
+  // 计算亮度（标准公式：R*0.299 + G*0.587 + B*0.114）
+  $brightness: (
+    $r * 0.299 + $g * 0.587 + $b * 0.114
+  );
+
+  // 如果亮度值大于128（中间值），返回黑色文本
+  @if ($brightness > 128) {
+    @return #000000; // 亮背景使用黑色文本
+  }
+  // 否则返回白色文本
+  @else {
+    @return #ffffff; // 暗背景使用白色文本
+  }
+}
+
+/// 语言标签样式的混合宏
+/// 根据提供的语言生成相应的标签样式
+/// @param {String} $language - 编程语言名称
+@mixin base-label-style($language) {
+  // 从颜色映射中获取该语言的颜色
+  $color-info: map-get($language-colors, $language);
+  // 注意：这里假设$color-info是一个列表，但实际上它是一个颜色值
+  // 这里有一个潜在的问题，应该直接使用$color-info而不是nth函数
+  $bg-color: nth($color-info, 1);
+  // 根据背景色获取适合的文本颜色
+  $text-color: get-text-color($bg-color);
+
+  background: $bg-color;       // 设置标签背景色
+  color: $text-color;          // 设置标签文本色
+  border-radius: 0.25rem;      // 圆角边框
+  font-size: 12px;             // 字体大小
+  font-weight: bold;           // 粗体
+  padding: 0.2rem 0.5rem;      // 内边距
+  text-transform: uppercase;   // 文本转为大写
+  position: absolute;          // 绝对定位
+  top: 5px;                    // 距顶部5像素
+  left: 5px;                   // 距左侧5像素（位于左上角）
+  z-index: 10;                 // 确保显示在代码内容之上
+}
+
+// 语言标签样式
+// 使用循环为每种语言创建类
+.code-label {
+  // 遍历语言颜色映射中的每一项
+  @each $language, $_ in $language-colors {
+    // 为每种语言创建特定的类
+    &.label-#{$language} {
+      // 应用基本标签样式，传入语言名称
+      @include base-label-style($language);
+    }
+  }
+}
+
+// 复制到剪贴板按钮样式
+.clipboard-button {
+  cursor: pointer;             // 鼠标指针变为手型
+  position: absolute;          // 绝对定位
+  top: 5px;                    // 距顶部5像素
+  right: 5px;                  // 距右侧5像素
+  z-index: 10;                 // 确保显示在代码内容之上
+  background-color: transparent; // 透明背景
+  border: "#3D444D";           // 边框颜色（注意：这里应该使用border属性，而不是直接赋值）
+  border-radius: 3px;          // 圆角边框
+
+  // 按钮内的SVG图标样式
+  svg {
+    fill: #9198A1;             // 图标填充颜色
+    width: 16px;               // 宽度
+    height: 16px;              // 高度
+  }
+}
+
+// 亮色主题下的复制按钮样式
+.light .clipboard-button {
+  border-width: 1px;           // 边框宽度
+  border-color: rgba(0, 0, 0, 0.5); // 边框颜色（半透明黑色）
+  background-color: #f3f3f3;   // 背景色（浅灰色）
+}
+
+// 代码块容器样式
+pre {
+  background-color: var(--bg-primary) !important; // 使用CSS变量作为背景色
+  border-radius: 5px;          // 圆角边框
+  border: none;                // 无边框
+  line-height: 1.4;            // 行高
+  padding-top: 1.8em;          // 顶部内边距（为语言标签留空间）
+  padding-bottom: 1em;         // 底部内边距
+  position: relative;          // 相对定位（为语言标签和复制按钮提供定位上下文）
+  overflow-x: auto;            // 水平方向内容溢出时显示滚动条
+  scroll-behavior: smooth;     // 平滑滚动效果（替换不支持的webkit属性）
+  
+  // 代码块内的代码元素样式
+  code {
+    background-color: transparent !important; // 透明背景
+    color: inherit;            // 继承颜色
+    border: none;              // 无边框
+    padding: 0 !important;     // 无内边距
+    
+    // 代码表格内的单元格样式
+    table td {
+      padding: 0.4em;          // 单元格内边距
+    }
+  }
+}
+
+// 亮色主题下代码表格单元格的文本颜色
+.light code table td {
+  color: #333333 !important;   // 在亮色主题下使用深色文本以确保可读性
+}
+
+// 暗色主题下代码表格单元格的文本颜色
+.dark code table td {
+  color: #ffffff !important;   // 在暗色主题下使用白色文本
+}
+
+// 代码块中标记元素的样式（通常用于高亮显示）
+pre code table mark {
+  color: unset;                // 使用默认文本颜色
+  padding: 0;                  // 无内边距
+  background-color: #204e8a !important; // 蓝色背景（代码高亮颜色）
+  filter: brightness(1.1);     // 稍微提高亮度，增强可见度
+}
+
+// 代码块滚动条样式（Webkit浏览器）
+pre::-webkit-scrollbar {
+  height: 8px;                 // 滚动条高度
+}
+
+// 滚动条滑块样式
+pre::-webkit-scrollbar-thumb {
+  background-color: #3D444D;   // 滑块背景色（中灰色）
+  border-radius: 4px;          // 圆角滑块
+}
+
+// 滚动条轨道样式
+pre::-webkit-scrollbar-track {
+  background-color: #1E222A;   // 轨道背景色（深灰色）
+}
+
+// 链接中的代码元素悬停效果
+a {
+  code:hover {
+    background-color: transparent;   // 悬停时背景透明
+    background: transparent !important; // 强制背景透明（覆盖其他样式）
+  }
+}
+
+// 行内代码元素的样式
+code {
+  background-color: var(--bg-primary); // 使用CSS变量作为背景色
+}
+
+// 所有代码相关元素的通用样式
+code,
+pre,
+kbd,
+samp {
+  font-size: 1.05em;           // 字体大小略大于周围文本
+  /* 比周围文本稍大，提高可读性 */
+  line-height: 1.6;            // 较大的行高，增强可读性
+}
+
+/////////////////////////////////////////////////////// 浅色主题下的代码高亮颜色覆盖规则
+.light {
+  pre {
+    // 设置正确的背景色和基本文本颜色
+    background-color: #f5f5f5 !important;
+    
+    code {
+      // 普通文本 - 从浅灰色 #abb2bf 改为更深的灰色
+      span[style*="color:#abb2bf"],
+      span[style*="color: #abb2bf"] {
+        color: #383a42 !important;
+      }
+      
+      // 普通文本 - 从中等灰色 #6c7079 改为更深的灰色
+      span[style*="color:#6c7079"],
+      span[style*="color: #6c7079"] {
+        color: #383a42 !important;
+      }
+      
+      // 注释 - 使用适中的灰色
+      span[style*="color:#5c6370"],
+      span[style*="color: #5c6370"] {
+        color: #a0a1a7 !important;
+      }
+      
+      // 字符串 - 使用更深的绿色
+      span[style*="color:#98c379"], 
+      span[style*="color: #98c379"],
+      span[style*="color:#9acc76"],
+      span[style*="color: #9acc76"] {
+        color: #50a14f !important;
+      }
+      
+      // 数字和字面量 - 使用棕色
+      span[style*="color:#d19a66"],
+      span[style*="color: #d19a66"] {
+        color: #986801 !important;
+      }
+      
+      // 关键字 - 使用深紫色
+      span[style*="color:#c678dd"],
+      span[style*="color: #c678dd"],
+      span[style*="color:#cd74e8"],
+      span[style*="color: #cd74e8"] {
+        color: #a626a4 !important;
+      }
+      
+      // 函数名 - 使用更深的蓝色
+      span[style*="color:#61afef"],
+      span[style*="color: #61afef"],
+      span[style*="color:#5cb3fa"],
+      span[style*="color: #5cb3fa"] {
+        color: #4078f2 !important;
+      }
+      
+      // 变量和标识符 - 使用更深的红色
+      span[style*="color:#e06c75"],
+      span[style*="color: #e06c75"] {
+        color: #e45649 !important;
+      }
+      
+      // 类名 - 使用更深的黄色/金色
+      span[style*="color:#e5c07b"],
+      span[style*="color: #e5c07b"] {
+        color: #c18401 !important;
+      }
+      
+      // 链接 - 使用GitHub风格的蓝色
+      a {
+        color: #0366d6 !important;
+      }
+      
+      // 变量名（紫红色）
+      span[style*="color:#ff43a7"],
+      span[style*="color: #ff43a7"] {
+        color: #a626a4 !important;
+      }
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////// 

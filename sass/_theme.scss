@@ -1,0 +1,301 @@
+/*
+ * 这个文件定义了站点主题的自定义样式表，独立于第三方插件和库。
+ */
+:root {
+  /* 仅作为断点参考 */
+  --screen-size-small: 30em;
+
+  /* 禁用连字 */
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+}
+
+/* 页面淡入动画效果 */
+@keyframes intro {
+  0% {
+    opacity: 0;  /* 开始时完全透明 */
+  }
+
+  100% {
+    opacity: 1;  /* 结束时完全不透明 */
+  }
+}
+
+/* 暗色模式下的淡化文本颜色 */
+.dark .muted {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* 亮色模式下的淡化文本颜色 */
+.light .muted {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+/* 响应式iframe容器样式 */
+.responsive-iframe {
+  position: relative;
+  padding-bottom: 56.25%;  /* 16:9 比例 */
+  padding-top: 25px;
+  height: 0;
+}
+
+/* 响应式iframe内部iframe元素样式 */
+.responsive-iframe iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 所有iframe的默认样式 */
+iframe {
+  border: 0;  /* 移除边框 */
+}
+
+/* 主要内容和页脚的淡入动画 */
+main,
+footer {
+  animation: intro 0.3s both;  /* 0.3秒完成淡入动画 */
+  animation-delay: 0.15s;  /* 延迟0.15秒开始动画 */
+}
+
+/* 导航头部布局 */
+.nav-header {
+  display: flex;  /* 使用弹性布局 */
+  justify-content: space-between;  /* 两端对齐 */
+  align-items: center;  /* 垂直居中 */
+}
+
+/* 在页脚时间前添加破折号 */
+footer time[datetime$="M"]:before {
+  content: "\2013\0020";  /* 添加破折号和空格 */
+}
+
+/* 小屏幕适配 */
+@media only screen and (max-width: 30em) {
+  /* 在小屏幕上隐藏页脚时间 */
+  footer time[datetime$="M"] {
+    display: none;
+  }
+
+  /* 在小屏幕上导航头部改为纵向排列 */
+  .nav-header {
+    flex-direction: column;
+  }
+}
+
+/* 引用来源显示为块级元素 */
+blockquote cite {
+  display: block;
+}
+
+/* 在引用来源前添加长破折号 */
+blockquote cite::before {
+  content: "\2014";  /* 添加长破折号 */
+}
+
+/* hack.css 覆盖和增强 */
+/* 移除列表项中子列表的外边距 */
+.hack li ul {
+  margin: 0;
+}
+
+/* 主内容区域的内边距 */
+.main {
+  padding: 20px 10px;
+}
+
+/* 亮色模式下活动导航链接的样式 */
+.light nav a.active {
+  background-color: #ce0068;  /* 亮粉色背景 */
+  color: #fff;  /* 白色文本 */
+}
+
+/* 暗色模式下活动导航链接的样式 */
+.dark nav a.active {
+  background-color: #b7005d;  /* 深粉色背景 */
+  color: #fff;  /* 白色文本 */
+}
+
+/* 暗色模式下的URL链接样式 */
+.dark a[itemprop="url"] {
+  color: #ff9800;  /* 橙色 */
+}
+
+/* 亮色模式下的URL链接样式 */
+.light a[itemprop="url"] {
+  color: #8D2220;  /* 深红色 */
+  font-weight: bold;  /* 粗体 */
+}
+
+/* URL链接悬停效果 */
+a[itemprop="url"]:hover {
+  color: #fff;  /* 悬停时变为白色 */
+}
+
+/* 为外部链接添加图标 */
+a[href*="://"]::after,
+a[rel*="external"] {
+  /* 在外部链接后添加一个SVG图标，表示这是外部链接 */
+  content: " " url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20class='i-external'%20viewBox='0%200%2032%2032'%20width='14'%20height='14'%20fill='none'%20stroke='%23ff9800'%20stroke-linecap='round'%20stroke-linejoin='round'%20stroke-width='9.38%'%3E%3Cpath%20d='M14%209%20L3%209%203%2029%2023%2029%2023%2018%20M18%204%20L28%204%2028%2014%20M28%204%20L14%2018'/%3E%3C/svg%3E");
+}
+
+/* 移除RSS图标后的外部链接箭头 */
+.feed-icon::after {
+  content: none !important;
+}
+
+/* 所有图标的基本样式设置 */
+#sun-icon,  /* 太阳图标（亮色模式） */
+#moon-icon,  /* 月亮图标（暗色模式） */
+.social-icon {  /* 社交媒体图标 */
+  padding: 0.1em;  /* 内边距 */
+  height: 1.5em;  /* 高度 */
+  width: auto;  /* 宽度自适应 */
+  display: block;  /* 块级显示 */
+  margin-bottom: 0.25em;  /* 底部外边距 */
+}
+
+/* 暗色模式切换按钮的特定样式，确保对齐 */
+#dark-mode-toggle {
+  display: flex;  /* 弹性布局 */
+  align-items: center;  /* 垂直居中 */
+}
+
+/* 暗色模式下社交图标样式 */
+body.dark .social-icon {
+  filter: invert(1);  /* 颜色反转，使图标在暗色背景上可见 */
+}
+
+/* 移除图片容器中外部链接的箭头图标 */
+figure a[href*="://"]::after,
+figure a[rel*="external"] {
+  content: "";  /* 清空内容 */
+}
+
+/* 基本字体大小设置 */
+html {
+  font-size: 13px;  /* 默认字体大小 */
+}
+
+/* 代码块字体大小 */
+.hack pre {
+  font-size: 17px;  /* 代码块使用更大字体 */
+}
+
+/* 图标垂直对齐调整 */
+.icon {
+  margin-bottom: -3px;  /* 微调图标位置，使其与文本对齐 */
+}
+
+/* 创意作品文章的样式 */
+article[itemtype="http://schema.org/CreativeWork"] {
+  margin-bottom: 3rem;  /* 文章底部外边距 */
+
+  /* 文章标题样式 */
+  header {
+    h2 {
+      margin-bottom: 1.2rem !important;  /* 标题底部外边距 */
+    }
+  }
+
+  /* "阅读更多"导航样式 */
+  nav.readmore {
+    margin-top: 0.25rem;  /* 顶部外边距 */
+  }
+}
+
+/* 文章描述和摘要的外边距 */
+article [itemprop="description"],
+article [itemprop="summary"] {
+  margin-bottom: 20px;  /* 底部外边距 */
+  margin-top: 10px;  /* 顶部外边距 */
+}
+
+/* 文章摘要段落的边距清零 */
+article [itemprop="summary"] p {
+  margin: 0;  /* 移除默认外边距 */
+}
+
+/* 在较大屏幕上的样式调整 */
+@media screen and (min-width: 768px) {
+  html {
+    font-size: 1em;  /* 在大屏幕上增加字体大小 */
+  }
+
+  .container {
+    max-width: 50rem;  /* 限制容器最大宽度 */
+  }
+}
+
+/* 用户操作容器样式 */
+.user-actions-container {
+  position: relative;  /* 相对定位 */
+  flex-grow: 1;  /* 允许容器增长填充空间 */
+  max-width: 100%;  /* 最大宽度限制 */
+  margin-left: 15px;  /* 左侧外边距 */
+  margin-right: 15px;  /* 右侧外边距 */
+  display: flex;  /* 弹性布局 */
+  align-items: center;  /* 垂直居中 */
+  gap: 15px;  /* 元素间间距 */
+}
+
+/* 小屏幕适配 */
+@media only screen and (max-width: 30em) {
+  .user-actions-container {
+    margin: 15px;  /* 在小屏幕上四周都有相同的外边距 */
+  }
+}
+
+/* 脚注样式 */
+/* 脚注引用样式 */
+.footnote-reference {
+  margin-left: 4px;  /* 左侧外边距 */
+}
+
+/* 脚注定义样式 */
+.footnote-definition {
+  display: block;  /* 块级显示 */
+  max-width: 100%;  /* 最大宽度 */
+  overflow: hidden;  /* 溢出隐藏 */
+  overflow-x: auto;  /* 横向溢出时显示滚动条 */
+  margin: 20px 0;  /* 垂直外边距 */
+  padding-block-end: 5px;  /* 底部内边距 */
+
+  /* 脚注上标样式 */
+  sup {
+    display: inline-block;  /* 行内块显示 */
+    margin-right: 0.5em;  /* 右侧外边距 */
+    color: #ff2e88;  /* 粉色 */
+    font-size: inherit;  /* 继承字体大小 */
+    font-weight: bold;  /* 粗体 */
+    vertical-align: baseline;  /* 基线对齐 */
+
+    /* 在上标前添加左方括号 */
+    &::before {
+      content: "[";
+    }
+
+    /* 在上标后添加右方括号 */
+    &::after {
+      content: "]";
+    }
+  }
+
+  /* 第一段落显示为行内元素 */
+  p:first-of-type {
+    display: inline;
+  }
+
+  /* 为后续段落添加顶部外边距 */
+  p:not(:first-of-type) {
+    margin-top: 0.5em;
+  }
+}
+
+/* 返回脚注引用的链接样式 */
+.footnote-return {
+  margin-left: 0.5em;  /* 左侧外边距 */
+  font-size: 1.2em;  /* 字体大小 */
+}
