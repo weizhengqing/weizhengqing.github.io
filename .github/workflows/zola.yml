@@ -9,10 +9,16 @@ jobs:
   build:
     name: Publish site
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - name: Checkout main
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - name: Build and deploy
       uses: shalzz/zola-deploy-action@v0.20.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PAGES_BRANCH: gh-pages
+        BUILD_DIR: .
