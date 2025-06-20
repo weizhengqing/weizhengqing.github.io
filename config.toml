@@ -42,7 +42,6 @@ radion_menu = [
     {url = "$BASE_URL/categories", name = "Categories"},
     {url = "$BASE_URL/tags", name = "Tags"},
 ]
-radion_title = "CompMat_Codebook"
 
 # Nicer codeblocks with copy to clipboard
 codeblock = true
