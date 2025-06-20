@@ -1,0 +1,304 @@
+---
+layout: none
+title: 导航
+permalink: /nav/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Navigation Hub</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --background: #f5f6fa;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            background: var(--background);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-box {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        #searchInput {
+            width: 60%;
+            padding: 12px 20px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+            width: 70%;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .category-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .link-list {
+            list-style: none;
+        }
+
+        .link-item {
+            margin: 0.5rem 0;
+        }
+
+        .link-item a {
+            color: #34495e;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+        }
+
+        /* New collapsible styles */
+        .link-item.hidden {
+            display: none;
+        }
+        .more-indicator {
+            color: #95a5a6;
+            font-style: italic;
+            margin-top: 0.5rem;
+            cursor: pointer;
+        }
+        .category-card:hover .hidden {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .link-item a:hover {
+            background: #f0f8ff;
+            padding-left: 15px;
+        }
+
+        .link-item a::before {
+            content: "➤";
+            color: var(--secondary-color);
+            margin-right: 10px;
+            transition: margin 0.2s ease;
+        }
+
+        .link-item a:hover::before {
+            margin-right: 15px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1rem;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 style="text-align: center; color: var(--primary-color); margin: 2rem 0">Smart Navigation Hub</h1>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search websites...">
+            </div>
+        </header>
+
+        <div class="category-grid" id="categoriesContainer">
+            <!-- Categories content generated dynamically by JavaScript -->
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Smart Navigation - ${totalLinks} curated resources</p>
+        <p>Usage tips: Ctrl+D to bookmark, Double-click category titles to edit</p>
+    </footer>
+
+    <script>
+        // Website data configuration (add new content here)
+        const siteData = [
+            {
+                category: "Academic Resources",
+                links: [
+                    { name: "Google Scholar", url: "https://scholar.google.com/schhp?hl=en&as_sdt=0,5" },
+                    { name: "Web of Science", url: "https://www.webofscience.com/wos/woscc/basic-search" },
+                    { name: "Shanghai Library", url: "https://z.library.sh.cn/next" },
+                    { name: "TUC Library", url: "https://www.tu-chemnitz.de/ub/index.html.en#" },
+                    { name: "SLUB Dresden", url: "https://www.slub-dresden.de/" },
+                    { name: "ProQuest", url: "https://www.proquest.com/?accountid=1" },
+                    { name: "Science Direct", url: "https://www.sciencedirect.com/" },
+                    { name: "Springer", url: "https://link.springer.com/" },
+                    { name: "Wiley", url: "https://onlinelibrary.wiley.com/" },
+                    { name: "Scopus", url: "https://www.scopus.com/search/form.uri?display=basic&zone=header&origin=searchbasic#basic" },
+                    { name: "Emerald", url: "https://www.emerald.com/insight/" },
+                    { name: "EBSCO", url: "https://www.ebsco.com/" },
+                    { name: "arxiv", url: "https://arxiv.org/" },
+                    { name: "IEEE Xplore", url: "https://ieeexplore.ieee.org/Xplore/home.jsp" },
+                    { name: "APS Advancing Physics", url: "https://www.aps.org/" },
+                    { name: "Libgen", url: "https://libgen.is" },
+                    { name: "Z-library", url: "https://z-library.sk/" },
+                    { name: "Sci-Hub 1", url: "https://sci-hub.se" },
+                    { name: "Sci-Hub 2", url: "https://sci-hub.ee/" },
+                    { name: "Academic Navigation", url: "https://ac.scmor.com/" },
+                    { name: "Anna's Archive", url: "https://zh.annas-archive.li/" },
+                    { name: "ResearchGate", url: "https://www.researchgate.net/" }
+                ]
+            },
+            {
+                category: "TUC",
+                links: [
+                    { name: "SB-Service", url: "https://campus.tu-chemnitz.de/qisserver/pages/cs/sys/portal/hisinoneStartPage.faces?chco=y" },
+                    { name: "OPAL", url: "https://bildungsportal.sachsen.de/opal/home/?5&ajax=true" },
+                    { name: "TUC Mail", url: "https://mail.tu-chemnitz.de/SOGo/" },
+                    { name: "TUC Cloud", url: "https://tuc.cloud/index.php/apps/files/files" },
+                    { name: "TUC Overleaf", url: "https://overleaf.hrz.tu-chemnitz.de/project" },
+                    { name: "Speiseplan", url: "https://www.swcz.de/bilderspeiseplan/" },
+                    { name: "swcz.de", url: "https://www.swcz.de/" },
+                    { name: "CSN", url: "https://www.csn.tu-chemnitz.de/secure/user/" },
+                    { name: "Deutschlandsemesterticket", url: "https://abo.ride-ticketing.de/app/subscription?partnerId=35e9b2855e1721fd6cb06488eb05ef80&bookingId=e24f7f9995f3ffe564ebc09304f7700b" }
+                ]
+            },
+            {
+                category: "AI Tools",
+                links: [
+                    { name: "ChatGPT", url: "https://chatgpt.com/" },
+                    { name: "DeepSeek", url: "https://chat.deepseek.com/" },
+                    { name: "Gemini", url: "https://gemini.google.com/app" },
+                    { name: "Grok", url: "https://grok.com/" },
+                    { name: "Hugging Face", url: "https://huggingface.co" },
+                    { name: "Matbench Discovery", url: "https://matbench-discovery.materialsproject.org/" },
+                    { name: "Mistral", url: "https://chat.mistral.ai/chat" },
+                    { name: "Perplexity", url: "https://perplexity.ai" },
+                    { name: "Claude AI", url: "https://claude.ai/new" },
+                    { name: "NotebookLM", url: "https://notebooklm.google.com/" },
+                    { name: "Ollama", url: "https://ollama.com/" },
+                    { name: "Google AI Studio", url: "https://aistudio.google.com/prompts/new_chat" },
+                    { name: "LM Studio", url: "https://lmstudio.ai/" },
+                    { name: "Tongyi", url: "https://www.tongyi.com/" }
+                ]
+            }
+        ];
+
+        // Dynamically generate categories
+        function renderCategories() {
+            const container = document.getElementById('categoriesContainer');
+            let totalLinks = 0;
+
+            container.innerHTML = siteData.map(category => `
+                <div class="category-card">
+                    <h2 class="category-title">${category.category}</h2>
+                    <ul class="link-list">
+                        ${category.links.map((link, index) => {
+                            totalLinks++;
+                            return `<li class="link-item${index >= 5 ? ' hidden' : ''}" data-index="${index}">
+                                <a href="${link.url}" target="_blank">${link.name}</a>
+                            </li>`;
+                        }).join('')}
+                        ${category.links.length > 5 ? 
+                            `<div class="more-indicator">Show all ${category.links.length} links...</div>` : ''}
+                    </ul>
+                </div>
+            `).join('');
+
+            // Update footer stats
+            document.querySelector('footer p').textContent = 
+                `© 2024 Smart Navigation - ${totalLinks} quality websites collected`;
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const isSearching = searchTerm.length > 0;
+
+            document.querySelectorAll('.category-card').forEach(card => {
+                let visibleCount = 0;
+                const links = card.querySelectorAll('.link-item');
+                
+                // Handle search matching
+                links.forEach(link => {
+                    const text = link.querySelector('a').textContent.toLowerCase();
+                    const match = text.includes(searchTerm);
+                    
+                    if (isSearching) {
+                        // When searching, show all matching items directly
+                        link.style.display = match ? 'block' : 'none';
+                        // Remove hidden class while searching to allow direct visibility
+                        if (match) link.classList.remove('hidden');
+                    } else {
+                        // When search is cleared, restore the collapse state
+                        const shouldHide = parseInt(link.dataset.index) >= 5;
+                        link.classList.toggle('hidden', shouldHide);
+                        // Reset to default display (not forced display:none)
+                        link.style.removeProperty('display');
+                    }
+                    
+                    if (match) visibleCount++;
+                });
+
+                // Update more-indicator display
+                const moreIndicator = card.querySelector('.more-indicator');
+                if (moreIndicator) {
+                    moreIndicator.style.display = (visibleCount > 5 && !isSearching) ? 'block' : 'none';
+                }
+            });
+        });
+
+        // Initialize rendering
+        renderCategories();
+
+        // Future expandable features:
+        // 1. localStorage to store custom added websites
+        // 2. Category drag and drop sorting functionality
+        // 3. Night mode toggle
+        // 4. Import/export configuration files
+    </script>
+</body>
+</html>
