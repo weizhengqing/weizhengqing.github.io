@@ -1,6 +1,6 @@
 base_url = "https://weizhengqing.github.io"
 compile_sass = true
-title = "CompMat_Codebook"
+title = "Codebook"
 description = "A blog about computational materials science"
 generate_feeds = false
 
@@ -58,8 +58,4 @@ theme = "toggle" # options: {light, dark, auto, toggle}
 # Whether to display favicon
 favicon = true
 
-# Giscus comment support
-comments = false
-giscus_repo = "micahkepe/radion"
-giscus_repo_id = "R_kgDONK7lCQ"
-giscus_data_category_id = "DIC_kwDONK7lCc4CnfXf"
+
