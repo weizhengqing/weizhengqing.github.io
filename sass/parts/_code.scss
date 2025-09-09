@@ -104,7 +104,7 @@ $language-colors: (
   right: 5px;                  // 距右侧5像素
   z-index: 10;                 // 确保显示在代码内容之上
   background-color: transparent; // 透明背景
-  border: "#3D444D";           // 边框颜色（注意：这里应该使用border属性，而不是直接赋值）
+  border: none;                // 无边框
   border-radius: 3px;          // 圆角边框
 
   // 按钮内的SVG图标样式
@@ -115,25 +115,65 @@ $language-colors: (
   }
 }
 
+// 折叠按钮样式
+.collapse-button {
+  cursor: pointer;             // 鼠标指针变为手型
+  position: absolute;          // 绝对定位
+  top: 5px;                    // 距顶部5像素
+  right: 30px;                 // 距右侧30像素，留出复制按钮的空间
+  z-index: 10;                 // 确保显示在代码内容之上
+  background-color: transparent; // 透明背景
+  border: none;                // 无边框
+  border-radius: 3px;          // 圆角边框
+
+  // 按钮内的SVG图标样式
+  svg {
+    stroke: #9198A1;           // 图标描边颜色
+    width: 16px;               // 宽度
+    height: 16px;              // 高度
+  }
+}
+
 // 亮色主题下的复制按钮样式
 .light .clipboard-button {
-  border-width: 1px;           // 边框宽度
-  border-color: transparent;   // 边框颜色（透明）
-  background-color: #f3f3f3;   // 背景色（浅灰色）
+  border: none;                // 无边框
+  background-color: transparent; // 透明背景
   
   // 浅色主题下的SVG图标样式
   svg {
-    fill: #f3f3f3;             // 图标填充颜色（浅灰色，适合浅色主题）
+    fill: #f5f5f5;             // 图标填充颜色（与亮色主题代码块背景色一致）
   }
   
   // 浅色主题下复制成功勾号图标样式
   .bi-check-lg {
-    fill: #000000;             // 勾号图标填充颜色（黑色）
+    fill: #22c55e;             // 勾号图标填充颜色（绿色）
   }
   
   // 浅色主题下复制失败X图标样式
   .bi-x-lg {
-    fill: #000000;             // X图标填充颜色（黑色）
+    fill: #ef4444;             // X图标填充颜色（红色）
+  }
+}
+
+// 亮色主题下的折叠按钮样式
+.light .collapse-button {
+  border: none;                // 无边框
+  background-color: transparent; // 透明背景
+  
+  // 浅色主题下的SVG图标样式
+  svg {
+    stroke: #333333;           // 图标描边颜色（深色，确保在亮色背景下可见）
+  }
+}
+
+// 暗色主题下的折叠按钮样式（保持透明背景）
+.dark .collapse-button {
+  background-color: transparent !important; // 强制透明背景
+  border: none;                // 无边框
+  
+  // 暗色主题下的SVG图标样式
+  svg {
+    stroke: #9198A1;           // 图标描边颜色
   }
 }
 
@@ -148,6 +188,7 @@ pre {
   position: relative;          // 相对定位（为语言标签和复制按钮提供定位上下文）
   overflow-x: auto;            // 水平方向内容溢出时显示滚动条
   scroll-behavior: smooth;     // 平滑滚动效果（替换不支持的webkit属性）
+  transition: max-height 0.3s ease-out, padding 0.3s ease-out; // 添加过渡动画
   
   // 代码块内的代码元素样式
   code {
@@ -155,10 +196,23 @@ pre {
     color: inherit;            // 继承颜色
     border: none;              // 无边框
     padding: 0 !important;     // 无内边距
+    transition: opacity 0.3s ease-out; // 添加透明度过渡
     
     // 代码表格内的单元格样式
     table td {
       padding: 0.4em;          // 单元格内边距
+    }
+  }
+
+  // 折叠状态样式
+  &.collapsed {
+    max-height: 2.5em;         // 折叠时的最大高度（只显示标题栏）
+    overflow: hidden;          // 隐藏溢出内容
+    padding-bottom: 0.5em;     // 减少底部内边距
+    
+    code {
+      opacity: 0;              // 隐藏代码内容
+      pointer-events: none;    // 禁用鼠标事件
     }
   }
 }

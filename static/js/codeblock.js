@@ -26,6 +26,20 @@ const copyIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0
 </svg>`;
 
 /**
+ * Code collapse button expand icon (down arrow)
+ */
+const expandIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <polyline points="6,9 12,15 18,9"></polyline>
+</svg>`;
+
+/**
+ * Code collapse button collapse icon (up arrow)
+ */
+const collapseIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <polyline points="18,15 12,9 6,15"></polyline>
+</svg>`;
+
+/**
  * Function to change the icon of the copy button based on success or error.
  *
  * @param {HTMLElement} button - The button element to change the icon for.
@@ -116,6 +130,13 @@ document.addEventListener("DOMContentLoaded", function () {
     copyBtn.setAttribute("aria-label", "Copy code to clipboard");
     pre.appendChild(copyBtn);
 
+    // Create and append the collapse button
+    const collapseBtn = document.createElement("button");
+    collapseBtn.className = "collapse-button";
+    collapseBtn.innerHTML = collapseIcon;
+    collapseBtn.setAttribute("aria-label", "Collapse code block");
+    pre.appendChild(collapseBtn);
+
     // Create and append the language label
     const langClass = codeBlock.className.match(/language-(\w+)/);
 
@@ -125,6 +146,21 @@ document.addEventListener("DOMContentLoaded", function () {
     label.className = "code-label label-" + langCode;
     label.textContent = languageNames[langCode] || langCode.toUpperCase();
     pre.appendChild(label);
+
+    // Attach event listener to collapse button
+    collapseBtn.addEventListener("click", () => {
+      const isCollapsed = pre.classList.contains("collapsed");
+      
+      if (isCollapsed) {
+        pre.classList.remove("collapsed");
+        collapseBtn.innerHTML = collapseIcon;
+        collapseBtn.setAttribute("aria-label", "Collapse code block");
+      } else {
+        pre.classList.add("collapsed");
+        collapseBtn.innerHTML = expandIcon;
+        collapseBtn.setAttribute("aria-label", "Expand code block");
+      }
+    });
 
     // Attach event listener to copy button
     copyBtn.addEventListener("click", async () => {
@@ -149,8 +185,9 @@ document.addEventListener("DOMContentLoaded", function () {
     pre.addEventListener("scroll", () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          // Ensure button stays on the right
+          // Ensure buttons stay on the right
           copyBtn.style.right = `-${pre.scrollLeft}px`;
+          collapseBtn.style.right = `-${pre.scrollLeft}px`;
 
           // Ensure label stays on the left
           label.style.left = `${pre.scrollLeft}px`;
