@@ -206,12 +206,8 @@
             height: 100%;
         }
 
-        .collapse-btn.collapsed {
-            transform: rotate(180deg);
-        }
-
         .collapse-btn.collapsed:hover {
-            transform: scale(1.2) rotate(540deg);
+            transform: scale(1.2) rotate(360deg);
         }
 
         .main-title {
@@ -221,40 +217,12 @@
             font-size: 2.5rem;
             font-weight: 300;
             letter-spacing: -1px;
-            opacity: 0;
-            transform: translateY(-30px);
-            animation: titleFadeIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s forwards;
-        }
-
-        @keyframes titleFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .search-box {
             margin: 2rem 0;
             text-align: center;
             position: relative;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: searchBoxFadeIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.8s forwards;
-        }
-
-        @keyframes searchBoxFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .link-item a:active {
@@ -324,17 +292,6 @@
             transition: all 0.3s ease;
         }
         
-        @keyframes slideInFade {
-            from { 
-                opacity: 0; 
-                transform: translateY(10px);
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0);
-            }
-        }
-
         .link-item a:hover {
             background: linear-gradient(135deg, #f0f8ff, #e8f4fd);
             transform: translateX(8px);
@@ -356,48 +313,11 @@
             color: #7f8c8d;
         }
 
-        .category-card {
-            animation: cardFadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) backwards;
-        }
-
-        .category-card:nth-child(1) { animation-delay: 0.1s; }
-        .category-card:nth-child(2) { animation-delay: 0.2s; }
-        .category-card:nth-child(3) { animation-delay: 0.3s; }
-        .category-card:nth-child(4) { animation-delay: 0.4s; }
-        .category-card:nth-child(5) { animation-delay: 0.5s; }
-
-        @keyframes cardFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        @keyframes cardSlideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1rem;
+            color: #7f8c8d;
         }
 
         .category-card:hover {
@@ -471,7 +391,7 @@
 
     <footer>
         <p></p>
-        <p>Usage tips: Ctrl+D to bookmark, Double-click category titles to edit</p>
+        <p>Usage tips: Ctrl+D to bookmark</p>
     </footer>
 
     <script>
@@ -626,7 +546,7 @@
                 <div class="category-card" data-state="collapsed">
                     <h2 class="category-title">
                         <span>${category.category}</span>
-                        <button class="collapse-btn" title="展开">▼</button>
+                        <button class="collapse-btn collapsed" title="展开">▼</button>
                     </h2>
                     <ul class="link-list">
                         ${category.links.map((link, index) => `
@@ -689,8 +609,6 @@
                 let visibleCount = 0;
                 const links = card.querySelectorAll('.link-item');
                 
-                card.style.animationDelay = `${cardIndex * 0.1}s`;
-                card.style.animation = 'cardSlideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                 card.classList.remove('collapsed');
                 
                 links.forEach((link, linkIndex) => {
@@ -906,14 +824,12 @@
                     try {
                         await navigator.clipboard.writeText(url);
                         const originalText = link.textContent;
-                        link.style.animation = 'pulse 0.6s ease';
                         link.textContent = '✓ 链接已复制!';
                         link.style.color = '#27ae60';
                         
                         setTimeout(() => {
                             link.textContent = originalText;
                             link.style.removeProperty('color');
-                            link.style.removeProperty('animation');
                             ripple.remove();
                         }, 1500);
                     } catch (err) {
@@ -925,16 +841,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            document.body.style.opacity = '0';
-            document.body.style.transition = 'opacity 0.5s ease';
-            
             initializePage();
-            
-            setTimeout(() => {
-                document.body.style.opacity = '1';
-                const searchInput = document.getElementById('searchInput');
-                searchInput.style.animation = 'pulse 2s ease-in-out';
-            }, 100);
         });
     </script>
 </body>
