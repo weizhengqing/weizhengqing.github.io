@@ -203,7 +203,7 @@
         .category-card[data-state="expanded"] .category-title {
             background: var(--card-bg);
             position: relative;
-            z-index: 1001;
+            z-index: 1002 !important;
             margin: -1.5rem -1.5rem 1rem -1.5rem;
             padding: 1.5rem 1.5rem 0.5rem 1.5rem;
             border-radius: 12px 12px 0 0;
@@ -254,54 +254,15 @@
             margin-bottom: 1rem;
             font-size: 1.4rem;
             position: relative;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
         }
         
         .category-title:hover {
             transform: translateX(5px);
             color: var(--secondary-color);
-        }
-
-        .collapse-btn {
-            background: none;
-            color: #666;
-            border: none;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            position: relative;
-            font-family: monospace;
-        }
-
-        .collapse-btn::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            border-right: 2px solid currentColor;
-            border-bottom: 2px solid currentColor;
-            transform: rotate(45deg);
-            transition: all 0.2s ease;
-        }
-
-        .collapse-btn.collapsed::before {
-            transform: rotate(45deg);
-        }
-
-        .collapse-btn:not(.collapsed)::before {
-            transform: rotate(-135deg);
-        }
-
-        .collapse-btn:hover {
-            color: var(--secondary-color);
-            transform: scale(1.1);
         }
 
         .main-title {
@@ -715,8 +676,7 @@
                 return `
                 <div class="category-card" data-state="collapsed" data-total-links="${category.links.length}">
                     <h2 class="category-title">
-                        <span>${category.category}</span>
-                        <button class="collapse-btn collapsed" title="展开"></button>
+                        ${category.category}
                     </h2>
                     <ul class="link-list">
                         ${category.links.map((link, index) => `
@@ -766,11 +726,6 @@
                         restoreSingleColumnLayout(card);
                     }
 
-                    const btn = card.querySelector('.collapse-btn');
-                    if (btn) {
-                        btn.title = '展开';
-                        btn.classList.add('collapsed');
-                    }
                     card.dataset.state = 'collapsed';
 
                     // 确保只显示前5个链接
@@ -801,7 +756,7 @@
                 
                 // 如果是多列布局，先恢复单列布局进行搜索
                 if (linkList.classList.contains('multi-column')) {
-                    const categoryName = card.querySelector('.category-title span').textContent;
+                    const categoryName = card.querySelector('.category-title').textContent;
                     const originalLinks = siteData.find(cat => cat.category === categoryName).links;
                     
                     linkList.innerHTML = '';
@@ -944,11 +899,11 @@
 
         function setupCollapseButtons() {
             document.getElementById('categoriesContainer').addEventListener('click', e => {
-                const btn = e.target.closest('.collapse-btn');
+                const title = e.target.closest('.category-title');
                 const moreIndicator = e.target.closest('.more-indicator');
                 
-                if (!btn && !moreIndicator) {
-                    // 如果点击的是卡片内部但不是按钮或more指示器，不做任何操作
+                if (!title && !moreIndicator) {
+                    // 如果点击的是卡片内部但不是标题或more指示器，不做任何操作
                     // 但要阻止事件冒泡到document，避免误触发折叠
                     if (e.target.closest('.category-card')) {
                         e.stopPropagation();
@@ -957,15 +912,15 @@
                 }
 
                 e.preventDefault();
-                e.stopPropagation(); // 阻止事件冒泡，避免触发document的点击事件
+                e.stopPropagation(); // 阻止事件冒泡到document，避免与document的点击事件冲突
                 
                 const card = e.target.closest('.category-card');
                 const currentState = card.dataset.state;
                 
-                if (btn) {
-                    btn.style.transform = 'scale(0.9)';
+                if (title) {
+                    title.style.transform = 'scale(0.98)';
                     setTimeout(() => {
-                        btn.style.transform = '';
+                        title.style.transform = '';
                     }, 150);
                 }
                 
@@ -979,21 +934,10 @@
                 if (currentState === 'collapsed') {
                     // 立即设置展开状态，让CSS样式立即生效
                     card.dataset.state = 'expanded';
-                    
                     expandCardWithAnimation(card);
-                    const collapseBtn = card.querySelector('.collapse-btn');
-                    if (collapseBtn) {
-                        collapseBtn.title = '折叠';
-                        collapseBtn.classList.remove('collapsed');
-                    }
                 } else {
+                    // 调用折叠动画，状态会在函数内部设置
                     collapseCardWithAnimation(card);
-                    card.dataset.state = 'collapsed';
-                    const collapseBtn = card.querySelector('.collapse-btn');
-                    if (collapseBtn) {
-                        collapseBtn.title = '展开';
-                        collapseBtn.classList.add('collapsed');
-                    }
                 }
             });
         }
@@ -1056,6 +1000,14 @@
             card.style.background = 'var(--card-bg)';
             linkList.style.background = 'var(--card-bg)';
             
+            // 确保标题在多列展开时仍然可点击
+            const title = card.querySelector('.category-title');
+            if (title) {
+                title.style.position = 'relative';
+                title.style.zIndex = '1002';
+                title.style.pointerEvents = 'auto';
+            }
+            
             // 创建多个列
             for (let col = 0; col < numColumns; col++) {
                 const column = document.createElement('div');
@@ -1101,21 +1053,15 @@
         }
 
         function collapseCardWithAnimation(card) {
+            // 添加安全检查
+            if (!card || !card.querySelector) {
+                return;
+            }
+            
             const linkList = card.querySelector('.link-list');
-            const totalLinks = parseInt(card.dataset.totalLinks);
-            
-            // 清理立即应用的样式
-            card.style.removeProperty('background');
-            card.style.removeProperty('z-index');
-            card.style.removeProperty('box-shadow');
-            card.style.removeProperty('border');
-            
-            // 清理链接列表的样式
-            linkList.style.removeProperty('background');
-            linkList.style.removeProperty('z-index');
-            linkList.style.removeProperty('border-radius');
-            linkList.style.removeProperty('margin');
-            linkList.style.removeProperty('padding');
+            if (!linkList) {
+                return;
+            }
             
             // 恢复其他卡片的动画效果
             enableOtherCardsAnimations();
@@ -1123,22 +1069,38 @@
             // 移除全局遮罩
             removeGlobalOverlay();
             
-            // 如果是多列布局，恢复单列布局
-            if (linkList.classList.contains('multi-column')) {
-                restoreSingleColumnLayout(card);
-            } else {
-                // 原有的折叠动画
-                const links = card.querySelectorAll('.link-item');
-                const hiddenLinks = Array.from(links).slice(5);
-                
-                hiddenLinks.reverse().forEach((link, index) => {
-                    setTimeout(() => {
-                        // 直接切换类，不要过渡动画
-                        link.classList.remove('visible');
-                        link.classList.add('hidden');
-                    }, index * 8);
-                });
+            // 获取原始数据来重新创建卡片
+            const categoryName = card.querySelector('.category-title').textContent.trim();
+            const categoryData = siteData.find(cat => cat.category === categoryName);
+            
+            if (!categoryData) {
+                console.error('Category data not found for:', categoryName);
+                return;
             }
+            
+            // 创建新的卡片HTML
+            const hasMoreItems = categoryData.links.length > 5;
+            const newCardHTML = `
+                <div class="category-card" data-state="collapsed" data-total-links="${categoryData.links.length}">
+                    <h2 class="category-title">
+                        ${categoryData.category}
+                    </h2>
+                    <ul class="link-list">
+                        ${categoryData.links.map((link, index) => `
+                            <li class="link-item ${index >= 5 ? 'hidden' : 'visible'}" data-index="${index}">
+                                <a href="${link.url}" target="_blank">${link.name}</a>
+                            </li>`).join('')}
+                    </ul>
+                    ${hasMoreItems ? '<div class="more-indicator">more</div>' : ''}
+                </div>`;
+            
+            // 创建临时容器
+            const tempContainer = document.createElement('div');
+            tempContainer.innerHTML = newCardHTML;
+            const newCard = tempContainer.firstElementChild;
+            
+            // 替换旧卡片
+            card.parentNode.replaceChild(newCard, card);
         }
 
         function disableOtherCardsAnimations(expandedCard) {
@@ -1188,7 +1150,7 @@
         }
 
         function addGlobalOverlay() {
-            // 创建一个全局遮罩来完全阻止底层交互
+            // 创建一个全局遮罩来完全阻止底层交互，但允许展开卡片的交互
             const overlay = document.createElement('div');
             overlay.id = 'global-overlay';
             overlay.style.cssText = `
@@ -1201,6 +1163,16 @@
                 z-index: 999;
                 pointer-events: auto;
             `;
+            
+            // 添加点击事件处理，点击遮罩层时折叠展开的卡片
+            overlay.addEventListener('click', (e) => {
+                const expandedCard = document.querySelector('.category-card[data-state="expanded"]');
+                if (expandedCard) {
+                    // 调用折叠动画，状态会在函数内部设置
+                    collapseCardWithAnimation(expandedCard);
+                }
+            });
+            
             document.body.appendChild(overlay);
         }
 
@@ -1214,7 +1186,7 @@
         function restoreSingleColumnLayout(card) {
             const linkList = card.querySelector('.link-list');
             const columns = linkList.querySelectorAll('.link-column');
-            const categoryName = card.querySelector('.category-title span').textContent;
+            const categoryName = card.querySelector('.category-title').textContent;
             const originalLinks = siteData.find(cat => cat.category === categoryName).links;
             
             // 立即隐藏所有列，不要动画
@@ -1313,25 +1285,7 @@
                     e.stopPropagation();
                 }
 
-                // 检查是否点击了空白区域来折叠展开的卡片
-                const expandedCard = document.querySelector('.category-card[data-state="expanded"]');
-                if (expandedCard) {
-                    // 检查点击的是否是卡片区域、搜索区域或链接
-                    const isCardArea = e.target.closest('.category-card');
-                    const isSearchArea = e.target.closest('.search-box');
-                    const isLink = e.target.closest('.link-item a');
-                    
-                    // 如果点击的不是这些区域，就折叠卡片
-                    if (!isCardArea && !isSearchArea && !isLink) {
-                        collapseCardWithAnimation(expandedCard);
-                        expandedCard.dataset.state = 'collapsed';
-                        const collapseBtn = expandedCard.querySelector('.collapse-btn');
-                        if (collapseBtn) {
-                            collapseBtn.title = '展开';
-                            collapseBtn.classList.add('collapsed');
-                        }
-                    }
-                }
+                // 遮罩层已经处理了点击空白区域折叠卡片的逻辑，这里不需要再处理
 
                 if (e.target.closest('.link-item a') && e.ctrlKey) {
                     e.preventDefault();
