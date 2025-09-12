@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Permissions-Policy" content="unload=()">
     <title>Navigation</title>
     <style>
         :root {
@@ -129,6 +130,7 @@
             gap: 1.5rem;
             padding: 1rem;
             align-items: start;
+            overflow: visible;
         }
 
         .category-card {
@@ -137,16 +139,112 @@
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             transform: translateY(0);
             min-height: fit-content;
             height: fit-content;
             align-self: start;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            width: 100%;
+            max-width: 100%;
+            z-index: 1;
         }
 
-        .category-card:hover {
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        .category-card[data-state="expanded"] {
+            z-index: 1000 !important;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25) !important;
+            overflow: visible;
+            position: relative;
+            background: var(--card-bg) !important;
+            border: 1px solid rgba(52, 152, 219, 0.2) !important;
+            width: fit-content;
+            min-width: 300px;
+            /* 移除背景色的过渡效果，确保立即应用 */
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                       min-width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                       transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        }
+
+        .category-card[data-state="expanded"]:not(:has(.link-list.multi-column)) {
+            width: auto;
+            min-width: 300px;
+            max-width: 400px;
+        }
+
+        .category-card[data-state="expanded"]:has(.link-list.multi-column) {
+            width: fit-content;
+            min-width: 600px;
+            max-width: none;
+        }
+
+        .category-card[data-state="expanded"] .link-list.multi-column {
+            width: max-content;
+            min-width: 600px;
+        }
+
+        .category-card[data-state="expanded"] .link-list:not(.multi-column) {
+            width: 100%;
+            min-width: 280px;
+        }
+
+        .category-card[data-state="expanded"]::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            z-index: -1;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .category-card[data-state="expanded"] .category-title {
+            background: var(--card-bg);
+            position: relative;
+            z-index: 1001;
+            margin: -1.5rem -1.5rem 1rem -1.5rem;
+            padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .category-card[data-state="expanded"] .link-list {
+            background: var(--card-bg);
+            position: relative;
+            z-index: 1001;
+            border-radius: 0 0 12px 12px;
+            margin: 0 -1.5rem -1.5rem -1.5rem;
+            padding: 0 1.5rem 1.5rem 1.5rem;
+        }
+
+        .category-card[data-state="expanded"] .link-list.multi-column {
+            width: max-content;
+            min-width: 600px;
+            overflow: visible;
+            background: var(--card-bg);
+            position: relative;
+            z-index: 1001;
+        }
+
+        /* 当有卡片展开时，隐藏其他卡片的动画效果 */
+        .category-grid:has(.category-card[data-state="expanded"]) .category-card:not([data-state="expanded"]) {
+            z-index: 1;
+        }
+
+        .category-grid:has(.category-card[data-state="expanded"]) .category-card:not([data-state="expanded"]) .link-item {
+            transition: none !important;
+        }
+
+        .category-grid:has(.category-card[data-state="expanded"]) .category-card:not([data-state="expanded"]):hover {
+            transform: none !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .category-card:not([data-state="expanded"]):hover {
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15) !important;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+            transform: translateY(-2px) !important;
         }
 
         .category-title {
@@ -227,11 +325,36 @@
 
         .link-list {
             list-style: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            width: 100%;
+        }
+
+        .link-list.multi-column {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            gap: 2rem;
+            width: max-content;
+            min-width: 100%;
+            overflow-x: visible;
+            overflow-y: visible;
+        }
+
+        .link-column {
+            flex: 0 0 280px;
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+        }
+
+        .link-column .link-item {
+            width: 100%;
+            flex-shrink: 0;
         }
 
         .link-item {
             margin: 0.5rem 0;
-            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             transform: translateX(0);
         }
 
@@ -293,6 +416,7 @@
             -webkit-backdrop-filter: blur(5px);
             backdrop-filter: blur(5px);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 5;
         }
 
         .more-indicator:hover {
@@ -336,10 +460,6 @@
             color: #7f8c8d;
         }
 
-        .category-card:hover {
-            background: linear-gradient(-45deg, #ffffff, #f8f9fa, #ffffff, #f1f2f6);
-        }
-
         @keyframes rippleEffect {
             from {
                 transform: scale(0);
@@ -373,10 +493,62 @@
             .category-card {
                 padding: 1rem;
             }
+
+            .link-list.multi-column {
+                flex-direction: column;
+            }
+
+            .link-column {
+                margin-right: 0;
+                margin-bottom: 1rem;
+                min-width: auto;
+            }
+
+            .link-column:last-child {
+                margin-bottom: 0;
+            }
         }
 
-        ::-webkit-scrollbar {
-            width: 8px;
+        .category-card.no-animations {
+            transition: none !important;
+            pointer-events: none !important;
+        }
+
+        .category-card.no-animations * {
+            transition: none !important;
+            pointer-events: none !important;
+        }
+
+        .category-card.no-animations:hover {
+            transform: none !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+            background: var(--card-bg) !important;
+        }
+
+        .category-card.no-animations .link-item a:hover {
+            transform: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        .category-card.no-animations .link-item a::after {
+            display: none !important;
+        }
+
+        .category-card.no-animations .category-title:hover {
+            transform: none !important;
+            color: var(--primary-color) !important;
+        }
+
+        /* 当有展开的卡片时，完全隐藏其他卡片的交互 */
+        body:has(.category-card[data-state="expanded"]) .category-card:not([data-state="expanded"]) {
+            pointer-events: none !important;
+            z-index: 1 !important;
+        }
+
+        body:has(.category-card[data-state="expanded"]) .category-card:not([data-state="expanded"]) * {
+            pointer-events: none !important;
+            transition: none !important;
         }
 
         ::-webkit-scrollbar-track {
@@ -538,8 +710,10 @@
             container.innerHTML = siteData.map(category => {
                 totalLinks += category.links.length;
                 const hasMoreItems = category.links.length > 5;
+                const maxPerColumn = 15;
+                
                 return `
-                <div class="category-card" data-state="collapsed">
+                <div class="category-card" data-state="collapsed" data-total-links="${category.links.length}">
                     <h2 class="category-title">
                         <span>${category.category}</span>
                         <button class="collapse-btn collapsed" title="展开"></button>
@@ -572,6 +746,25 @@
                     card.style.removeProperty('transform');
                     card.style.removeProperty('animation');
                     card.style.removeProperty('animation-delay');
+                    card.style.removeProperty('background');
+                    card.style.removeProperty('box-shadow');
+                    card.style.removeProperty('pointer-events');
+
+                    // 清理链接列表的样式
+                    const linkList = card.querySelector('.link-list');
+                    if (linkList) {
+                        linkList.style.removeProperty('background');
+                        linkList.style.removeProperty('z-index');
+                        linkList.style.removeProperty('border-radius');
+                        linkList.style.removeProperty('margin');
+                        linkList.style.removeProperty('padding');
+                    }
+
+                    // 恢复原始折叠状态
+                    if (linkList.classList.contains('multi-column')) {
+                        // 如果当前是多列状态，恢复到单列折叠状态
+                        restoreSingleColumnLayout(card);
+                    }
 
                     const btn = card.querySelector('.collapse-btn');
                     if (btn) {
@@ -580,6 +773,7 @@
                     }
                     card.dataset.state = 'collapsed';
 
+                    // 确保只显示前5个链接
                     const links = card.querySelectorAll('.link-item');
                     links.forEach((link, index) => {
                         link.style.removeProperty('display');
@@ -603,9 +797,27 @@
 
             document.querySelectorAll('.category-card').forEach((card, cardIndex) => {
                 let visibleCount = 0;
-                const links = card.querySelectorAll('.link-item');
+                const linkList = card.querySelector('.link-list');
+                
+                // 如果是多列布局，先恢复单列布局进行搜索
+                if (linkList.classList.contains('multi-column')) {
+                    const categoryName = card.querySelector('.category-title span').textContent;
+                    const originalLinks = siteData.find(cat => cat.category === categoryName).links;
+                    
+                    linkList.innerHTML = '';
+                    linkList.classList.remove('multi-column');
+                    
+                    originalLinks.forEach((link, index) => {
+                        const linkElement = document.createElement('li');
+                        linkElement.className = 'link-item visible';
+                        linkElement.dataset.index = index;
+                        linkElement.innerHTML = `<a href="${link.url}" target="_blank">${link.name}</a>`;
+                        linkList.appendChild(linkElement);
+                    });
+                }
                 
                 card.classList.remove('collapsed');
+                const links = card.querySelectorAll('.link-item');
                 
                 links.forEach((link, linkIndex) => {
                     const text = link.querySelector('a').textContent.toLowerCase();
@@ -616,8 +828,8 @@
                         link.style.opacity = '0';
                         link.style.transform = 'translateX(-20px)';
                         
+                        // 直接设置最终状态，不要渐变动画
                         const timeoutId = setTimeout(() => {
-                            link.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                             link.style.opacity = '1';
                             link.style.transform = 'translateX(0)';
                             link.style.height = 'auto';
@@ -703,16 +915,24 @@
                     
                     suggestionsContainer.querySelectorAll('.search-suggestion').forEach(item => {
                         item.addEventListener('click', () => {
-                            item.style.transform = 'scale(0.95)';
-                            item.style.background = 'linear-gradient(135deg, #3498db, #2980b9)';
-                            item.style.color = 'white';
-                            
-                            setTimeout(() => {
+                            try {
+                                item.style.transform = 'scale(0.95)';
+                                item.style.background = 'linear-gradient(135deg, #3498db, #2980b9)';
+                                item.style.color = 'white';
+                                
+                                setTimeout(() => {
+                                    searchInput.value = item.textContent;
+                                    searchInput.dispatchEvent(new Event('input'));
+                                    suggestionsContainer.classList.remove('show');
+                                    suggestionsContainer.style.display = 'none';
+                                }, 150);
+                            } catch (err) {
+                                console.warn('Search suggestion click error:', err);
+                                // 降级处理
                                 searchInput.value = item.textContent;
-                                searchInput.dispatchEvent(new Event('input'));
                                 suggestionsContainer.classList.remove('show');
                                 suggestionsContainer.style.display = 'none';
-                            }, 150);
+                            }
                         });
                     });
                 } else {
@@ -727,10 +947,17 @@
                 const btn = e.target.closest('.collapse-btn');
                 const moreIndicator = e.target.closest('.more-indicator');
                 
-                if (!btn && !moreIndicator) return;
+                if (!btn && !moreIndicator) {
+                    // 如果点击的是卡片内部但不是按钮或more指示器，不做任何操作
+                    // 但要阻止事件冒泡到document，避免误触发折叠
+                    if (e.target.closest('.category-card')) {
+                        e.stopPropagation();
+                    }
+                    return;
+                }
 
                 e.preventDefault();
-                e.stopPropagation();
+                e.stopPropagation(); // 阻止事件冒泡，避免触发document的点击事件
                 
                 const card = e.target.closest('.category-card');
                 const currentState = card.dataset.state;
@@ -750,8 +977,10 @@
                 }
                 
                 if (currentState === 'collapsed') {
-                    expandCardWithAnimation(card);
+                    // 立即设置展开状态，让CSS样式立即生效
                     card.dataset.state = 'expanded';
+                    
+                    expandCardWithAnimation(card);
                     const collapseBtn = card.querySelector('.collapse-btn');
                     if (collapseBtn) {
                         collapseBtn.title = '折叠';
@@ -771,32 +1000,296 @@
 
         function expandCardWithAnimation(card) {
             const links = card.querySelectorAll('.link-item');
-            links.forEach((link, index) => {
-                if (index >= 5) {
+            const linkList = card.querySelector('.link-list');
+            const totalLinks = parseInt(card.dataset.totalLinks);
+            const maxPerColumn = 15;
+            
+            // 立即应用展开状态的样式（包括白色背景）
+            card.style.background = 'var(--card-bg)';
+            card.style.zIndex = '1000';
+            card.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.25)';
+            card.style.border = '1px solid rgba(52, 152, 219, 0.2)';
+            
+            // 禁用其他卡片的hover效果和动画
+            disableOtherCardsAnimations(card);
+            
+            // 添加全局遮罩
+            addGlobalOverlay();
+            
+            // 如果总链接数超过15个，使用多列布局
+            if (totalLinks > maxPerColumn) {
+                createMultiColumnLayout(card, links, maxPerColumn);
+            } else {
+                // 原有的单列布局 - 确保卡片有合适的宽度
+                linkList.classList.remove('multi-column');
+                card.style.width = 'auto';
+                card.style.minWidth = '300px';
+                card.style.maxWidth = '400px';
+                
+                links.forEach((link, index) => {
+                    if (index >= 5) {
+                        setTimeout(() => {
+                            // 直接切换类，不要过渡动画
+                            link.classList.remove('hidden');
+                            link.classList.add('visible');
+                        }, (index - 5) * 10);
+                    }
+                });
+            }
+        }
+
+        function createMultiColumnLayout(card, links, maxPerColumn) {
+            const linkList = card.querySelector('.link-list');
+            const totalLinks = links.length;
+            const numColumns = Math.ceil(totalLinks / maxPerColumn);
+            
+            // 清空现有内容并设置多列布局
+            linkList.innerHTML = '';
+            linkList.classList.add('multi-column');
+            
+            // 强制更新卡片尺寸以适应多列布局
+            card.style.width = 'fit-content';
+            card.style.minWidth = `${Math.max(600, numColumns * 300)}px`;
+            card.style.maxWidth = 'none';
+            
+            // 确保白色背景立即应用
+            card.style.background = 'var(--card-bg)';
+            linkList.style.background = 'var(--card-bg)';
+            
+            // 创建多个列
+            for (let col = 0; col < numColumns; col++) {
+                const column = document.createElement('div');
+                column.className = 'link-column';
+                column.style.opacity = '0';
+                column.style.transform = 'translateX(20px)';
+                column.style.background = 'var(--card-bg)'; // 确保列也是白色背景
+                
+                const startIndex = col * maxPerColumn;
+                const endIndex = Math.min(startIndex + maxPerColumn, totalLinks);
+                
+                // 创建该列的链接
+                for (let i = startIndex; i < endIndex; i++) {
+                    const originalLink = links[i];
+                    const linkElement = document.createElement('li');
+                    linkElement.className = 'link-item visible';
+                    linkElement.dataset.index = i;
+                    linkElement.style.opacity = '0';
+                    linkElement.style.transform = 'translateY(10px)';
+                    linkElement.innerHTML = originalLink.innerHTML;
+                    column.appendChild(linkElement);
+                }
+                
+                linkList.appendChild(column);
+                
+                // 动画显示列
+                setTimeout(() => {
+                    column.style.transition = 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    column.style.opacity = '1';
+                    column.style.transform = 'translateX(0)';
+                    
+                    // 直接显示列中的链接，不要透明度渐变
+                    const columnLinks = column.querySelectorAll('.link-item');
+                    columnLinks.forEach((link, linkIndex) => {
+                        setTimeout(() => {
+                            // 直接设置最终状态，不要过渡动画
+                            link.style.opacity = '1';
+                            link.style.transform = 'translateY(0)';
+                        }, linkIndex * 20);
+                    });
+                }, col * 100);
+            }
+        }
+
+        function collapseCardWithAnimation(card) {
+            const linkList = card.querySelector('.link-list');
+            const totalLinks = parseInt(card.dataset.totalLinks);
+            
+            // 清理立即应用的样式
+            card.style.removeProperty('background');
+            card.style.removeProperty('z-index');
+            card.style.removeProperty('box-shadow');
+            card.style.removeProperty('border');
+            
+            // 清理链接列表的样式
+            linkList.style.removeProperty('background');
+            linkList.style.removeProperty('z-index');
+            linkList.style.removeProperty('border-radius');
+            linkList.style.removeProperty('margin');
+            linkList.style.removeProperty('padding');
+            
+            // 恢复其他卡片的动画效果
+            enableOtherCardsAnimations();
+            
+            // 移除全局遮罩
+            removeGlobalOverlay();
+            
+            // 如果是多列布局，恢复单列布局
+            if (linkList.classList.contains('multi-column')) {
+                restoreSingleColumnLayout(card);
+            } else {
+                // 原有的折叠动画
+                const links = card.querySelectorAll('.link-item');
+                const hiddenLinks = Array.from(links).slice(5);
+                
+                hiddenLinks.reverse().forEach((link, index) => {
                     setTimeout(() => {
-                        link.style.transition = 'all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-                        link.classList.remove('hidden');
-                        link.classList.add('visible');
-                    }, (index - 5) * 10);
+                        // 直接切换类，不要过渡动画
+                        link.classList.remove('visible');
+                        link.classList.add('hidden');
+                    }, index * 8);
+                });
+            }
+        }
+
+        function disableOtherCardsAnimations(expandedCard) {
+            const allCards = document.querySelectorAll('.category-card');
+            allCards.forEach(card => {
+                if (card !== expandedCard) {
+                    card.style.pointerEvents = 'none';
+                    card.style.zIndex = '1';
+                    card.style.opacity = '0.8';
+                    // 确保hover效果被完全禁用
+                    card.style.background = 'var(--card-bg)';
+                    card.style.transform = 'none';
+                    card.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+                    
+                    // 禁用所有交互效果
+                    card.classList.add('no-animations');
+                    
+                    // 禁用卡片内所有元素的交互
+                    const allElements = card.querySelectorAll('*');
+                    allElements.forEach(element => {
+                        element.style.pointerEvents = 'none';
+                        element.style.transition = 'none';
+                    });
                 }
             });
         }
 
-        function collapseCardWithAnimation(card) {
-            const links = card.querySelectorAll('.link-item');
-            const hiddenLinks = Array.from(links).slice(5);
+        function enableOtherCardsAnimations() {
+            const allCards = document.querySelectorAll('.category-card');
+            allCards.forEach(card => {
+                // 完全清理所有强制设置的样式
+                card.style.removeProperty('pointer-events');
+                card.style.removeProperty('z-index');
+                card.style.removeProperty('opacity');
+                card.style.removeProperty('background');
+                card.style.removeProperty('transform');
+                card.style.removeProperty('box-shadow');
+                card.classList.remove('no-animations');
+                
+                // 恢复所有元素的交互
+                const allElements = card.querySelectorAll('*');
+                allElements.forEach(element => {
+                    element.style.removeProperty('pointer-events');
+                    element.style.removeProperty('transition');
+                });
+            });
+        }
+
+        function addGlobalOverlay() {
+            // 创建一个全局遮罩来完全阻止底层交互
+            const overlay = document.createElement('div');
+            overlay.id = 'global-overlay';
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.1);
+                z-index: 999;
+                pointer-events: auto;
+            `;
+            document.body.appendChild(overlay);
+        }
+
+        function removeGlobalOverlay() {
+            const overlay = document.getElementById('global-overlay');
+            if (overlay) {
+                overlay.remove();
+            }
+        }
+
+        function restoreSingleColumnLayout(card) {
+            const linkList = card.querySelector('.link-list');
+            const columns = linkList.querySelectorAll('.link-column');
+            const categoryName = card.querySelector('.category-title span').textContent;
+            const originalLinks = siteData.find(cat => cat.category === categoryName).links;
             
-            hiddenLinks.reverse().forEach((link, index) => {
-                setTimeout(() => {
-                    link.style.transition = 'all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-                    link.classList.remove('visible');
-                    link.classList.add('hidden');
-                }, index * 8);
+            // 立即隐藏所有列，不要动画
+            columns.forEach((column) => {
+                column.style.transition = 'none';
+                column.style.opacity = '0';
+                column.style.display = 'none';
+            });
+            
+            // 立即恢复原始单列布局
+            linkList.innerHTML = '';
+            linkList.classList.remove('multi-column');
+            
+            // 重置卡片尺寸和所有展开相关样式到默认状态
+            card.style.removeProperty('width');
+            card.style.removeProperty('min-width');
+            card.style.removeProperty('max-width');
+            card.style.removeProperty('background');
+            card.style.removeProperty('z-index');
+            card.style.removeProperty('box-shadow');
+            card.style.removeProperty('border');
+            card.style.removeProperty('overflow');
+            card.style.removeProperty('position');
+            
+            // 清理链接列表的所有样式
+            linkList.style.removeProperty('background');
+            linkList.style.removeProperty('z-index');
+            linkList.style.removeProperty('border-radius');
+            linkList.style.removeProperty('margin');
+            linkList.style.removeProperty('padding');
+            linkList.style.removeProperty('width');
+            linkList.style.removeProperty('min-width');
+            
+            // 重新添加原始链接，只显示前5个
+            originalLinks.forEach((link, index) => {
+                const linkElement = document.createElement('li');
+                linkElement.className = `link-item ${index >= 5 ? 'hidden' : 'visible'}`;
+                linkElement.dataset.index = index;
+                linkElement.innerHTML = `<a href="${link.url}" target="_blank">${link.name}</a>`;
+                linkList.appendChild(linkElement);
             });
         }
 
         function initializePage() {
             renderCategories();
+            
+            // 确保所有卡片都有正确的初始状态
+            setTimeout(() => {
+                document.querySelectorAll('.category-card').forEach(card => {
+                    // 清理任何可能影响hover的内联样式
+                    card.style.removeProperty('background');
+                    card.style.removeProperty('box-shadow');
+                    card.style.removeProperty('transform');
+                    card.style.removeProperty('z-index');
+                    card.style.removeProperty('border');
+                    card.style.removeProperty('pointer-events');
+                    
+                    // 清理链接列表的样式
+                    const linkList = card.querySelector('.link-list');
+                    if (linkList) {
+                        linkList.style.removeProperty('background');
+                        linkList.style.removeProperty('z-index');
+                        linkList.style.removeProperty('border-radius');
+                        linkList.style.removeProperty('margin');
+                        linkList.style.removeProperty('padding');
+                    }
+                    
+                    // 确保没有no-animations类
+                    card.classList.remove('no-animations');
+                    
+                    // 确保data-state是collapsed
+                    card.dataset.state = 'collapsed';
+                });
+            }, 100);
+            
             setupDynamicPlaceholder();
             setupSearchSuggestions();
             setupCollapseButtons();
@@ -815,6 +1308,29 @@
                 if (!e.target.closest('.search-box')) {
                     suggestionsContainer.classList.remove('show');
                     suggestionsContainer.style.display = 'none';
+                } else {
+                    // 点击搜索区域时，阻止事件冒泡避免折叠卡片
+                    e.stopPropagation();
+                }
+
+                // 检查是否点击了空白区域来折叠展开的卡片
+                const expandedCard = document.querySelector('.category-card[data-state="expanded"]');
+                if (expandedCard) {
+                    // 检查点击的是否是卡片区域、搜索区域或链接
+                    const isCardArea = e.target.closest('.category-card');
+                    const isSearchArea = e.target.closest('.search-box');
+                    const isLink = e.target.closest('.link-item a');
+                    
+                    // 如果点击的不是这些区域，就折叠卡片
+                    if (!isCardArea && !isSearchArea && !isLink) {
+                        collapseCardWithAnimation(expandedCard);
+                        expandedCard.dataset.state = 'collapsed';
+                        const collapseBtn = expandedCard.querySelector('.collapse-btn');
+                        if (collapseBtn) {
+                            collapseBtn.title = '展开';
+                            collapseBtn.classList.add('collapsed');
+                        }
+                    }
                 }
 
                 if (e.target.closest('.link-item a') && e.ctrlKey) {
@@ -845,15 +1361,59 @@
                             ripple.remove();
                         }, 1500);
                     } catch (err) {
-                        console.error('Failed to copy: ', err);
-                        ripple.remove();
+                        console.warn('Failed to copy to clipboard:', err);
+                        // 降级方案：显示链接地址
+                        const originalText = link.textContent;
+                        link.textContent = `链接: ${url}`;
+                        link.style.color = '#f39c12';
+                        
+                        setTimeout(() => {
+                            link.textContent = originalText;
+                            link.style.removeProperty('color');
+                            ripple.remove();
+                        }, 2500);
                     }
                 }
             });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // 添加全局错误处理器，抑制非关键错误
+            window.addEventListener('error', (e) => {
+                // 抑制权限策略相关的错误，这些通常不影响功能
+                if (e.message && e.message.includes('Permissions policy violation')) {
+                    e.preventDefault();
+                    return false;
+                }
+                // 抑制JSON解析错误，通常由浏览器扩展引起
+                if (e.message && e.message.includes('JSON')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // 抑制未处理的Promise拒绝
+            window.addEventListener('unhandledrejection', (e) => {
+                if (e.reason && typeof e.reason === 'string' && 
+                    (e.reason.includes('permission') || e.reason.includes('JSON'))) {
+                    e.preventDefault();
+                }
+            });
+            
             initializePage();
+            
+            // 强制重新计算样式，确保hover效果正常工作
+            setTimeout(() => {
+                document.querySelectorAll('.category-card').forEach(card => {
+                    // 强制浏览器重新计算样式
+                    card.offsetHeight; // 触发重排
+                    
+                    // 确保卡片有正确的初始样式
+                    if (!card.style.background) {
+                        card.style.background = ''; // 确保没有内联背景样式
+                    }
+                });
+            }, 200);
         });
     </script>
 </body>
