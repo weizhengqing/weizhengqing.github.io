@@ -227,6 +227,24 @@
             z-index: 1001;
         }
 
+        /* 向左展开的样式 */
+        .category-card[data-state="expanded"].expand-left {
+            transform-origin: right center;
+            position: relative;
+        }
+
+        .category-card[data-state="expanded"].expand-left:has(.link-list.multi-column) {
+            transform: translateX(calc(-1 * (var(--expanded-width, 600px) - 300px)));
+        }
+
+        .category-card[data-state="expanded"].expand-left:not(:has(.link-list.multi-column)) {
+            transform: translateX(calc(-1 * (var(--expanded-width, 400px) - 300px)));
+        }
+
+        .category-card[data-state="expanded"].expand-left .link-list.multi-column {
+            direction: ltr;
+        }
+
         /* 当有卡片展开时，隐藏其他卡片的动画效果 */
         .category-grid:has(.category-card[data-state="expanded"]) .category-card:not([data-state="expanded"]) {
             z-index: 1;
@@ -768,12 +786,54 @@
             });
         }
 
+        function checkIfCardWillOverflow(card) {
+            const cardRect = card.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const containerRect = document.querySelector('.container').getBoundingClientRect();
+            
+            // 获取预期的卡片展开宽度
+            const totalLinks = parseInt(card.dataset.totalLinks);
+            const maxPerColumn = 15;
+            
+            let expectedWidth = 300; // 默认单列宽度
+            if (totalLinks > maxPerColumn) {
+                const numColumns = Math.ceil(totalLinks / maxPerColumn);
+                expectedWidth = numColumns * 280 + (numColumns - 1) * 32; // 每列280px，间距32px
+                expectedWidth = Math.max(expectedWidth, 600); // 最小600px
+            } else {
+                expectedWidth = Math.min(400, 300 + Math.min(totalLinks * 8, 100)); // 单列时根据链接数量调整
+            }
+            
+            // 检查右侧是否有足够空间（考虑容器边界和一些padding）
+            const rightSpace = Math.min(viewportWidth, containerRect.right) - cardRect.right - 40; // 40px padding
+            const needsLeftExpansion = rightSpace < (expectedWidth - cardRect.width);
+            
+            return { needsLeftExpansion, expectedWidth };
+        }
+
         function expandCard(card) {
             card.dataset.state = 'expanded';
             document.body.classList.add('is-card-expanded');
 
             const totalLinks = parseInt(card.dataset.totalLinks);
             const maxPerColumn = 15;
+
+            // 检查是否需要向左展开
+            const { needsLeftExpansion, expectedWidth } = checkIfCardWillOverflow(card);
+            
+            // 设置CSS变量来控制展开宽度
+            card.style.setProperty('--expanded-width', `${expectedWidth}px`);
+            
+            // 添加调试信息
+            console.log(`Card expansion: needsLeftExpansion=${needsLeftExpansion}, expectedWidth=${expectedWidth}`);
+            
+            if (needsLeftExpansion) {
+                card.classList.add('expand-left');
+                console.log('Applied expand-left class');
+            } else {
+                card.classList.remove('expand-left');
+                console.log('Removed expand-left class');
+            }
 
             if (totalLinks > maxPerColumn) {
                 createMultiColumnLayout(card, maxPerColumn);
@@ -791,6 +851,8 @@
 
         function collapseCard(card) {
             card.dataset.state = 'collapsed';
+            card.classList.remove('expand-left'); // 清除左侧展开样式
+            card.style.removeProperty('--expanded-width'); // 清除CSS变量
             document.body.classList.remove('is-card-expanded');
 
             const linkList = card.querySelector('.link-list');
@@ -889,6 +951,20 @@
             setupCollapseButtons();
             
             document.getElementById('searchInput').addEventListener('input', debounce(handleSearch, 250));
+
+            // 监听窗口大小变化，重新计算展开方向
+            window.addEventListener('resize', debounce(() => {
+                const expandedCard = document.querySelector('.category-card[data-state="expanded"]');
+                if (expandedCard) {
+                    const { needsLeftExpansion, expectedWidth } = checkIfCardWillOverflow(expandedCard);
+                    expandedCard.style.setProperty('--expanded-width', `${expectedWidth}px`);
+                    if (needsLeftExpansion) {
+                        expandedCard.classList.add('expand-left');
+                    } else {
+                        expandedCard.classList.remove('expand-left');
+                    }
+                }
+            }, 100));
 
             document.addEventListener('keydown', (e) => {
                 if (e.ctrlKey && e.key === 'k') {
