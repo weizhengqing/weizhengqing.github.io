@@ -168,50 +168,42 @@
         }
 
         .collapse-btn {
-            background: var(--secondary-color);
-            color: white;
+            background: none;
+            color: #666;
             border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             cursor: pointer;
             font-size: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            opacity: 0.8;
+            transition: all 0.2s ease;
             position: relative;
-            overflow: hidden;
+            font-family: monospace;
         }
 
         .collapse-btn::before {
             content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transition: all 0.4s ease;
-            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-right: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            transform: rotate(45deg);
+            transition: all 0.2s ease;
+        }
+
+        .collapse-btn.collapsed::before {
+            transform: rotate(45deg);
+        }
+
+        .collapse-btn:not(.collapsed)::before {
+            transform: rotate(-135deg);
         }
 
         .collapse-btn:hover {
-            opacity: 1;
-            transform: scale(1.2) rotate(360deg);
-            background: var(--primary-color);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .collapse-btn:hover::before {
-            width: 100%;
-            height: 100%;
-        }
-
-        .collapse-btn.collapsed:hover {
-            transform: scale(1.2) rotate(360deg);
+            color: var(--secondary-color);
+            transform: scale(1.1);
         }
 
         .main-title {
@@ -286,14 +278,34 @@
         }
         
         .more-indicator {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
             color: #95a5a6;
+            font-size: 0.8rem;
             font-style: italic;
-            margin-top: 0.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px 8px;
+            border-radius: 12px;
             cursor: pointer;
-            padding: 8px;
-            border-radius: 6px;
-            display: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0.7;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .more-indicator:hover {
+            opacity: 1;
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        .category-card[data-state="expanded"] .more-indicator {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
         }
         
         .link-item a:hover {
@@ -381,7 +393,6 @@
 <body>
     <div class="container">
         <header>
-            <h1 class="main-title">Navigation</h1>
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="Search websites... (Ctrl+K)">
                 <div class="search-suggestions" id="searchSuggestions"></div>
@@ -546,11 +557,12 @@
 
             container.innerHTML = siteData.map(category => {
                 totalLinks += category.links.length;
+                const hasMoreItems = category.links.length > 5;
                 return `
                 <div class="category-card" data-state="collapsed">
                     <h2 class="category-title">
                         <span>${category.category}</span>
-                        <button class="collapse-btn collapsed" title="展开">▼</button>
+                        <button class="collapse-btn collapsed" title="展开"></button>
                     </h2>
                     <ul class="link-list">
                         ${category.links.map((link, index) => `
@@ -558,6 +570,7 @@
                                 <a href="${link.url}" target="_blank">${link.name}</a>
                             </li>`).join('')}
                     </ul>
+                    ${hasMoreItems ? '<div class="more-indicator">more</div>' : ''}
                 </div>`;
             }).join('');
 
@@ -582,7 +595,6 @@
 
                     const btn = card.querySelector('.collapse-btn');
                     if (btn) {
-                        btn.textContent = '▼';
                         btn.title = '展开';
                         btn.classList.add('collapsed');
                     }
@@ -733,30 +745,46 @@
         function setupCollapseButtons() {
             document.getElementById('categoriesContainer').addEventListener('click', e => {
                 const btn = e.target.closest('.collapse-btn');
-                if (!btn) return;
+                const moreIndicator = e.target.closest('.more-indicator');
+                
+                if (!btn && !moreIndicator) return;
 
                 e.preventDefault();
                 e.stopPropagation();
+                
                 const card = e.target.closest('.category-card');
                 const currentState = card.dataset.state;
                 
-                btn.style.transform = 'scale(0.9)';
-                setTimeout(() => {
-                    btn.style.transform = '';
-                }, 150);
+                if (btn) {
+                    btn.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        btn.style.transform = '';
+                    }, 150);
+                }
+                
+                if (moreIndicator) {
+                    moreIndicator.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        moreIndicator.style.transform = '';
+                    }, 150);
+                }
                 
                 if (currentState === 'collapsed') {
                     expandCardWithAnimation(card);
                     card.dataset.state = 'expanded';
-                    btn.textContent = '▲';
-                    btn.title = '折叠';
-                    btn.classList.remove('collapsed');
+                    const collapseBtn = card.querySelector('.collapse-btn');
+                    if (collapseBtn) {
+                        collapseBtn.title = '折叠';
+                        collapseBtn.classList.remove('collapsed');
+                    }
                 } else {
                     collapseCardWithAnimation(card);
                     card.dataset.state = 'collapsed';
-                    btn.textContent = '▼';
-                    btn.title = '展开';
-                    btn.classList.add('collapsed');
+                    const collapseBtn = card.querySelector('.collapse-btn');
+                    if (collapseBtn) {
+                        collapseBtn.title = '展开';
+                        collapseBtn.classList.add('collapsed');
+                    }
                 }
             });
         }
