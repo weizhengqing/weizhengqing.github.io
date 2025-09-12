@@ -274,12 +274,6 @@
             letter-spacing: -1px;
         }
 
-        .search-box {
-            margin: 2rem 0;
-            text-align: center;
-            position: relative;
-        }
-
         .link-item a:active {
             transform: translateX(8px) scale(0.98);
         }
@@ -414,13 +408,6 @@
             color: #7f8c8d;
         }
 
-        footer {
-            text-align: center;
-            margin-top: 3rem;
-            padding: 1rem;
-            color: #7f8c8d;
-        }
-
         @keyframes rippleEffect {
             from {
                 transform: scale(0);
@@ -470,38 +457,18 @@
             }
         }
 
-        .category-card.no-animations {
-            transition: none !important;
-            pointer-events: none !important;
-        }
-
-        .category-card.no-animations * {
-            transition: none !important;
-            pointer-events: none !important;
-        }
-
-        .category-card.no-animations:hover {
-            transform: none !important;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
-            background: var(--card-bg) !important;
-        }
-
-        .category-card.no-animations .link-item a:hover {
-            transform: none !important;
-            background: transparent !important;
-            box-shadow: none !important;
-        }
-
-        .category-card.no-animations .link-item a::after {
-            display: none !important;
-        }
-
-        .category-card.no-animations .category-title:hover {
-            transform: none !important;
-            color: var(--primary-color) !important;
-        }
+        
 
         /* 当有展开的卡片时，完全隐藏其他卡片的交互 */
+        body.is-card-expanded .category-card:not([data-state="expanded"]) {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        body.is-searching .category-card.hidden {
+            display: none;
+        }
+
         body:has(.category-card[data-state="expanded"]) .category-card:not([data-state="expanded"]) {
             pointer-events: none !important;
             z-index: 1 !important;
@@ -653,8 +620,6 @@
             }
         ];
 
-        let searchAnimationTimeouts = [];
-
         function debounce(func, delay) {
             let timeout;
             return function(...args) {
@@ -671,7 +636,6 @@
             container.innerHTML = siteData.map(category => {
                 totalLinks += category.links.length;
                 const hasMoreItems = category.links.length > 5;
-                const maxPerColumn = 15;
                 
                 return `
                 <div class="category-card" data-state="collapsed" data-total-links="${category.links.length}">
@@ -693,130 +657,29 @@
         }
 
         function handleSearch(e) {
-            searchAnimationTimeouts.forEach(clearTimeout);
-            searchAnimationTimeouts = [];
-
             const searchTerm = e.target.value.toLowerCase();
             const isSearching = searchTerm.length > 0;
 
-            if (!isSearching) {
-                document.querySelectorAll('.category-card').forEach(card => {
-                    card.style.removeProperty('display');
-                    card.style.removeProperty('opacity');
-                    card.style.removeProperty('transform');
-                    card.style.removeProperty('animation');
-                    card.style.removeProperty('animation-delay');
-                    card.style.removeProperty('background');
-                    card.style.removeProperty('box-shadow');
-                    card.style.removeProperty('pointer-events');
+            document.body.classList.toggle('is-searching', isSearching);
 
-                    // 清理链接列表的样式
-                    const linkList = card.querySelector('.link-list');
-                    if (linkList) {
-                        linkList.style.removeProperty('background');
-                        linkList.style.removeProperty('z-index');
-                        linkList.style.removeProperty('border-radius');
-                        linkList.style.removeProperty('margin');
-                        linkList.style.removeProperty('padding');
-                    }
-
-                    // 恢复原始折叠状态
-                    if (linkList.classList.contains('multi-column')) {
-                        // 如果当前是多列状态，恢复到单列折叠状态
-                        restoreSingleColumnLayout(card);
-                    }
-
-                    card.dataset.state = 'collapsed';
-
-                    // 确保只显示前5个链接
-                    const links = card.querySelectorAll('.link-item');
-                    links.forEach((link, index) => {
-                        link.style.removeProperty('display');
-                        link.style.removeProperty('opacity');
-                        link.style.removeProperty('transform');
-                        link.style.removeProperty('height');
-                        link.style.removeProperty('margin');
-                        link.style.removeProperty('transition');
-                        
-                        if (index >= 5) {
-                            link.classList.add('hidden');
-                            link.classList.remove('visible');
-                        } else {
-                            link.classList.remove('hidden');
-                            link.classList.add('visible');
-                        }
-                    });
-                });
-                return;
-            }
-
-            document.querySelectorAll('.category-card').forEach((card, cardIndex) => {
-                let visibleCount = 0;
-                const linkList = card.querySelector('.link-list');
-                
-                // 如果是多列布局，先恢复单列布局进行搜索
-                if (linkList.classList.contains('multi-column')) {
-                    const categoryName = card.querySelector('.category-title').textContent;
-                    const originalLinks = siteData.find(cat => cat.category === categoryName).links;
-                    
-                    linkList.innerHTML = '';
-                    linkList.classList.remove('multi-column');
-                    
-                    originalLinks.forEach((link, index) => {
-                        const linkElement = document.createElement('li');
-                        linkElement.className = 'link-item visible';
-                        linkElement.dataset.index = index;
-                        linkElement.innerHTML = `<a href="${link.url}" target="_blank">${link.name}</a>`;
-                        linkList.appendChild(linkElement);
-                    });
+            document.querySelectorAll('.category-card').forEach(card => {
+                if (!isSearching) {
+                    resetCard(card);
+                    return;
                 }
-                
-                card.classList.remove('collapsed');
+
+                let visibleCount = 0;
                 const links = card.querySelectorAll('.link-item');
                 
-                links.forEach((link, linkIndex) => {
+                links.forEach(link => {
                     const text = link.querySelector('a').textContent.toLowerCase();
                     const match = text.includes(searchTerm);
-                    
-                    if (match) {
-                        link.style.display = 'block';
-                        link.style.opacity = '0';
-                        link.style.transform = 'translateX(-20px)';
-                        
-                        // 直接设置最终状态，不要渐变动画
-                        const timeoutId = setTimeout(() => {
-                            link.style.opacity = '1';
-                            link.style.transform = 'translateX(0)';
-                            link.style.height = 'auto';
-                            link.style.margin = '0.5rem 0';
-                        }, linkIndex * 30);
-                        searchAnimationTimeouts.push(timeoutId);
-                    } else {
-                        link.style.transition = 'all 0.3s ease';
-                        link.style.opacity = '0';
-                        link.style.transform = 'translateX(-20px)';
-                        const timeoutId = setTimeout(() => {
-                            link.style.display = 'none';
-                        }, 300);
-                        searchAnimationTimeouts.push(timeoutId);
-                    }
-                    
+                    link.classList.toggle('hidden', !match);
+                    link.classList.toggle('visible', match);
                     if (match) visibleCount++;
                 });
 
-                if (visibleCount > 0) {
-                    card.style.display = 'block';
-                    card.style.opacity = '1';
-                    card.style.transform = 'scale(1)';
-                } else {
-                    card.style.transition = 'all 0.3s ease';
-                    card.style.opacity = '0';
-                    card.style.transform = 'scale(0.95)';
-                    const timeoutId = setTimeout(() => {
-                        card.style.display = 'none';
-                    }, 300);
-                    searchAnimationTimeouts.push(timeoutId);
-                }
+                card.classList.toggle('hidden', visibleCount === 0);
             });
         }
 
@@ -851,7 +714,6 @@
                 
                 if (query.length < 2) {
                     suggestionsContainer.classList.remove('show');
-                    suggestionsContainer.style.display = 'none';
                     return;
                 }
                 
@@ -865,34 +727,17 @@
                         .map(suggestion => `<div class="search-suggestion">${suggestion}</div>`)
                         .join('');
                     
-                    suggestionsContainer.style.display = 'block';
                     suggestionsContainer.classList.add('show');
                     
                     suggestionsContainer.querySelectorAll('.search-suggestion').forEach(item => {
                         item.addEventListener('click', () => {
-                            try {
-                                item.style.transform = 'scale(0.95)';
-                                item.style.background = 'linear-gradient(135deg, #3498db, #2980b9)';
-                                item.style.color = 'white';
-                                
-                                setTimeout(() => {
-                                    searchInput.value = item.textContent;
-                                    searchInput.dispatchEvent(new Event('input'));
-                                    suggestionsContainer.classList.remove('show');
-                                    suggestionsContainer.style.display = 'none';
-                                }, 150);
-                            } catch (err) {
-                                console.warn('Search suggestion click error:', err);
-                                // 降级处理
-                                searchInput.value = item.textContent;
-                                suggestionsContainer.classList.remove('show');
-                                suggestionsContainer.style.display = 'none';
-                            }
+                            searchInput.value = item.textContent;
+                            searchInput.dispatchEvent(new Event('input'));
+                            suggestionsContainer.classList.remove('show');
                         });
                     });
                 } else {
                     suggestionsContainer.classList.remove('show');
-                    suggestionsContainer.style.display = 'none';
                 }
             });
         }
@@ -903,8 +748,6 @@
                 const moreIndicator = e.target.closest('.more-indicator');
                 
                 if (!title && !moreIndicator) {
-                    // 如果点击的是卡片内部但不是标题或more指示器，不做任何操作
-                    // 但要阻止事件冒泡到document，避免误触发折叠
                     if (e.target.closest('.category-card')) {
                         e.stopPropagation();
                     }
@@ -912,264 +755,120 @@
                 }
 
                 e.preventDefault();
-                e.stopPropagation(); // 阻止事件冒泡到document，避免与document的点击事件冲突
+                e.stopPropagation();
                 
                 const card = e.target.closest('.category-card');
                 const currentState = card.dataset.state;
                 
-                if (title) {
-                    title.style.transform = 'scale(0.98)';
-                    setTimeout(() => {
-                        title.style.transform = '';
-                    }, 150);
-                }
-                
-                if (moreIndicator) {
-                    moreIndicator.style.transform = 'scale(0.9)';
-                    setTimeout(() => {
-                        moreIndicator.style.transform = '';
-                    }, 150);
-                }
-                
                 if (currentState === 'collapsed') {
-                    // 立即设置展开状态，让CSS样式立即生效
-                    card.dataset.state = 'expanded';
-                    expandCardWithAnimation(card);
+                    expandCard(card);
                 } else {
-                    // 调用折叠动画，状态会在函数内部设置
-                    collapseCardWithAnimation(card);
+                    collapseCard(card);
                 }
             });
         }
 
-        function expandCardWithAnimation(card) {
-            const links = card.querySelectorAll('.link-item');
-            const linkList = card.querySelector('.link-list');
+        function expandCard(card) {
+            card.dataset.state = 'expanded';
+            document.body.classList.add('is-card-expanded');
+
             const totalLinks = parseInt(card.dataset.totalLinks);
             const maxPerColumn = 15;
-            
-            // 立即应用展开状态的样式（包括白色背景）
-            card.style.background = 'var(--card-bg)';
-            card.style.zIndex = '1000';
-            card.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.25)';
-            card.style.border = '1px solid rgba(52, 152, 219, 0.2)';
-            
-            // 禁用其他卡片的hover效果和动画
-            disableOtherCardsAnimations(card);
-            
-            // 添加全局遮罩
-            addGlobalOverlay();
-            
-            // 如果总链接数超过15个，使用多列布局
+
             if (totalLinks > maxPerColumn) {
-                createMultiColumnLayout(card, links, maxPerColumn);
-            } else {
-                // 原有的单列布局 - 确保卡片有合适的宽度
-                linkList.classList.remove('multi-column');
-                card.style.width = 'auto';
-                card.style.minWidth = '300px';
-                card.style.maxWidth = '400px';
-                
-                links.forEach((link, index) => {
-                    if (index >= 5) {
-                        setTimeout(() => {
-                            // 直接切换类，不要过渡动画
-                            link.classList.remove('hidden');
-                            link.classList.add('visible');
-                        }, (index - 5) * 10);
-                    }
-                });
+                createMultiColumnLayout(card, maxPerColumn);
             }
+
+            card.querySelectorAll('.link-item').forEach((link, index) => {
+                if (index >= 5) {
+                    link.classList.remove('hidden');
+                    link.classList.add('visible');
+                }
+            });
+
+            addGlobalOverlay();
         }
 
-        function createMultiColumnLayout(card, links, maxPerColumn) {
+        function collapseCard(card) {
+            card.dataset.state = 'collapsed';
+            document.body.classList.remove('is-card-expanded');
+
             const linkList = card.querySelector('.link-list');
-            const totalLinks = links.length;
+            if (linkList.classList.contains('multi-column')) {
+                const categoryName = card.querySelector('.category-title').textContent.trim();
+                const categoryData = siteData.find(cat => cat.category === categoryName);
+                if (categoryData) {
+                    linkList.innerHTML = categoryData.links.map((link, index) => `
+                        <li class="link-item ${index >= 5 ? 'hidden' : 'visible'}" data-index="${index}">
+                            <a href="${link.url}" target="_blank">${link.name}</a>
+                        </li>`).join('');
+                }
+                linkList.classList.remove('multi-column');
+            }
+
+            card.querySelectorAll('.link-item').forEach((link, index) => {
+                if (index >= 5) {
+                    link.classList.add('hidden');
+                    link.classList.remove('visible');
+                }
+            });
+
+            removeGlobalOverlay();
+        }
+
+        function createMultiColumnLayout(card, maxPerColumn) {
+            const linkList = card.querySelector('.link-list');
+            const categoryName = card.querySelector('.category-title').textContent.trim();
+            const categoryData = siteData.find(cat => cat.category === categoryName);
+            if (!categoryData) return;
+
+            const totalLinks = categoryData.links.length;
             const numColumns = Math.ceil(totalLinks / maxPerColumn);
             
-            // 清空现有内容并设置多列布局
             linkList.innerHTML = '';
             linkList.classList.add('multi-column');
             
-            // 强制更新卡片尺寸以适应多列布局
-            card.style.width = 'fit-content';
-            card.style.minWidth = `${Math.max(600, numColumns * 300)}px`;
-            card.style.maxWidth = 'none';
-            
-            // 确保白色背景立即应用
-            card.style.background = 'var(--card-bg)';
-            linkList.style.background = 'var(--card-bg)';
-            
-            // 确保标题在多列展开时仍然可点击
-            const title = card.querySelector('.category-title');
-            if (title) {
-                title.style.position = 'relative';
-                title.style.zIndex = '1002';
-                title.style.pointerEvents = 'auto';
-            }
-            
-            // 创建多个列
             for (let col = 0; col < numColumns; col++) {
                 const column = document.createElement('div');
                 column.className = 'link-column';
-                column.style.opacity = '0';
-                column.style.transform = 'translateX(20px)';
-                column.style.background = 'var(--card-bg)'; // 确保列也是白色背景
                 
                 const startIndex = col * maxPerColumn;
                 const endIndex = Math.min(startIndex + maxPerColumn, totalLinks);
                 
-                // 创建该列的链接
                 for (let i = startIndex; i < endIndex; i++) {
-                    const originalLink = links[i];
+                    const link = categoryData.links[i];
                     const linkElement = document.createElement('li');
                     linkElement.className = 'link-item visible';
                     linkElement.dataset.index = i;
-                    linkElement.style.opacity = '0';
-                    linkElement.style.transform = 'translateY(10px)';
-                    linkElement.innerHTML = originalLink.innerHTML;
+                    linkElement.innerHTML = `<a href="${link.url}" target="_blank">${link.name}</a>`;
                     column.appendChild(linkElement);
                 }
-                
                 linkList.appendChild(column);
-                
-                // 动画显示列
-                setTimeout(() => {
-                    column.style.transition = 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-                    column.style.opacity = '1';
-                    column.style.transform = 'translateX(0)';
-                    
-                    // 直接显示列中的链接，不要透明度渐变
-                    const columnLinks = column.querySelectorAll('.link-item');
-                    columnLinks.forEach((link, linkIndex) => {
-                        setTimeout(() => {
-                            // 直接设置最终状态，不要过渡动画
-                            link.style.opacity = '1';
-                            link.style.transform = 'translateY(0)';
-                        }, linkIndex * 20);
-                    });
-                }, col * 100);
             }
         }
 
-        function collapseCardWithAnimation(card) {
-            // 添加安全检查
-            if (!card || !card.querySelector) {
-                return;
-            }
-            
-            const linkList = card.querySelector('.link-list');
-            if (!linkList) {
-                return;
-            }
-            
-            // 恢复其他卡片的动画效果
-            enableOtherCardsAnimations();
-            
-            // 移除全局遮罩
-            removeGlobalOverlay();
-            
-            // 获取原始数据来重新创建卡片
-            const categoryName = card.querySelector('.category-title').textContent.trim();
-            const categoryData = siteData.find(cat => cat.category === categoryName);
-            
-            if (!categoryData) {
-                console.error('Category data not found for:', categoryName);
-                return;
-            }
-            
-            // 创建新的卡片HTML
-            const hasMoreItems = categoryData.links.length > 5;
-            const newCardHTML = `
-                <div class="category-card" data-state="collapsed" data-total-links="${categoryData.links.length}">
-                    <h2 class="category-title">
-                        ${categoryData.category}
-                    </h2>
-                    <ul class="link-list">
-                        ${categoryData.links.map((link, index) => `
-                            <li class="link-item ${index >= 5 ? 'hidden' : 'visible'}" data-index="${index}">
-                                <a href="${link.url}" target="_blank">${link.name}</a>
-                            </li>`).join('')}
-                    </ul>
-                    ${hasMoreItems ? '<div class="more-indicator">more</div>' : ''}
-                </div>`;
-            
-            // 创建临时容器
-            const tempContainer = document.createElement('div');
-            tempContainer.innerHTML = newCardHTML;
-            const newCard = tempContainer.firstElementChild;
-            
-            // 替换旧卡片
-            card.parentNode.replaceChild(newCard, card);
-        }
-
-        function disableOtherCardsAnimations(expandedCard) {
-            const allCards = document.querySelectorAll('.category-card');
-            allCards.forEach(card => {
-                if (card !== expandedCard) {
-                    card.style.pointerEvents = 'none';
-                    card.style.zIndex = '1';
-                    card.style.opacity = '0.8';
-                    // 确保hover效果被完全禁用
-                    card.style.background = 'var(--card-bg)';
-                    card.style.transform = 'none';
-                    card.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-                    
-                    // 禁用所有交互效果
-                    card.classList.add('no-animations');
-                    
-                    // 禁用卡片内所有元素的交互
-                    const allElements = card.querySelectorAll('*');
-                    allElements.forEach(element => {
-                        element.style.pointerEvents = 'none';
-                        element.style.transition = 'none';
-                    });
-                }
-            });
-        }
-
-        function enableOtherCardsAnimations() {
-            const allCards = document.querySelectorAll('.category-card');
-            allCards.forEach(card => {
-                // 完全清理所有强制设置的样式
-                card.style.removeProperty('pointer-events');
-                card.style.removeProperty('z-index');
-                card.style.removeProperty('opacity');
-                card.style.removeProperty('background');
-                card.style.removeProperty('transform');
-                card.style.removeProperty('box-shadow');
-                card.classList.remove('no-animations');
-                
-                // 恢复所有元素的交互
-                const allElements = card.querySelectorAll('*');
-                allElements.forEach(element => {
-                    element.style.removeProperty('pointer-events');
-                    element.style.removeProperty('transition');
-                });
+        function resetCard(card) {
+            collapseCard(card);
+            card.classList.remove('hidden');
+            card.querySelectorAll('.link-item').forEach((link, index) => {
+                const isHidden = index >= 5;
+                link.classList.toggle('hidden', isHidden);
+                link.classList.toggle('visible', !isHidden);
             });
         }
 
         function addGlobalOverlay() {
-            // 创建一个全局遮罩来完全阻止底层交互，但允许展开卡片的交互
             const overlay = document.createElement('div');
             overlay.id = 'global-overlay';
             overlay.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                background: rgba(0, 0, 0, 0.1);
-                z-index: 999;
-                pointer-events: auto;
+                position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+                background: rgba(0, 0, 0, 0.1); z-index: 999; pointer-events: auto;
             `;
             
-            // 添加点击事件处理，点击遮罩层时折叠展开的卡片
-            overlay.addEventListener('click', (e) => {
+            overlay.addEventListener('click', () => {
                 const expandedCard = document.querySelector('.category-card[data-state="expanded"]');
                 if (expandedCard) {
-                    // 调用折叠动画，状态会在函数内部设置
-                    collapseCardWithAnimation(expandedCard);
+                    collapseCard(expandedCard);
                 }
             });
             
@@ -1183,85 +882,8 @@
             }
         }
 
-        function restoreSingleColumnLayout(card) {
-            const linkList = card.querySelector('.link-list');
-            const columns = linkList.querySelectorAll('.link-column');
-            const categoryName = card.querySelector('.category-title').textContent;
-            const originalLinks = siteData.find(cat => cat.category === categoryName).links;
-            
-            // 立即隐藏所有列，不要动画
-            columns.forEach((column) => {
-                column.style.transition = 'none';
-                column.style.opacity = '0';
-                column.style.display = 'none';
-            });
-            
-            // 立即恢复原始单列布局
-            linkList.innerHTML = '';
-            linkList.classList.remove('multi-column');
-            
-            // 重置卡片尺寸和所有展开相关样式到默认状态
-            card.style.removeProperty('width');
-            card.style.removeProperty('min-width');
-            card.style.removeProperty('max-width');
-            card.style.removeProperty('background');
-            card.style.removeProperty('z-index');
-            card.style.removeProperty('box-shadow');
-            card.style.removeProperty('border');
-            card.style.removeProperty('overflow');
-            card.style.removeProperty('position');
-            
-            // 清理链接列表的所有样式
-            linkList.style.removeProperty('background');
-            linkList.style.removeProperty('z-index');
-            linkList.style.removeProperty('border-radius');
-            linkList.style.removeProperty('margin');
-            linkList.style.removeProperty('padding');
-            linkList.style.removeProperty('width');
-            linkList.style.removeProperty('min-width');
-            
-            // 重新添加原始链接，只显示前5个
-            originalLinks.forEach((link, index) => {
-                const linkElement = document.createElement('li');
-                linkElement.className = `link-item ${index >= 5 ? 'hidden' : 'visible'}`;
-                linkElement.dataset.index = index;
-                linkElement.innerHTML = `<a href="${link.url}" target="_blank">${link.name}</a>`;
-                linkList.appendChild(linkElement);
-            });
-        }
-
         function initializePage() {
             renderCategories();
-            
-            // 确保所有卡片都有正确的初始状态
-            setTimeout(() => {
-                document.querySelectorAll('.category-card').forEach(card => {
-                    // 清理任何可能影响hover的内联样式
-                    card.style.removeProperty('background');
-                    card.style.removeProperty('box-shadow');
-                    card.style.removeProperty('transform');
-                    card.style.removeProperty('z-index');
-                    card.style.removeProperty('border');
-                    card.style.removeProperty('pointer-events');
-                    
-                    // 清理链接列表的样式
-                    const linkList = card.querySelector('.link-list');
-                    if (linkList) {
-                        linkList.style.removeProperty('background');
-                        linkList.style.removeProperty('z-index');
-                        linkList.style.removeProperty('border-radius');
-                        linkList.style.removeProperty('margin');
-                        linkList.style.removeProperty('padding');
-                    }
-                    
-                    // 确保没有no-animations类
-                    card.classList.remove('no-animations');
-                    
-                    // 确保data-state是collapsed
-                    card.dataset.state = 'collapsed';
-                });
-            }, 100);
-            
             setupDynamicPlaceholder();
             setupSearchSuggestions();
             setupCollapseButtons();
@@ -1279,13 +901,7 @@
                 const suggestionsContainer = document.getElementById('searchSuggestions');
                 if (!e.target.closest('.search-box')) {
                     suggestionsContainer.classList.remove('show');
-                    suggestionsContainer.style.display = 'none';
-                } else {
-                    // 点击搜索区域时，阻止事件冒泡避免折叠卡片
-                    e.stopPropagation();
                 }
-
-                // 遮罩层已经处理了点击空白区域折叠卡片的逻辑，这里不需要再处理
 
                 if (e.target.closest('.link-item a') && e.ctrlKey) {
                     e.preventDefault();
@@ -1293,14 +909,12 @@
                     const url = link.href;
                     
                     const ripple = document.createElement('span');
-                    ripple.style.position = 'absolute';
-                    ripple.style.borderRadius = '50%';
-                    ripple.style.background = 'rgba(52, 152, 219, 0.3)';
-                    ripple.style.transform = 'scale(0)';
-                    ripple.style.animation = 'rippleEffect 0.6s linear';
-                    ripple.style.left = `${e.clientX - link.getBoundingClientRect().left}px`;
-                    ripple.style.top = `${e.clientY - link.getBoundingClientRect().top}px`;
-                    
+                    ripple.style.cssText = `
+                        position: absolute; border-radius: 50%; background: rgba(52, 152, 219, 0.3);
+                        transform: scale(0); animation: rippleEffect 0.6s linear;
+                        left: ${e.clientX - link.getBoundingClientRect().left}px;
+                        top: ${e.clientY - link.getBoundingClientRect().top}px;
+                    `;
                     link.appendChild(ripple);
                     
                     try {
@@ -1316,7 +930,6 @@
                         }, 1500);
                     } catch (err) {
                         console.warn('Failed to copy to clipboard:', err);
-                        // 降级方案：显示链接地址
                         const originalText = link.textContent;
                         link.textContent = `链接: ${url}`;
                         link.style.color = '#f39c12';
@@ -1332,43 +945,23 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // 添加全局错误处理器，抑制非关键错误
             window.addEventListener('error', (e) => {
-                // 抑制权限策略相关的错误，这些通常不影响功能
-                if (e.message && e.message.includes('Permissions policy violation')) {
-                    e.preventDefault();
-                    return false;
-                }
-                // 抑制JSON解析错误，通常由浏览器扩展引起
-                if (e.message && e.message.includes('JSON')) {
+                if (e.message && (e.message.includes('Permissions policy violation') || e.message.includes('JSON'))) {
                     e.preventDefault();
                     return false;
                 }
             });
             
-            // 抑制未处理的Promise拒绝
             window.addEventListener('unhandledrejection', (e) => {
-                if (e.reason && typeof e.reason === 'string' && 
-                    (e.reason.includes('permission') || e.reason.includes('JSON'))) {
+                if (e.reason && typeof e.reason === 'string' && (e.reason.includes('permission') || e.reason.includes('JSON'))) {
                     e.preventDefault();
                 }
             });
             
             initializePage();
-            
-            // 强制重新计算样式，确保hover效果正常工作
-            setTimeout(() => {
-                document.querySelectorAll('.category-card').forEach(card => {
-                    // 强制浏览器重新计算样式
-                    card.offsetHeight; // 触发重排
-                    
-                    // 确保卡片有正确的初始样式
-                    if (!card.style.background) {
-                        card.style.background = ''; // 确保没有内联背景样式
-                    }
-                });
-            }, 200);
         });
     </script>
+</body>
+</html>
 </body>
 </html>
