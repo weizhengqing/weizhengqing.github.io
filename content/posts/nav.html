@@ -128,6 +128,7 @@
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
             padding: 1rem;
+            align-items: start;
         }
 
         .category-card {
@@ -138,6 +139,9 @@
             position: relative;
             overflow: hidden;
             transform: translateY(0);
+            min-height: fit-content;
+            height: fit-content;
+            align-self: start;
         }
 
         .category-card:hover {
