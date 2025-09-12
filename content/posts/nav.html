@@ -204,7 +204,9 @@
         }
         .category-card[data-state="expanded"].expand-left {
             transform-origin: right center;
-            transform: translateX(calc(-1 * (var(--expanded-width, 400px) - 300px)));
+            /* Keep the right edge aligned when expanding left */
+            position: relative;
+            left: calc(-1 * (var(--expanded-width, 400px) - 100%));
         }
         .category-card[data-state="expanded"] .more-indicator {
             opacity: 0;
