@@ -214,11 +214,65 @@
         .link-list.multi-column {
             display: flex;
             flex-direction: row;
-            gap: 2rem;
+            gap: 1.5rem; /* Reduced gap to give more space for content */
         }
         .link-column {
             flex: 0 0 280px;
             list-style: none;
+            overflow: hidden;
+            padding-right: 8px; /* Add right padding to prevent edge overflow */
+        }
+        
+        /* Multi-column specific link styling to prevent overflow */
+        .link-list.multi-column .link-item a {
+            max-width: calc(280px - 40px); /* Column width minus padding, margins and buffer */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            box-sizing: border-box;
+            margin-right: 8px; /* Extra margin to prevent edge cases */
+        }
+        
+        .link-list.multi-column .link-item a:hover {
+            /* No horizontal transform in multi-column to prevent overflow */
+            transform: none;
+            /* Keep text strictly constrained */
+            max-width: calc(280px - 40px);
+            background: #e8f4fd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+            position: relative;
+            z-index: 10;
+            /* Add subtle scale effect instead of translation */
+            transform: scale(1.01); /* Reduced scale to be more subtle */
+            transform-origin: left center;
+        }
+        
+        /* Add a tooltip for long text in multi-column layout */
+        .link-list.multi-column .link-item a[title]:hover::after {
+            content: attr(title);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(44, 62, 80, 0.95);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            white-space: nowrap;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 300px;
+            word-break: break-word;
+            white-space: normal;
+            margin-top: 4px;
+            opacity: 0;
+            animation: fadeInTooltip 0.3s ease forwards;
+        }
+        
+        @keyframes fadeInTooltip {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* --- Global State when a card is expanded --- */
@@ -537,7 +591,10 @@
                         const linkElement = document.createElement('li');
                         linkElement.className = 'link-item';
                         linkElement.dataset.index = i;
-                        linkElement.innerHTML = `<a href="${link.url}" target="_blank">${link.name}</a>`;
+                        
+                        // Add title attribute for tooltip if text is long
+                        const titleAttr = link.name.length > 20 ? ` title="${link.name}"` : '';
+                        linkElement.innerHTML = `<a href="${link.url}" target="_blank"${titleAttr}>${link.name}</a>`;
                         column.appendChild(linkElement);
                     }
                     linkList.appendChild(column);
