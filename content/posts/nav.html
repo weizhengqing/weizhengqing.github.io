@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Permissions-Policy" content="unload=()">
     <title>Navigation</title>
     <style>
         :root {
@@ -41,6 +40,28 @@
             position: relative;
         }
 
+        #searchInput {
+            width: 60%;
+            padding: 12px 20px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 25px;
+            font-size: 16px;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.2);
+            transform: scale(1.02);
+        }
+
+        #searchInput::placeholder {
+            color: #95a5a6;
+        }
+
         .search-suggestions {
             position: absolute;
             top: 100%;
@@ -67,70 +88,17 @@
             border-bottom: 1px solid #f0f0f0;
             display: flex;
             align-items: center;
-            transition: all 0.2s ease;
-            position: relative;
-            overflow: hidden;
+            transition: background 0.2s ease;
         }
-
-        .search-suggestion::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.1), transparent);
-            transition: left 0.4s ease;
-        }
-
-        .search-suggestion:hover::after {
-            left: 100%;
-        }
-
-        .search-suggestion:last-child {
-            border-bottom: none;
-        }
-
-        .search-suggestion:hover {
-            background: linear-gradient(135deg, #f0f8ff, #e8f4fd);
-        }
-
-        .search-suggestion::before {
-            content: "🔍";
-            margin-right: 10px;
-            font-size: 14px;
-        }
-
-        #searchInput {
-            width: 60%;
-            padding: 12px 20px;
-            border: 2px solid var(--secondary-color);
-            border-radius: 25px;
-            font-size: 16px;
-            position: relative;
-            background: linear-gradient(145deg, #ffffff, #f8f9fa);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        #searchInput:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.2);
-            transform: scale(1.02);
-        }
-
-        #searchInput::placeholder {
-            color: #95a5a6;
-        }
+        .search-suggestion:last-child { border-bottom: none; }
+        .search-suggestion:hover { background: #f0f8ff; }
+        .search-suggestion::before { content: "🔍"; margin-right: 10px; }
 
         .category-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
             padding: 1rem;
-            align-items: start;
-            overflow: visible;
         }
 
         .category-card {
@@ -138,131 +106,13 @@
             border-radius: 12px;
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: visible;
-            transform: translateY(0);
-            min-height: fit-content;
-            height: fit-content;
-            align-self: start;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            width: 100%;
-            max-width: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             z-index: 1;
         }
 
-        .category-card[data-state="expanded"] {
-            z-index: 1000 !important;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25) !important;
-            overflow: visible;
-            position: relative;
-            background: var(--card-bg) !important;
-            border: 1px solid rgba(52, 152, 219, 0.2) !important;
-            width: fit-content;
-            min-width: 300px;
-            /* 移除背景色的过渡效果，确保立即应用 */
-            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
-                       min-width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                       transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
-        }
-
-        .category-card[data-state="expanded"]:not(:has(.link-list.multi-column)) {
-            width: auto;
-            min-width: 300px;
-            max-width: 400px;
-        }
-
-        .category-card[data-state="expanded"]:has(.link-list.multi-column) {
-            width: fit-content;
-            min-width: 600px;
-            max-width: none;
-        }
-
-        .category-card[data-state="expanded"] .link-list.multi-column {
-            width: max-content;
-            min-width: 600px;
-        }
-
-        .category-card[data-state="expanded"] .link-list:not(.multi-column) {
-            width: 100%;
-            min-width: 280px;
-        }
-
-        .category-card[data-state="expanded"]::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            background: var(--card-bg);
-            border-radius: 16px;
-            z-index: -1;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
-        }
-
-        .category-card[data-state="expanded"] .category-title {
-            background: var(--card-bg);
-            position: relative;
-            z-index: 1002 !important;
-            margin: -1.5rem -1.5rem 1rem -1.5rem;
-            padding: 1.5rem 1.5rem 0.5rem 1.5rem;
-            border-radius: 12px 12px 0 0;
-        }
-
-        .category-card[data-state="expanded"] .link-list {
-            background: var(--card-bg);
-            position: relative;
-            z-index: 1001;
-            border-radius: 0 0 12px 12px;
-            margin: 0 -1.5rem -1.5rem -1.5rem;
-            padding: 0 1.5rem 1.5rem 1.5rem;
-        }
-
-        .category-card[data-state="expanded"] .link-list.multi-column {
-            width: max-content;
-            min-width: 600px;
-            overflow: visible;
-            background: var(--card-bg);
-            position: relative;
-            z-index: 1001;
-        }
-
-        /* 向左展开的样式 */
-        .category-card[data-state="expanded"].expand-left {
-            transform-origin: right center;
-            position: relative;
-        }
-
-        .category-card[data-state="expanded"].expand-left:has(.link-list.multi-column) {
-            transform: translateX(calc(-1 * (var(--expanded-width, 600px) - 300px)));
-        }
-
-        .category-card[data-state="expanded"].expand-left:not(:has(.link-list.multi-column)) {
-            transform: translateX(calc(-1 * (var(--expanded-width, 400px) - 300px)));
-        }
-
-        .category-card[data-state="expanded"].expand-left .link-list.multi-column {
-            direction: ltr;
-        }
-
-        /* 当有卡片展开时，隐藏其他卡片的动画效果 */
-        .category-grid:has(.category-card[data-state="expanded"]) .category-card:not([data-state="expanded"]) {
-            z-index: 1;
-        }
-
-        .category-grid:has(.category-card[data-state="expanded"]) .category-card:not([data-state="expanded"]) .link-item {
-            transition: none !important;
-        }
-
-        .category-grid:has(.category-card[data-state="expanded"]) .category-card:not([data-state="expanded"]):hover {
-            transform: none !important;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
-        }
-
-        .category-card:not([data-state="expanded"]):hover {
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15) !important;
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
-            transform: translateY(-2px) !important;
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
         }
 
         .category-title {
@@ -271,11 +121,9 @@
             padding-bottom: 0.5rem;
             margin-bottom: 1rem;
             font-size: 1.4rem;
-            position: relative;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             cursor: pointer;
-            -webkit-user-select: none;
             user-select: none;
+            transition: color 0.3s ease, transform 0.3s ease;
         }
         
         .category-title:hover {
@@ -283,52 +131,13 @@
             color: var(--secondary-color);
         }
 
-        .main-title {
-            text-align: center;
-            color: var(--primary-color);
-            margin: 2rem 0;
-            font-size: 2.5rem;
-            font-weight: 300;
-            letter-spacing: -1px;
-        }
-
-        .link-item a:active {
-            transform: translateX(8px) scale(0.98);
-        }
-
         .link-list {
             list-style: none;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            width: 100%;
-        }
-
-        .link-list.multi-column {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            gap: 2rem;
-            width: max-content;
-            min-width: 100%;
-            overflow-x: visible;
-            overflow-y: visible;
-        }
-
-        .link-column {
-            flex: 0 0 280px;
-            width: 280px;
-            display: flex;
-            flex-direction: column;
-            list-style: none;
-        }
-
-        .link-column .link-item {
-            width: 100%;
-            flex-shrink: 0;
         }
 
         .link-item {
             margin: 0.5rem 0;
-            transform: translateX(0);
+            transition: opacity 0.3s ease, transform 0.3s ease, height 0.3s ease, margin 0.3s ease;
         }
 
         .link-item a {
@@ -338,75 +147,11 @@
             align-items: center;
             padding: 10px 12px;
             border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
         }
 
-        .link-item a::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.1), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .link-item a:hover::after {
-            left: 100%;
-        }
-
-        .link-item.hidden {
-            opacity: 0;
-            height: 0;
-            overflow: hidden;
-            margin: 0;
-            transform: translateX(-20px);
-        }
-
-        .link-item.visible {
-            opacity: 1;
-            height: auto;
-            margin: 0.5rem 0;
-            transform: translateX(0);
-        }
-        
-        .more-indicator {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            color: #95a5a6;
-            font-size: 0.8rem;
-            font-style: italic;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 4px 8px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            opacity: 0.7;
-            -webkit-backdrop-filter: blur(5px);
-            backdrop-filter: blur(5px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            z-index: 5;
-        }
-
-        .more-indicator:hover {
-            opacity: 1;
-            background: rgba(52, 152, 219, 0.1);
-            color: var(--secondary-color);
-            transform: scale(1.05);
-        }
-
-        .category-card[data-state="expanded"] .more-indicator {
-            opacity: 0;
-            transform: scale(0.8);
-            pointer-events: none;
-        }
-        
         .link-item a:hover {
-            background: linear-gradient(135deg, #f0f8ff, #e8f4fd);
+            background: #e8f4fd;
             transform: translateX(8px);
             box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
         }
@@ -419,6 +164,94 @@
             opacity: 0.7;
         }
 
+        .link-item.hidden {
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            margin: 0;
+            transform: translateX(-20px);
+        }
+
+        .more-indicator {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            color: #95a5a6;
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 5;
+            border: none;
+        }
+        .more-indicator:hover {
+            opacity: 1;
+            color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        /* --- Expanded Card State --- */
+        .category-card[data-state="expanded"] {
+            z-index: 1001;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            width: var(--expanded-width, 400px);
+            min-width: 300px;
+        }
+        .category-card[data-state="expanded"].expand-left {
+            transform-origin: right center;
+            transform: translateX(calc(-1 * (var(--expanded-width, 400px) - 300px)));
+        }
+        .category-card[data-state="expanded"] .more-indicator {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .link-list.multi-column {
+            display: flex;
+            flex-direction: row;
+            gap: 2rem;
+        }
+        .link-column {
+            flex: 0 0 280px;
+            list-style: none;
+        }
+
+        /* --- Global State when a card is expanded --- */
+        body.is-card-expanded .category-card:not([data-state="expanded"]) {
+            pointer-events: none;
+            opacity: 0.6;
+            filter: blur(2px);
+        }
+        body.is-card-expanded .category-card:not([data-state="expanded"]):hover {
+            transform: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #global-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+        }
+        #global-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* --- Search State --- */
+        body.is-searching .category-card.hidden-by-search {
+            display: none;
+        }
+
         footer {
             text-align: center;
             margin-top: 3rem;
@@ -426,86 +259,15 @@
             color: #7f8c8d;
         }
 
-        @keyframes rippleEffect {
-            from {
-                transform: scale(0);
-                opacity: 1;
-            }
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-
         @media (max-width: 768px) {
-            .category-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-                padding: 0.5rem;
-            }
-
-            #searchInput, .search-suggestions {
-                width: 90%;
-            }
-
-            #searchInput:focus {
-                width: 95%;
-            }
-
-            .main-title {
-                font-size: 2rem;
-            }
-
-            .category-card {
-                padding: 1rem;
-            }
-
-            .link-list.multi-column {
-                flex-direction: column;
-            }
-
-            .link-column {
-                margin-right: 0;
-                margin-bottom: 1rem;
-                min-width: auto;
-            }
-
-            .link-column:last-child {
-                margin-bottom: 0;
-            }
+            .category-grid { grid-template-columns: 1fr; gap: 1rem; padding: 0.5rem; }
+            #searchInput, .search-suggestions { width: 90%; }
+            #searchInput:focus { width: 95%; }
+            .link-list.multi-column { flex-direction: column; }
         }
 
-        
-
-        /* 当有展开的卡片时，完全隐藏其他卡片的交互 */
-        body.is-card-expanded .category-card:not([data-state="expanded"]) {
-            pointer-events: none;
-            opacity: 0.8;
-        }
-
-        body.is-searching .category-card.hidden {
-            display: none;
-        }
-
-        body:has(.category-card[data-state="expanded"]) .category-card:not([data-state="expanded"]) {
-            pointer-events: none !important;
-            z-index: 1 !important;
-        }
-
-        body:has(.category-card[data-state="expanded"]) .category-card:not([data-state="expanded"]) * {
-            pointer-events: none !important;
-            transition: none !important;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--secondary-color);
-            border-radius: 4px;
-        }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--secondary-color); border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -521,6 +283,8 @@
             <!-- Categories content generated dynamically by JavaScript -->
         </div>
     </div>
+
+    <div id="global-overlay" class="hidden"></div>
 
     <footer>
         <p></p>
@@ -638,406 +402,205 @@
             }
         ];
 
-        function debounce(func, delay) {
-            let timeout;
-            return function(...args) {
-                const context = this;
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(context, args), delay);
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = {
+                container: document.getElementById('categoriesContainer'),
+                searchInput: document.getElementById('searchInput'),
+                suggestionsContainer: document.getElementById('searchSuggestions'),
+                overlay: document.getElementById('global-overlay'),
+                footerText: document.querySelector('footer p:first-of-type')
             };
-        }
 
-        function renderCategories() {
-            const container = document.getElementById('categoriesContainer');
-            let totalLinks = 0;
+            let currentlyExpandedCard = null;
 
-            container.innerHTML = siteData.map(category => {
-                totalLinks += category.links.length;
-                const hasMoreItems = category.links.length > 5;
+            function debounce(func, delay) {
+                let timeout;
+                return function(...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), delay);
+                };
+            }
+
+            function renderCategories() {
+                let totalLinks = 0;
+                elements.container.innerHTML = siteData.map(category => {
+                    totalLinks += category.links.length;
+                    const hasMoreItems = category.links.length > 5;
+                    return `
+                        <div class="category-card" data-state="collapsed" data-total-links="${category.links.length}" data-category-name="${category.category}">
+                            <h2 class="category-title">${category.category}</h2>
+                            <ul class="link-list">
+                                ${category.links.map((link, index) => `
+                                    <li class="link-item ${index >= 5 ? 'hidden' : ''}" data-index="${index}">
+                                        <a href="${link.url}" target="_blank">${link.name}</a>
+                                    </li>`).join('')}
+                            </ul>
+                            ${hasMoreItems ? '<button class="more-indicator">more</button>' : ''}
+                        </div>`;
+                }).join('');
+                elements.footerText.textContent = `© ${new Date().getFullYear()} Smart Navigation - ${totalLinks} quality websites collected`;
+            }
+
+            function handleSearch(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                document.body.classList.toggle('is-searching', searchTerm.length > 0);
+
+                document.querySelectorAll('.category-card').forEach(card => {
+                    if (searchTerm.length === 0) {
+                        card.classList.remove('hidden-by-search');
+                        card.querySelectorAll('.link-item').forEach(link => link.classList.remove('hidden'));
+                        return;
+                    }
+
+                    let visibleCount = 0;
+                    card.querySelectorAll('.link-item').forEach(link => {
+                        const match = link.querySelector('a').textContent.toLowerCase().includes(searchTerm);
+                        link.classList.toggle('hidden', !match);
+                        if (match) visibleCount++;
+                    });
+                    card.classList.toggle('hidden-by-search', visibleCount === 0);
+                });
+            }
+            
+            function expandCard(card) {
+                if (currentlyExpandedCard && currentlyExpandedCard !== card) {
+                    collapseCard(currentlyExpandedCard);
+                }
                 
-                return `
-                <div class="category-card" data-state="collapsed" data-total-links="${category.links.length}">
-                    <h2 class="category-title">
-                        ${category.category}
-                    </h2>
-                    <ul class="link-list">
-                        ${category.links.map((link, index) => `
-                            <li class="link-item ${index >= 5 ? 'hidden' : 'visible'}" data-index="${index}">
-                                <a href="${link.url}" target="_blank">${link.name}</a>
-                            </li>`).join('')}
-                    </ul>
-                    ${hasMoreItems ? '<div class="more-indicator">more</div>' : ''}
-                </div>`;
-            }).join('');
+                currentlyExpandedCard = card;
+                card.dataset.state = 'expanded';
+                document.body.classList.add('is-card-expanded');
+                elements.overlay.classList.remove('hidden');
 
-            document.querySelector('footer p:first-of-type').textContent = 
-                `© ${new Date().getFullYear()} Smart Navigation - ${totalLinks} quality websites collected`;
-        }
+                const totalLinks = parseInt(card.dataset.totalLinks);
+                const maxPerColumn = 15;
 
-        function handleSearch(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const isSearching = searchTerm.length > 0;
+                const { needsLeftExpansion, expectedWidth } = checkIfCardWillOverflow(card);
+                card.style.setProperty('--expanded-width', `${expectedWidth}px`);
+                card.classList.toggle('expand-left', needsLeftExpansion);
 
-            document.body.classList.toggle('is-searching', isSearching);
-
-            document.querySelectorAll('.category-card').forEach(card => {
-                if (!isSearching) {
-                    resetCard(card);
-                    return;
+                if (totalLinks > maxPerColumn) {
+                    createMultiColumnLayout(card, maxPerColumn);
                 }
 
-                let visibleCount = 0;
-                const links = card.querySelectorAll('.link-item');
+                card.querySelectorAll('.link-item.hidden').forEach(link => link.classList.remove('hidden'));
+            }
+
+            function collapseCard(card) {
+                if (!card) return;
                 
-                links.forEach(link => {
-                    const text = link.querySelector('a').textContent.toLowerCase();
-                    const match = text.includes(searchTerm);
-                    link.classList.toggle('hidden', !match);
-                    link.classList.toggle('visible', match);
-                    if (match) visibleCount++;
+                card.dataset.state = 'collapsed';
+                card.classList.remove('expand-left');
+                card.style.removeProperty('--expanded-width');
+                
+                const linkList = card.querySelector('.link-list');
+                if (linkList.classList.contains('multi-column')) {
+                    const allLinks = Array.from(linkList.querySelectorAll('.link-item'));
+                    linkList.innerHTML = '';
+                    allLinks.sort((a, b) => a.dataset.index - b.dataset.index).forEach(link => linkList.appendChild(link));
+                    linkList.classList.remove('multi-column');
+                }
+
+                card.querySelectorAll('.link-item').forEach((link, index) => {
+                    if (index >= 5) link.classList.add('hidden');
                 });
 
-                card.classList.toggle('hidden', visibleCount === 0);
-            });
-        }
-
-        function setupDynamicPlaceholder() {
-            const searchInput = document.getElementById('searchInput');
-            const placeholders = [
-                'Search websites... (Ctrl+K)',
-                'Try "scholar", "ai", "german"...',
-                'Find your favorite tools...',
-                'Quick search across all sites...'
-            ];
-            let currentIndex = 0;
-
-            setInterval(() => {
-                if (document.activeElement !== searchInput) {
-                    currentIndex = (currentIndex + 1) % placeholders.length;
-                    searchInput.placeholder = placeholders[currentIndex];
+                if (currentlyExpandedCard === card) {
+                    currentlyExpandedCard = null;
+                    document.body.classList.remove('is-card-expanded');
+                    elements.overlay.classList.add('hidden');
                 }
-            }, 3000);
-        }
-
-        function setupSearchSuggestions() {
-            const searchInput = document.getElementById('searchInput');
-            const suggestionsContainer = document.getElementById('searchSuggestions');
-            
-            const allSiteNames = siteData.flatMap(category => 
-                category.links.map(link => link.name.toLowerCase())
-            );
-            
-            searchInput.addEventListener('input', (e) => {
-                const query = e.target.value.toLowerCase().trim();
-                
-                if (query.length < 2) {
-                    suggestionsContainer.classList.remove('show');
-                    return;
-                }
-                
-                const suggestions = allSiteNames
-                    .filter(name => name.includes(query))
-                    .slice(0, 5)
-                    .map(name => name.charAt(0).toUpperCase() + name.slice(1));
-                
-                if (suggestions.length > 0) {
-                    suggestionsContainer.innerHTML = suggestions
-                        .map(suggestion => `<div class="search-suggestion">${suggestion}</div>`)
-                        .join('');
-                    
-                    suggestionsContainer.classList.add('show');
-                    
-                    suggestionsContainer.querySelectorAll('.search-suggestion').forEach(item => {
-                        item.addEventListener('click', () => {
-                            searchInput.value = item.textContent;
-                            searchInput.dispatchEvent(new Event('input'));
-                            suggestionsContainer.classList.remove('show');
-                        });
-                    });
-                } else {
-                    suggestionsContainer.classList.remove('show');
-                }
-            });
-        }
-
-        function setupCollapseButtons() {
-            document.getElementById('categoriesContainer').addEventListener('click', e => {
-                const title = e.target.closest('.category-title');
-                const moreIndicator = e.target.closest('.more-indicator');
-                
-                if (!title && !moreIndicator) {
-                    if (e.target.closest('.category-card')) {
-                        e.stopPropagation();
-                    }
-                    return;
-                }
-
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const card = e.target.closest('.category-card');
-                const currentState = card.dataset.state;
-                
-                if (currentState === 'collapsed') {
-                    expandCard(card);
-                } else {
-                    collapseCard(card);
-                }
-            });
-        }
-
-        function checkIfCardWillOverflow(card) {
-            const cardRect = card.getBoundingClientRect();
-            const viewportWidth = window.innerWidth;
-            const containerRect = document.querySelector('.container').getBoundingClientRect();
-            
-            // 获取预期的卡片展开宽度
-            const totalLinks = parseInt(card.dataset.totalLinks);
-            const maxPerColumn = 15;
-            
-            let expectedWidth = 300; // 默认单列宽度
-            if (totalLinks > maxPerColumn) {
-                const numColumns = Math.ceil(totalLinks / maxPerColumn);
-                expectedWidth = numColumns * 280 + (numColumns - 1) * 32; // 每列280px，间距32px
-                expectedWidth = Math.max(expectedWidth, 600); // 最小600px
-            } else {
-                expectedWidth = Math.min(400, 300 + Math.min(totalLinks * 8, 100)); // 单列时根据链接数量调整
-            }
-            
-            // 检查右侧是否有足够空间（考虑容器边界和一些padding）
-            const rightSpace = Math.min(viewportWidth, containerRect.right) - cardRect.right - 40; // 40px padding
-            const needsLeftExpansion = rightSpace < (expectedWidth - cardRect.width);
-            
-            return { needsLeftExpansion, expectedWidth };
-        }
-
-        function expandCard(card) {
-            card.dataset.state = 'expanded';
-            document.body.classList.add('is-card-expanded');
-
-            const totalLinks = parseInt(card.dataset.totalLinks);
-            const maxPerColumn = 15;
-
-            // 检查是否需要向左展开
-            const { needsLeftExpansion, expectedWidth } = checkIfCardWillOverflow(card);
-            
-            // 设置CSS变量来控制展开宽度
-            card.style.setProperty('--expanded-width', `${expectedWidth}px`);
-            
-            // 添加调试信息
-            console.log(`Card expansion: needsLeftExpansion=${needsLeftExpansion}, expectedWidth=${expectedWidth}`);
-            
-            if (needsLeftExpansion) {
-                card.classList.add('expand-left');
-                console.log('Applied expand-left class');
-            } else {
-                card.classList.remove('expand-left');
-                console.log('Removed expand-left class');
             }
 
-            if (totalLinks > maxPerColumn) {
-                createMultiColumnLayout(card, maxPerColumn);
-            }
-
-            card.querySelectorAll('.link-item').forEach((link, index) => {
-                if (index >= 5) {
-                    link.classList.remove('hidden');
-                    link.classList.add('visible');
-                }
-            });
-
-            addGlobalOverlay();
-        }
-
-        function collapseCard(card) {
-            card.dataset.state = 'collapsed';
-            card.classList.remove('expand-left'); // 清除左侧展开样式
-            card.style.removeProperty('--expanded-width'); // 清除CSS变量
-            document.body.classList.remove('is-card-expanded');
-
-            const linkList = card.querySelector('.link-list');
-            if (linkList.classList.contains('multi-column')) {
-                const categoryName = card.querySelector('.category-title').textContent.trim();
+            function createMultiColumnLayout(card, maxPerColumn) {
+                const linkList = card.querySelector('.link-list');
+                const categoryName = card.dataset.categoryName;
                 const categoryData = siteData.find(cat => cat.category === categoryName);
-                if (categoryData) {
-                    linkList.innerHTML = categoryData.links.map((link, index) => `
-                        <li class="link-item ${index >= 5 ? 'hidden' : 'visible'}" data-index="${index}">
-                            <a href="${link.url}" target="_blank">${link.name}</a>
-                        </li>`).join('');
-                }
-                linkList.classList.remove('multi-column');
-            }
+                if (!categoryData) return;
 
-            card.querySelectorAll('.link-item').forEach((link, index) => {
-                if (index >= 5) {
-                    link.classList.add('hidden');
-                    link.classList.remove('visible');
-                }
-            });
-
-            removeGlobalOverlay();
-        }
-
-        function createMultiColumnLayout(card, maxPerColumn) {
-            const linkList = card.querySelector('.link-list');
-            const categoryName = card.querySelector('.category-title').textContent.trim();
-            const categoryData = siteData.find(cat => cat.category === categoryName);
-            if (!categoryData) return;
-
-            const totalLinks = categoryData.links.length;
-            const numColumns = Math.ceil(totalLinks / maxPerColumn);
-            
-            linkList.innerHTML = '';
-            linkList.classList.add('multi-column');
-            
-            for (let col = 0; col < numColumns; col++) {
-                const column = document.createElement('div');
-                column.className = 'link-column';
+                const totalLinks = categoryData.links.length;
+                const numColumns = Math.ceil(totalLinks / maxPerColumn);
                 
-                const startIndex = col * maxPerColumn;
-                const endIndex = Math.min(startIndex + maxPerColumn, totalLinks);
+                linkList.innerHTML = '';
+                linkList.classList.add('multi-column');
                 
-                for (let i = startIndex; i < endIndex; i++) {
-                    const link = categoryData.links[i];
-                    const linkElement = document.createElement('li');
-                    linkElement.className = 'link-item visible';
-                    linkElement.dataset.index = i;
-                    linkElement.innerHTML = `<a href="${link.url}" target="_blank">${link.name}</a>`;
-                    column.appendChild(linkElement);
+                for (let col = 0; col < numColumns; col++) {
+                    const column = document.createElement('ul');
+                    column.className = 'link-column';
+                    
+                    const startIndex = col * maxPerColumn;
+                    const endIndex = Math.min(startIndex + maxPerColumn, totalLinks);
+                    
+                    for (let i = startIndex; i < endIndex; i++) {
+                        const link = categoryData.links[i];
+                        const linkElement = document.createElement('li');
+                        linkElement.className = 'link-item';
+                        linkElement.dataset.index = i;
+                        linkElement.innerHTML = `<a href="${link.url}" target="_blank">${link.name}</a>`;
+                        column.appendChild(linkElement);
+                    }
+                    linkList.appendChild(column);
                 }
-                linkList.appendChild(column);
             }
-        }
 
-        function resetCard(card) {
-            collapseCard(card);
-            card.classList.remove('hidden');
-            card.querySelectorAll('.link-item').forEach((link, index) => {
-                const isHidden = index >= 5;
-                link.classList.toggle('hidden', isHidden);
-                link.classList.toggle('visible', !isHidden);
-            });
-        }
-
-        function addGlobalOverlay() {
-            const overlay = document.createElement('div');
-            overlay.id = 'global-overlay';
-            overlay.style.cssText = `
-                position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-                background: rgba(0, 0, 0, 0.1); z-index: 999; pointer-events: auto;
-            `;
-            
-            overlay.addEventListener('click', () => {
-                const expandedCard = document.querySelector('.category-card[data-state="expanded"]');
-                if (expandedCard) {
-                    collapseCard(expandedCard);
+            function checkIfCardWillOverflow(card) {
+                const cardRect = card.getBoundingClientRect();
+                const viewportWidth = window.innerWidth;
+                const containerRect = elements.container.getBoundingClientRect();
+                
+                const totalLinks = parseInt(card.dataset.totalLinks);
+                const maxPerColumn = 15;
+                
+                let expectedWidth;
+                if (totalLinks > maxPerColumn) {
+                    const numColumns = Math.ceil(totalLinks / maxPerColumn);
+                    expectedWidth = numColumns * 280 + (numColumns - 1) * 32;
+                } else {
+                    expectedWidth = 400;
                 }
-            });
-            
-            document.body.appendChild(overlay);
-        }
-
-        function removeGlobalOverlay() {
-            const overlay = document.getElementById('global-overlay');
-            if (overlay) {
-                overlay.remove();
+                
+                const rightSpace = Math.min(viewportWidth, containerRect.right) - cardRect.right - 20;
+                const needsLeftExpansion = rightSpace < (expectedWidth - cardRect.width);
+                
+                return { needsLeftExpansion, expectedWidth };
             }
-        }
 
-        function initializePage() {
+            function setupEventListeners() {
+                elements.searchInput.addEventListener('input', debounce(handleSearch, 250));
+
+                elements.container.addEventListener('click', e => {
+                    const target = e.target;
+                    const card = target.closest('.category-card');
+                    if (!card) return;
+
+                    if (target.closest('.category-title') || target.closest('.more-indicator')) {
+                        e.preventDefault();
+                        card.dataset.state === 'collapsed' ? expandCard(card) : collapseCard(card);
+                    }
+                });
+
+                elements.overlay.addEventListener('click', () => collapseCard(currentlyExpandedCard));
+
+                document.addEventListener('keydown', e => {
+                    if (e.key === 'Escape' && currentlyExpandedCard) collapseCard(currentlyExpandedCard);
+                    if (e.ctrlKey && e.key === 'k') {
+                        e.preventDefault();
+                        elements.searchInput.focus();
+                    }
+                });
+
+                window.addEventListener('resize', debounce(() => {
+                    if (currentlyExpandedCard) {
+                        const { needsLeftExpansion, expectedWidth } = checkIfCardWillOverflow(currentlyExpandedCard);
+                        currentlyExpandedCard.style.setProperty('--expanded-width', `${expectedWidth}px`);
+                        currentlyExpandedCard.classList.toggle('expand-left', needsLeftExpansion);
+                    }
+                }, 100));
+            }
+
             renderCategories();
-            setupDynamicPlaceholder();
-            setupSearchSuggestions();
-            setupCollapseButtons();
-            
-            document.getElementById('searchInput').addEventListener('input', debounce(handleSearch, 250));
-
-            // 监听窗口大小变化，重新计算展开方向
-            window.addEventListener('resize', debounce(() => {
-                const expandedCard = document.querySelector('.category-card[data-state="expanded"]');
-                if (expandedCard) {
-                    const { needsLeftExpansion, expectedWidth } = checkIfCardWillOverflow(expandedCard);
-                    expandedCard.style.setProperty('--expanded-width', `${expectedWidth}px`);
-                    if (needsLeftExpansion) {
-                        expandedCard.classList.add('expand-left');
-                    } else {
-                        expandedCard.classList.remove('expand-left');
-                    }
-                }
-            }, 100));
-
-            document.addEventListener('keydown', (e) => {
-                if (e.ctrlKey && e.key === 'k') {
-                    e.preventDefault();
-                    document.getElementById('searchInput').focus();
-                }
-            });
-
-            document.addEventListener('click', async (e) => {
-                const suggestionsContainer = document.getElementById('searchSuggestions');
-                if (!e.target.closest('.search-box')) {
-                    suggestionsContainer.classList.remove('show');
-                }
-
-                if (e.target.closest('.link-item a') && e.ctrlKey) {
-                    e.preventDefault();
-                    const link = e.target.closest('a');
-                    const url = link.href;
-                    
-                    const ripple = document.createElement('span');
-                    ripple.style.cssText = `
-                        position: absolute; border-radius: 50%; background: rgba(52, 152, 219, 0.3);
-                        transform: scale(0); animation: rippleEffect 0.6s linear;
-                        left: ${e.clientX - link.getBoundingClientRect().left}px;
-                        top: ${e.clientY - link.getBoundingClientRect().top}px;
-                    `;
-                    link.appendChild(ripple);
-                    
-                    try {
-                        await navigator.clipboard.writeText(url);
-                        const originalText = link.textContent;
-                        link.textContent = '✓ 链接已复制!';
-                        link.style.color = '#27ae60';
-                        
-                        setTimeout(() => {
-                            link.textContent = originalText;
-                            link.style.removeProperty('color');
-                            ripple.remove();
-                        }, 1500);
-                    } catch (err) {
-                        console.warn('Failed to copy to clipboard:', err);
-                        const originalText = link.textContent;
-                        link.textContent = `链接: ${url}`;
-                        link.style.color = '#f39c12';
-                        
-                        setTimeout(() => {
-                            link.textContent = originalText;
-                            link.style.removeProperty('color');
-                            ripple.remove();
-                        }, 2500);
-                    }
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            window.addEventListener('error', (e) => {
-                if (e.message && (e.message.includes('Permissions policy violation') || e.message.includes('JSON'))) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-            
-            window.addEventListener('unhandledrejection', (e) => {
-                if (e.reason && typeof e.reason === 'string' && (e.reason.includes('permission') || e.reason.includes('JSON'))) {
-                    e.preventDefault();
-                }
-            });
-            
-            initializePage();
+            setupEventListeners();
         });
     </script>
-</body>
-</html>
 </body>
 </html>
