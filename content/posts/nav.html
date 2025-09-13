@@ -34,18 +34,7 @@
             margin: 0 auto;
         }
 
-        /* Increase container width for wider screens to support 4 cards */
-        @media (min-width: 1400px) {
-            .container {
-                max-width: 1400px;
-            }
-        }
-
-        @media (min-width: 1600px) {
-            .container {
-                max-width: 1600px;
-            }
-        }
+        
 
         .search-box {
             margin: 2rem 0;
@@ -116,16 +105,22 @@
 
         /* Support up to 4 cards per row when window is wide enough */
         @media (min-width: 1400px) {
+            .container,
+            .category-grid {
+                max-width: 1400px;
+            }
             .category-grid {
                 grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                max-width: 1400px;
             }
         }
 
         @media (min-width: 1600px) {
+            .container,
+            .category-grid {
+                max-width: 1600px;
+            }
             .category-grid {
                 grid-template-columns: repeat(4, 1fr);
-                max-width: 1600px;
             }
         }
 
@@ -682,12 +677,13 @@
                     collapseCard(currentlyExpandedCard);
                 }
                 
-                // Store the original position and dimensions
+                // Store the original position and dimensions of the card.
                 const cardRect = card.getBoundingClientRect();
                 const originalWidth = cardRect.width;
                 const originalHeight = cardRect.height;
                 
-                // Create a perfect placeholder with exact same dimensions and content
+                // Create a placeholder to maintain the grid layout.
+                // The placeholder is a clone of the card, but invisible.
                 const placeholder = card.cloneNode(true);
                 placeholder.className = 'category-card-placeholder';
                 placeholder.style.width = `${originalWidth}px`;
@@ -695,23 +691,24 @@
                 placeholder.style.minHeight = `${originalHeight}px`;
                 placeholder.style.maxHeight = `${originalHeight}px`;
                 
-                // Remove any expanded state from placeholder
+                // Remove any expanded state from the placeholder.
                 placeholder.dataset.state = 'collapsed';
                 placeholder.classList.remove('expand-left');
                 
-                // Insert placeholder right before the original card
+                // Insert the placeholder before the card.
                 card.parentNode.insertBefore(placeholder, card);
                 
-                // Store reference for cleanup
+                // Give the card and placeholder a unique ID to associate them.
                 const placeholderId = Date.now().toString();
                 card.dataset.placeholderId = placeholderId;
                 placeholder.dataset.cardPlaceholder = placeholderId;
                 
-                // Set up the expanded card positioning
+                // Position the card absolutely, on top of the placeholder.
                 card.style.setProperty('--card-top', `${cardRect.top + window.scrollY}px`);
                 card.style.setProperty('--card-left', `${cardRect.left}px`);
                 card.style.setProperty('--original-width', `${originalWidth}px`);
                 
+                // Update the state of the card and the page.
                 currentlyExpandedCard = card;
                 card.dataset.state = 'expanded';
                 document.body.classList.add('is-card-expanded');
@@ -720,7 +717,7 @@
                 const totalLinks = parseInt(card.dataset.totalLinks);
                 const maxPerColumn = 15;
 
-                // Only calculate overflow and use multi-column on wider screens
+                // Handle multi-column layout for wider screens.
                 if (window.innerWidth > 768) {
                     const { needsLeftExpansion, expectedWidth } = checkIfCardWillOverflow(card);
                     card.style.setProperty('--expanded-width', `${expectedWidth}px`);
@@ -730,39 +727,34 @@
                         createMultiColumnLayout(card, maxPerColumn);
                     }
                 } else {
-                    // On narrow screens, use single column and full width
+                    // On narrow screens, use a single column layout.
                     card.style.removeProperty('--expanded-width');
                     card.classList.remove('expand-left');
                     if (totalLinks > maxPerColumn) {
-                        createMultiColumnLayout(card, maxPerColumn); // This will create single column due to screen width check
+                        createMultiColumnLayout(card, maxPerColumn);
                     }
                 }
 
+                // Show all the links in the card.
                 card.querySelectorAll('.link-item.hidden').forEach(link => link.classList.remove('hidden'));
             }
 
             function collapseCard(card) {
                 if (!card) return;
-                
-                // Check if this was a single column expansion
-                const linkList = card.querySelector('.link-list');
-                const isSingleColumn = !linkList.classList.contains('multi-column');
-                
-                // Temporarily disable transitions on all cards to prevent unwanted animations
+
+                // Temporarily disable transitions on all cards to prevent unwanted animations during collapse.
                 document.body.classList.add('disable-card-transitions');
-                
+
                 const placeholderId = card.dataset.placeholderId;
-                let placeholder = null;
-                if (placeholderId) {
-                    placeholder = document.querySelector(`[data-card-placeholder="${placeholderId}"]`);
-                }
-                
-                // Change the card state
+                const placeholder = placeholderId ? document.querySelector(`[data-card-placeholder="${placeholderId}"]`) : null;
+
+                // Change the card state back to collapsed.
                 card.dataset.state = 'collapsed';
                 card.classList.remove('expand-left');
                 card.style.removeProperty('--expanded-width');
-                
-                // Reset the card content
+
+                // Reset the card content to its original state (only showing the first 5 links).
+                const linkList = card.querySelector('.link-list');
                 if (linkList.classList.contains('multi-column')) {
                     const allLinks = Array.from(linkList.querySelectorAll('.link-item'));
                     linkList.innerHTML = '';
@@ -774,57 +766,32 @@
                     if (index >= 5) link.classList.add('hidden');
                 });
 
+                // Update the global state.
                 if (currentlyExpandedCard === card) {
                     currentlyExpandedCard = null;
                     document.body.classList.remove('is-card-expanded');
                     elements.overlay.classList.add('hidden');
                 }
-                
-                if (isSingleColumn) {
-                    // For single column: Never remove placeholder, just let card cover it
+
+                // Use requestAnimationFrame to smoothly transition the card back to its original position.
+                requestAnimationFrame(() => {
                     card.style.removeProperty('--card-top');
                     card.style.removeProperty('--card-left');
                     card.style.removeProperty('--original-width');
-                    
-                    // Hide placeholder but don't remove it to maintain grid space
+
+                    // Remove the placeholder from the DOM.
                     if (placeholder) {
-                        placeholder.style.display = 'none';
-                        placeholder.style.visibility = 'hidden';
+                        placeholder.remove();
                     }
-                    
-                    // Re-enable transitions after extended delay
+                    if (placeholderId) {
+                        delete card.dataset.placeholderId;
+                    }
+
+                    // Re-enable transitions after a short delay.
                     setTimeout(() => {
                         document.body.classList.remove('disable-card-transitions');
-                        
-                        // Only remove placeholder much later, when user is likely not watching
-                        setTimeout(() => {
-                            if (placeholder && placeholder.parentNode) {
-                                placeholder.remove();
-                            }
-                            if (placeholderId) {
-                                delete card.dataset.placeholderId;
-                            }
-                        }, 2000); // Very long delay
-                    }, 300);
-                } else {
-                    // For multi-column: Use atomic operation with requestAnimationFrame
-                    requestAnimationFrame(() => {
-                        card.style.removeProperty('--card-top');
-                        card.style.removeProperty('--card-left');
-                        card.style.removeProperty('--original-width');
-                        
-                        if (placeholder) {
-                            placeholder.remove();
-                        }
-                        if (placeholderId) {
-                            delete card.dataset.placeholderId;
-                        }
-                        
-                        setTimeout(() => {
-                            document.body.classList.remove('disable-card-transitions');
-                        }, 50);
-                    });
-                }
+                    }, 50);
+                });
             }
 
             function createMultiColumnLayout(card, maxPerColumn) {
@@ -934,23 +901,29 @@
 
                 window.addEventListener('resize', debounce(() => {
                     if (currentlyExpandedCard) {
-                        // Re-expand the card to adjust layout for new screen size
                         const card = currentlyExpandedCard;
-                        const wasExpanded = card.dataset.state === 'expanded';
-                        
-                        if (wasExpanded) {
-                            // On resize, we need to recalculate the position
-                            // First collapse the card, then re-expand it to get fresh position
-                            const categoryName = card.dataset.categoryName;
-                            collapseCard(card);
-                            
-                            // Find the card again in the DOM (since it might have moved in grid)
-                            setTimeout(() => {
-                                const newCard = document.querySelector(`[data-category-name="${categoryName}"]`);
-                                if (newCard) {
-                                    expandCard(newCard);
-                                }
-                            }, 50);
+                        // Recalculate position and layout on resize
+                        const cardRect = card.getBoundingClientRect();
+                        card.style.setProperty('--card-top', `${cardRect.top + window.scrollY}px`);
+                        card.style.setProperty('--card-left', `${cardRect.left}px`);
+
+                        const totalLinks = parseInt(card.dataset.totalLinks);
+                        const maxPerColumn = 15;
+
+                        if (window.innerWidth > 768) {
+                            const { needsLeftExpansion, expectedWidth } = checkIfCardWillOverflow(card);
+                            card.style.setProperty('--expanded-width', `${expectedWidth}px`);
+                            card.classList.toggle('expand-left', needsLeftExpansion);
+
+                            if (totalLinks > maxPerColumn) {
+                                createMultiColumnLayout(card, maxPerColumn);
+                            }
+                        } else {
+                            card.style.removeProperty('--expanded-width');
+                            card.classList.remove('expand-left');
+                            if (totalLinks > maxPerColumn) {
+                                createMultiColumnLayout(card, maxPerColumn);
+                            }
                         }
                     }
                 }, 100));
