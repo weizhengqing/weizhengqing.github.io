@@ -773,13 +773,21 @@
                     elements.overlay.classList.add('hidden');
                 }
 
-                // Use requestAnimationFrame to smoothly transition the card back to its original position.
+                // Use requestAnimationFrame to perform the collapse animation smoothly.
                 requestAnimationFrame(() => {
+                    if (placeholder) {
+                        // Move the card to be before the placeholder in the DOM.
+                        // This ensures that when the card returns to the grid, it occupies the correct cell,
+                        // preventing the grid from reflowing and causing a "jump".
+                        placeholder.parentNode.insertBefore(card, placeholder);
+                    }
+
+                    // Remove the absolute positioning styles, returning the card to the grid layout.
                     card.style.removeProperty('--card-top');
                     card.style.removeProperty('--card-left');
                     card.style.removeProperty('--original-width');
 
-                    // Remove the placeholder from the DOM.
+                    // Now that the card is in place, remove the placeholder.
                     if (placeholder) {
                         placeholder.remove();
                     }
@@ -787,7 +795,7 @@
                         delete card.dataset.placeholderId;
                     }
 
-                    // Re-enable transitions after a short delay.
+                    // Re-enable transitions after a short delay to allow the DOM to settle.
                     setTimeout(() => {
                         document.body.classList.remove('disable-card-transitions');
                     }, 50);
