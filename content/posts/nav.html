@@ -139,6 +139,32 @@
             position: relative;
         }
 
+        /* Disable transitions when card is expanded to prevent other cards from animating */
+        .category-card[data-state="expanded"] {
+            transition: none;
+        }
+
+        /* Temporarily disable all card transitions during collapse */
+        body.disable-card-transitions .category-card {
+            transition: none !important;
+            transform: none !important; /* Prevent any transform during transition disable */
+        }
+
+        /* Completely freeze grid during single column collapse */
+        body.disable-card-transitions .category-grid {
+            transition: none !important;
+        }
+
+        body.disable-card-transitions .category-grid .category-card {
+            transition: none !important;
+            animation: none !important;
+        }
+
+        /* Special state for cards returning to normal position */
+        .category-card[data-state="collapsed"] {
+            transition: none !important; /* Ensure smooth return without affecting other cards */
+        }
+
         .category-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
@@ -228,16 +254,37 @@
 
         /* --- Expanded Card State --- */
         .category-card[data-state="expanded"] {
+            position: absolute;
             z-index: 1001;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
             width: var(--expanded-width, 400px);
             min-width: 300px;
+            top: var(--card-top);
+            left: var(--card-left);
         }
         .category-card[data-state="expanded"].expand-left {
             transform-origin: right center;
-            /* Keep the right edge aligned when expanding left */
+            left: calc(var(--card-left) - (var(--expanded-width, 400px) - var(--original-width)));
+        }
+
+        /* Perfect placeholder that maintains exact grid space */
+        .category-card-placeholder {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 0;
             position: relative;
-            left: calc(-1 * (var(--expanded-width, 400px) - 100%));
+            transition: none !important;
+            /* Exact same styling as normal card but invisible */
+        }
+
+        /* Ensure placeholder never becomes visible or interactive */
+        .category-card-placeholder * {
+            pointer-events: none !important;
+            opacity: 0 !important;
         }
         .category-card[data-state="expanded"] .more-indicator {
             opacity: 0;
@@ -247,12 +294,16 @@
         /* On mobile, expanded cards should use full available width */
         @media (max-width: 768px) {
             .category-card[data-state="expanded"] {
-                width: 100%;
-                max-width: calc(100vw - 40px);
-                left: 0 !important;
+                position: fixed !important;
+                top: 10px !important;
+                left: 10px !important;
+                width: calc(100vw - 20px) !important;
+                max-width: calc(100vw - 20px);
+                height: calc(100vh - 20px);
+                overflow-y: auto;
             }
             .category-card[data-state="expanded"].expand-left {
-                left: 0 !important;
+                left: 10px !important;
             }
         }
 
@@ -334,14 +385,22 @@
         }
 
         /* --- Global State when a card is expanded --- */
-        body.is-card-expanded .category-card:not([data-state="expanded"]) {
+        body.is-card-expanded .category-card:not([data-state="expanded"]):not(.category-card-placeholder) {
             pointer-events: none;
             opacity: 0.6;
             filter: blur(2px);
+            transition: none; /* Disable transitions to prevent unwanted animations */
         }
-        body.is-card-expanded .category-card:not([data-state="expanded"]):hover {
+        body.is-card-expanded .category-card:not([data-state="expanded"]):not(.category-card-placeholder):hover {
             transform: none;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Placeholder should remain completely invisible in any state */
+        body.is-card-expanded .category-card-placeholder {
+            opacity: 0 !important;
+            filter: none !important;
+            pointer-events: none !important;
         }
 
         #global-overlay {
@@ -623,6 +682,36 @@
                     collapseCard(currentlyExpandedCard);
                 }
                 
+                // Store the original position and dimensions
+                const cardRect = card.getBoundingClientRect();
+                const originalWidth = cardRect.width;
+                const originalHeight = cardRect.height;
+                
+                // Create a perfect placeholder with exact same dimensions and content
+                const placeholder = card.cloneNode(true);
+                placeholder.className = 'category-card-placeholder';
+                placeholder.style.width = `${originalWidth}px`;
+                placeholder.style.height = `${originalHeight}px`;
+                placeholder.style.minHeight = `${originalHeight}px`;
+                placeholder.style.maxHeight = `${originalHeight}px`;
+                
+                // Remove any expanded state from placeholder
+                placeholder.dataset.state = 'collapsed';
+                placeholder.classList.remove('expand-left');
+                
+                // Insert placeholder right before the original card
+                card.parentNode.insertBefore(placeholder, card);
+                
+                // Store reference for cleanup
+                const placeholderId = Date.now().toString();
+                card.dataset.placeholderId = placeholderId;
+                placeholder.dataset.cardPlaceholder = placeholderId;
+                
+                // Set up the expanded card positioning
+                card.style.setProperty('--card-top', `${cardRect.top + window.scrollY}px`);
+                card.style.setProperty('--card-left', `${cardRect.left}px`);
+                card.style.setProperty('--original-width', `${originalWidth}px`);
+                
                 currentlyExpandedCard = card;
                 card.dataset.state = 'expanded';
                 document.body.classList.add('is-card-expanded');
@@ -655,11 +744,25 @@
             function collapseCard(card) {
                 if (!card) return;
                 
+                // Check if this was a single column expansion
+                const linkList = card.querySelector('.link-list');
+                const isSingleColumn = !linkList.classList.contains('multi-column');
+                
+                // Temporarily disable transitions on all cards to prevent unwanted animations
+                document.body.classList.add('disable-card-transitions');
+                
+                const placeholderId = card.dataset.placeholderId;
+                let placeholder = null;
+                if (placeholderId) {
+                    placeholder = document.querySelector(`[data-card-placeholder="${placeholderId}"]`);
+                }
+                
+                // Change the card state
                 card.dataset.state = 'collapsed';
                 card.classList.remove('expand-left');
                 card.style.removeProperty('--expanded-width');
                 
-                const linkList = card.querySelector('.link-list');
+                // Reset the card content
                 if (linkList.classList.contains('multi-column')) {
                     const allLinks = Array.from(linkList.querySelectorAll('.link-item'));
                     linkList.innerHTML = '';
@@ -675,6 +778,52 @@
                     currentlyExpandedCard = null;
                     document.body.classList.remove('is-card-expanded');
                     elements.overlay.classList.add('hidden');
+                }
+                
+                if (isSingleColumn) {
+                    // For single column: Never remove placeholder, just let card cover it
+                    card.style.removeProperty('--card-top');
+                    card.style.removeProperty('--card-left');
+                    card.style.removeProperty('--original-width');
+                    
+                    // Hide placeholder but don't remove it to maintain grid space
+                    if (placeholder) {
+                        placeholder.style.display = 'none';
+                        placeholder.style.visibility = 'hidden';
+                    }
+                    
+                    // Re-enable transitions after extended delay
+                    setTimeout(() => {
+                        document.body.classList.remove('disable-card-transitions');
+                        
+                        // Only remove placeholder much later, when user is likely not watching
+                        setTimeout(() => {
+                            if (placeholder && placeholder.parentNode) {
+                                placeholder.remove();
+                            }
+                            if (placeholderId) {
+                                delete card.dataset.placeholderId;
+                            }
+                        }, 2000); // Very long delay
+                    }, 300);
+                } else {
+                    // For multi-column: Use atomic operation with requestAnimationFrame
+                    requestAnimationFrame(() => {
+                        card.style.removeProperty('--card-top');
+                        card.style.removeProperty('--card-left');
+                        card.style.removeProperty('--original-width');
+                        
+                        if (placeholder) {
+                            placeholder.remove();
+                        }
+                        if (placeholderId) {
+                            delete card.dataset.placeholderId;
+                        }
+                        
+                        setTimeout(() => {
+                            document.body.classList.remove('disable-card-transitions');
+                        }, 50);
+                    });
                 }
             }
 
@@ -790,9 +939,18 @@
                         const wasExpanded = card.dataset.state === 'expanded';
                         
                         if (wasExpanded) {
-                            // Temporarily collapse and re-expand to refresh layout
+                            // On resize, we need to recalculate the position
+                            // First collapse the card, then re-expand it to get fresh position
+                            const categoryName = card.dataset.categoryName;
                             collapseCard(card);
-                            setTimeout(() => expandCard(card), 50);
+                            
+                            // Find the card again in the DOM (since it might have moved in grid)
+                            setTimeout(() => {
+                                const newCard = document.querySelector(`[data-category-name="${categoryName}"]`);
+                                if (newCard) {
+                                    expandCard(newCard);
+                                }
+                            }, 50);
                         }
                     }
                 }, 100));
