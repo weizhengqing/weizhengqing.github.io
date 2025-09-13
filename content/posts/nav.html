@@ -34,6 +34,19 @@
             margin: 0 auto;
         }
 
+        /* Increase container width for wider screens to support 4 cards */
+        @media (min-width: 1400px) {
+            .container {
+                max-width: 1400px;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            .container {
+                max-width: 1600px;
+            }
+        }
+
         .search-box {
             margin: 2rem 0;
             text-align: center;
@@ -101,6 +114,21 @@
             padding: 1rem;
         }
 
+        /* Support up to 4 cards per row when window is wide enough */
+        @media (min-width: 1400px) {
+            .category-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                max-width: 1400px;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            .category-grid {
+                grid-template-columns: repeat(4, 1fr);
+                max-width: 1600px;
+            }
+        }
+
         .category-card {
             background: var(--card-bg);
             border-radius: 12px;
@@ -108,6 +136,7 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             z-index: 1;
+            position: relative;
         }
 
         .category-card:hover {
@@ -122,6 +151,7 @@
             margin-bottom: 1rem;
             font-size: 1.4rem;
             cursor: pointer;
+            -webkit-user-select: none;
             user-select: none;
             transition: color 0.3s ease, transform 0.3s ease;
         }
@@ -184,6 +214,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             opacity: 0.7;
+            -webkit-backdrop-filter: blur(5px);
             backdrop-filter: blur(5px);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             z-index: 5;
@@ -213,6 +244,18 @@
             pointer-events: none;
         }
 
+        /* On mobile, expanded cards should use full available width */
+        @media (max-width: 768px) {
+            .category-card[data-state="expanded"] {
+                width: 100%;
+                max-width: calc(100vw - 40px);
+                left: 0 !important;
+            }
+            .category-card[data-state="expanded"].expand-left {
+                left: 0 !important;
+            }
+        }
+
         .link-list.multi-column {
             display: flex;
             flex-direction: row;
@@ -223,6 +266,19 @@
             list-style: none;
             overflow: hidden;
             padding-right: 8px; /* Add right padding to prevent edge overflow */
+        }
+        
+        /* Force single column layout on narrow screens for expanded cards */
+        @media (max-width: 768px) {
+            .link-list.multi-column {
+                flex-direction: column;
+                gap: 0;
+            }
+            .link-column {
+                flex: none;
+                width: 100%;
+                padding-right: 0;
+            }
         }
         
         /* Multi-column specific link styling to prevent overflow */
@@ -320,6 +376,19 @@
             #searchInput, .search-suggestions { width: 90%; }
             #searchInput:focus { width: 95%; }
             .link-list.multi-column { flex-direction: column; }
+            
+            /* Fix more button position on mobile */
+            .more-indicator {
+                right: 10px;
+                bottom: 10px;
+                font-size: 0.7rem;
+                padding: 3px 6px;
+            }
+            
+            /* Hide more button when card is in expanded state on mobile */
+            .category-card[data-state="expanded"] .more-indicator {
+                display: none;
+            }
         }
 
         ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
@@ -562,12 +631,22 @@
                 const totalLinks = parseInt(card.dataset.totalLinks);
                 const maxPerColumn = 15;
 
-                const { needsLeftExpansion, expectedWidth } = checkIfCardWillOverflow(card);
-                card.style.setProperty('--expanded-width', `${expectedWidth}px`);
-                card.classList.toggle('expand-left', needsLeftExpansion);
+                // Only calculate overflow and use multi-column on wider screens
+                if (window.innerWidth > 768) {
+                    const { needsLeftExpansion, expectedWidth } = checkIfCardWillOverflow(card);
+                    card.style.setProperty('--expanded-width', `${expectedWidth}px`);
+                    card.classList.toggle('expand-left', needsLeftExpansion);
 
-                if (totalLinks > maxPerColumn) {
-                    createMultiColumnLayout(card, maxPerColumn);
+                    if (totalLinks > maxPerColumn) {
+                        createMultiColumnLayout(card, maxPerColumn);
+                    }
+                } else {
+                    // On narrow screens, use single column and full width
+                    card.style.removeProperty('--expanded-width');
+                    card.classList.remove('expand-left');
+                    if (totalLinks > maxPerColumn) {
+                        createMultiColumnLayout(card, maxPerColumn); // This will create single column due to screen width check
+                    }
                 }
 
                 card.querySelectorAll('.link-item.hidden').forEach(link => link.classList.remove('hidden'));
@@ -606,30 +685,47 @@
                 if (!categoryData) return;
 
                 const totalLinks = categoryData.links.length;
-                const numColumns = Math.ceil(totalLinks / maxPerColumn);
+                
+                // Check if we should use multi-column based on screen width
+                const shouldUseMultiColumn = window.innerWidth > 768 && totalLinks > maxPerColumn;
                 
                 linkList.innerHTML = '';
-                linkList.classList.add('multi-column');
                 
-                for (let col = 0; col < numColumns; col++) {
-                    const column = document.createElement('ul');
-                    column.className = 'link-column';
+                if (shouldUseMultiColumn) {
+                    const numColumns = Math.ceil(totalLinks / maxPerColumn);
+                    linkList.classList.add('multi-column');
                     
-                    const startIndex = col * maxPerColumn;
-                    const endIndex = Math.min(startIndex + maxPerColumn, totalLinks);
-                    
-                    for (let i = startIndex; i < endIndex; i++) {
+                    for (let col = 0; col < numColumns; col++) {
+                        const column = document.createElement('ul');
+                        column.className = 'link-column';
+                        
+                        const startIndex = col * maxPerColumn;
+                        const endIndex = Math.min(startIndex + maxPerColumn, totalLinks);
+                        
+                        for (let i = startIndex; i < endIndex; i++) {
+                            const link = categoryData.links[i];
+                            const linkElement = document.createElement('li');
+                            linkElement.className = 'link-item';
+                            linkElement.dataset.index = i;
+                            
+                            // Add title attribute for tooltip if text is long
+                            const titleAttr = link.name.length > 20 ? ` title="${link.name}"` : '';
+                            linkElement.innerHTML = `<a href="${link.url}" target="_blank"${titleAttr}>${link.name}</a>`;
+                            column.appendChild(linkElement);
+                        }
+                        linkList.appendChild(column);
+                    }
+                } else {
+                    // Single column layout for narrow screens or fewer links
+                    linkList.classList.remove('multi-column');
+                    for (let i = 0; i < totalLinks; i++) {
                         const link = categoryData.links[i];
                         const linkElement = document.createElement('li');
                         linkElement.className = 'link-item';
                         linkElement.dataset.index = i;
-                        
-                        // Add title attribute for tooltip if text is long
-                        const titleAttr = link.name.length > 20 ? ` title="${link.name}"` : '';
-                        linkElement.innerHTML = `<a href="${link.url}" target="_blank"${titleAttr}>${link.name}</a>`;
-                        column.appendChild(linkElement);
+                        linkElement.innerHTML = `<a href="${link.url}" target="_blank">${link.name}</a>`;
+                        linkList.appendChild(linkElement);
                     }
-                    linkList.appendChild(column);
                 }
             }
 
@@ -642,6 +738,14 @@
                 const maxPerColumn = 15;
                 
                 let expectedWidth;
+                
+                // On narrow screens, use single column layout
+                if (viewportWidth <= 768) {
+                    expectedWidth = Math.min(cardRect.width, viewportWidth - 40); // Leave some margin
+                    return { needsLeftExpansion: false, expectedWidth };
+                }
+                
+                // On wider screens, calculate multi-column width
                 if (totalLinks > maxPerColumn) {
                     const numColumns = Math.ceil(totalLinks / maxPerColumn);
                     expectedWidth = numColumns * 280 + (numColumns - 1) * 32;
@@ -681,9 +785,15 @@
 
                 window.addEventListener('resize', debounce(() => {
                     if (currentlyExpandedCard) {
-                        const { needsLeftExpansion, expectedWidth } = checkIfCardWillOverflow(currentlyExpandedCard);
-                        currentlyExpandedCard.style.setProperty('--expanded-width', `${expectedWidth}px`);
-                        currentlyExpandedCard.classList.toggle('expand-left', needsLeftExpansion);
+                        // Re-expand the card to adjust layout for new screen size
+                        const card = currentlyExpandedCard;
+                        const wasExpanded = card.dataset.state === 'expanded';
+                        
+                        if (wasExpanded) {
+                            // Temporarily collapse and re-expand to refresh layout
+                            collapseCard(card);
+                            setTimeout(() => expandCard(card), 50);
+                        }
                     }
                 }, 100));
             }
