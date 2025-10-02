@@ -109,6 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
     clojure: "Clojure",
     sql: "SQL",
     bash: "Bash",
+    sh: "sh",
     text: "Text",
     gd: "GDScript",
     cpp: "C++",
