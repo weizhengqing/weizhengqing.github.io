@@ -85,6 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const languageNames = {
     js: "JS",
     yaml: "YAML",
+    yml: "YAML",
     shell: "Shell",
     json: "JSON",
     python: "Python",
@@ -114,6 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
     gd: "GDScript",
     cpp: "C++",
     toml: "TOML",
+    vim: "Vim",
     // define more languages as needed
   };
 
