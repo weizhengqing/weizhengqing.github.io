@@ -27,16 +27,16 @@
   
   {# 分页导航 #}
   {% if paginator.number_pagers > 1 %}
-  <nav aria-label="分页导航" class="pagination">
+  <nav aria-label="Pagination" class="pagination">
     <div class="pagination-wrapper">
       {% if paginator.previous %}
-        <a href="{{ paginator.previous }}" class="pagination-link prev-page">&laquo; 上一页</a>
+        <a href="{{ paginator.previous }}" class="pagination-link prev-page">&laquo; Previous</a>
       {% endif %}
       
-      <span class="pagination-info">第 {{ paginator.current_index }} 页，共 {{ paginator.number_pagers }} 页</span>
+      <span class="pagination-info">Page {{ paginator.current_index }} of {{ paginator.number_pagers }}</span>
       
       {% if paginator.next %}
-        <a href="{{ paginator.next }}" class="pagination-link next-page">下一页 &raquo;</a>
+        <a href="{{ paginator.next }}" class="pagination-link next-page">Next &raquo;</a>
       {% endif %}
     </div>
   </nav>
