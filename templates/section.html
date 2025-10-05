@@ -3,6 +3,11 @@
 {% block title %}{{ section.title }} | {{ config.title }}{% endblock title %}
 
 {% block content %}
+{% block header %}
+{{ super() }}
+{% endblock header %}
+
+<main>
 <h1>{{ section.title }}</h1>
 
 {% if section.content %}
@@ -47,4 +52,5 @@
     {{ post_macros::page_in_list(page=page) }}
   {% endfor %}
 {% endif %}
+</main>
 {% endblock content %}
