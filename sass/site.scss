@@ -69,14 +69,15 @@ html.light {
 }
 
 .view-all-posts {
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   text-decoration: none;
-  background-color: var(--accent);
-  color: white;
+  border: 1px solid var(--accent);
   border-radius: 4px;
+  color: var(--accent);
   transition: all 0.3s ease;
 }
 
 .view-all-posts:hover {
-  background-color: #a22422;
+  background-color: var(--accent);
+  color: white;
 }
