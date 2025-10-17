@@ -339,6 +339,11 @@ a.zola-anchor:hover {
   content: "## "
 }
 
+/* 移除文章列表标题前的 ## */
+.hack h2.post-list-title:before {
+  content: ""
+}
+
 .hack h3:before {
   content: "### "
 }
