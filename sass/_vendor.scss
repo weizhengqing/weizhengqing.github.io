@@ -62,9 +62,9 @@ pre {
 
 a {
   cursor: pointer;
-  color: #ff2e88;
+  color: #2196f3;
   text-decoration: none;
-  border-bottom: 1.5px solid #ff2e88;
+  border-bottom: 1.5px solid #2196f3;
 }
 
 /* Zola-generated header anchors
@@ -74,7 +74,7 @@ a.zola-anchor {
 }
 
 a.zola-anchor:hover {
-  border-bottom: 1.5px solid #ff2e88;
+  border-bottom: 1.5px solid #2196f3;
   background-color: transparent !important;
   color: inherit !important;
 }
@@ -85,12 +85,12 @@ a.zola-anchor:hover {
 }
 
 .light a:hover {
-  background-color: #ce0068;
+  background-color: #1976d2;
   color: #fff
 }
 
 .dark a:hover {
-  background-color: #b7005d;
+  background-color: #1565c0;
   color: #fff;
 }
 
@@ -332,7 +332,7 @@ a.zola-anchor:hover {
 .hack h5:before,
 .hack h6:before {
   display: inline;
-  color: #d64a48;
+  color: #2196f3;
 }
 
 .hack h2:before {
@@ -440,7 +440,7 @@ a.zola-anchor:hover {
 }
 
 .hack blockquote {
-  border-left: 0.2em solid #ff2e88;
+  border-left: 0.2em solid #2196f3;
   border-top-right-radius: 0.2em;
   border-bottom-right-radius: 0.2em;
   position: relative;
@@ -452,7 +452,7 @@ a.zola-anchor:hover {
   box-shadow: inset -3px -3px 5px rgba(0, 0, 0, 0.1);
 
   strong {
-    background: #ff2e88;
+    background: #2196f3;
     color: #FFFFFF;
     padding: 0.1em 0.3em;
     border-radius: 0.2em;
@@ -462,7 +462,7 @@ a.zola-anchor:hover {
     font-style: italic;
     font-weight: bold;
     text-decoration: underline;
-    text-decoration-color: #d64a48;
+    text-decoration-color: #2196f3;
 
     &:before,
     &:after {
@@ -690,7 +690,7 @@ table tbody td:first-child {
 }
 
 del {
-  text-decoration-color: #d64a48;
+  text-decoration-color: #2196f3;
   text-decoration-thickness: 3px;
 }
 
@@ -701,7 +701,7 @@ details {
   border-radius: 8px;
 
   summary::marker {
-    color: #d64a48;
+    color: #2196f3;
   }
 }
 

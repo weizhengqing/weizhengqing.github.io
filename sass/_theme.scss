@@ -108,24 +108,24 @@ blockquote cite::before {
 
 /* 亮色模式下活动导航链接的样式 */
 .light nav a.active {
-  background-color: #ce0068;  /* 亮粉色背景 */
+  background-color: #1976d2;  /* 深蓝色背景 */
   color: #fff;  /* 白色文本 */
 }
 
 /* 暗色模式下活动导航链接的样式 */
 .dark nav a.active {
-  background-color: #b7005d;  /* 深粉色背景 */
+  background-color: #1565c0;  /* 更深蓝色背景 */
   color: #fff;  /* 白色文本 */
 }
 
 /* 暗色模式下的URL链接样式 */
 .dark a[itemprop="url"] {
-  color: #ff9800;  /* 橙色 */
+  color: #64b5f6;  /* 浅蓝色 */
 }
 
 /* 亮色模式下的URL链接样式 */
 .light a[itemprop="url"] {
-  color: #8D2220;  /* 深红色 */
+  color: #1565c0;  /* 深蓝色 */
   font-weight: bold;  /* 粗体 */
 }
 
@@ -138,7 +138,7 @@ a[itemprop="url"]:hover {
 a[href*="://"]::after,
 a[rel*="external"] {
   /* 在外部链接后添加一个SVG图标，表示这是外部链接 */
-  content: " " url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20class='i-external'%20viewBox='0%200%2032%2032'%20width='14'%20height='14'%20fill='none'%20stroke='%23ff9800'%20stroke-linecap='round'%20stroke-linejoin='round'%20stroke-width='9.38%'%3E%3Cpath%20d='M14%209%20L3%209%203%2029%2023%2029%2023%2018%20M18%204%20L28%204%2028%2014%20M28%204%20L14%2018'/%3E%3C/svg%3E");
+  content: " " url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20class='i-external'%20viewBox='0%200%2032%2032'%20width='14'%20height='14'%20fill='none'%20stroke='%232196f3'%20stroke-linecap='round'%20stroke-linejoin='round'%20stroke-width='9.38%'%3E%3Cpath%20d='M14%209%20L3%209%203%2029%2023%2029%2023%2018%20M18%204%20L28%204%2028%2014%20M28%204%20L14%2018'/%3E%3C/svg%3E");
 }
 
 /* 移除RSS图标后的外部链接箭头 */
@@ -278,7 +278,7 @@ article [itemprop="summary"] p {
   sup {
     display: inline-block;  /* 行内块显示 */
     margin-right: 0.5em;  /* 右侧外边距 */
-    color: #ff2e88;  /* 粉色 */
+    color: #2196f3;  /* 蓝色 */
     font-size: inherit;  /* 继承字体大小 */
     font-weight: bold;  /* 粗体 */
     vertical-align: baseline;  /* 基线对齐 */
