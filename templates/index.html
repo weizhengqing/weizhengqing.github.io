@@ -229,12 +229,11 @@
       <header><h1>{{ config.title }}</h1></header>
       {% endif %} 
       
-      {# 收集所有页面和子部分的页面 #}
-      {# 获取posts部分的所有页面 #}
+      {# 收集所有子部分的页面 #}
       {% set posts_section = get_section(path="posts/_index.md") %}
-      {% set all_posts = posts_section.pages %}
+      {% set all_posts = [] %}
       
-      {# 收集posts子目录中的页面 #}
+      {# 只收集posts子目录中的页面，不包括posts根目录的直接页面 #}
       {% for subsection_path in posts_section.subsections %}
         {% set subsection = get_section(path=subsection_path) %}
         {% set_global all_posts = all_posts | concat(with=subsection.pages) %}
