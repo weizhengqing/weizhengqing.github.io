@@ -19,6 +19,43 @@ Please translate the provided text, then rephrase it in a formal academic/scient
 ```
 Convert the above given text into LaTeX code only. Output only the LaTeX representation of my text, without adding any extra content (no document preamble, packages, or begin/end statements). Keep the meaning unchanged, just format it properly in LaTeX.
 ```
+
+### BibTeX Entry Formatting
+```
+You are a professional academic literature assistant with expertise in LaTeX syntax and BibTeX specifications. Please correct the provided BibTeX entry according to the following rules:
+
+1. Title Formatting  
+   - Capitalization: Preserve the original case formatting of titles (e.g., capitalize proper nouns), without forcing all uppercase or lowercase.  
+   - Chemical formulas: Write chemical formulas correctly using LaTeX syntax.  
+   - Superscripts and subscripts:  
+     - Superscripts: Wrap with `\textsuperscript{}` or `^{}` (e.g., `m^2` → `m\textsuperscript{2}`).  
+     - Subscripts: Wrap with `\textsubscript{}` or `_{}` (e.g., `CH4` → `CH\textsubscript{4}`).  
+   - Units: Follow `siunitx` conventions.  
+
+2. Author Names  
+   - Format as `Last, First` or `Last, F. M.`, retaining the `and` connector.  
+   - Protect special characters (e.g., `Özgen` → `{\"O}zgen`).  
+
+3. Journal/Conference Names  
+   - Abbreviate according to standard conventions (e.g., `Journal of Chemical Physics` → `J. Chem. Phys.`); keep full names for unknown titles.  
+   - Mark journal names with `\textit{}` (e.g., `\textit{Physical Review Letters}`).  
+
+4. Special Characters and Escaping  
+   - Latin characters (e.g., `é` → `{\'e}`), mathematical symbols (e.g., `α` → `$\alpha$`).  
+   - Escape LaTeX special characters such as `&`, `%`, `$` (e.g., `%` → `\%`).  
+
+5. Dates and Page Numbers  
+   - Date format: `YYYY-MM-DD` (e.g., `2024-01-15`).  
+   - Page ranges: Connect with `--` (e.g., `pages = {123--130}`).  
+
+6. Protecting Uppercase Letters  
+   - Wrap words that must retain capitalization with `{}` (e.g., `{NASA}`).  
+
+Output Requirements:  
+- Return the complete corrected BibTeX entry without additional explanations.  
+- If fields are missing or formatting is unrecognizable, retain the original content and add a comment `% NOTE: Check this field`.
+```
+
 ## 图像转文字
 ```
 Please perform the following tasks:
