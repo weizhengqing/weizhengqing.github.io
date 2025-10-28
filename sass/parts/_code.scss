@@ -108,6 +108,11 @@ $language-colors: (
   background-color: transparent; // 透明背景
   border: none;                // 无边框
   border-radius: 3px;          // 圆角边框
+  min-width: 16px;             // 最小宽度，防止按钮消失
+  min-height: 16px;            // 最小高度
+  display: flex;               // 使用flex布局确保图标居中
+  align-items: center;         // 垂直居中
+  justify-content: center;     // 水平居中
 
   // 按钮内的SVG图标样式
   svg {
@@ -127,6 +132,11 @@ $language-colors: (
   background-color: transparent; // 透明背景
   border: none;                // 无边框
   border-radius: 3px;          // 圆角边框
+  min-width: 16px;             // 最小宽度，防止按钮消失
+  min-height: 16px;            // 最小高度
+  display: flex;               // 使用flex布局确保图标居中
+  align-items: center;         // 垂直居中
+  justify-content: center;     // 水平居中
 
   // 按钮内的SVG图标样式
   svg {

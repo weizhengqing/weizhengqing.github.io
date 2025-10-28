@@ -80,7 +80,8 @@ const getNonTableCode = (codeBlock) => {
   return codeBlock.textContent.trim();
 };
 
-document.addEventListener("DOMContentLoaded", function () {
+// 等待所有资源加载完成（包括字体）后再初始化按钮
+function initCodeBlocks() {
   // Mapping from language codes to full language names
   const languageNames = {
     js: "JS",
@@ -122,6 +123,14 @@ document.addEventListener("DOMContentLoaded", function () {
   // Select all `pre` elements containing `code`
   document.querySelectorAll("pre code").forEach((codeBlock) => {
     const pre = codeBlock.parentNode;
+
+    // 检查是否已经初始化过（防止重复添加按钮）
+    if (pre.hasAttribute('data-code-block-initialized')) {
+      return;
+    }
+    
+    // 标记为已初始化
+    pre.setAttribute('data-code-block-initialized', 'true');
 
     // Ensure parent `pre` can contain absolute elements
     pre.style.position = "relative";
@@ -200,4 +209,25 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+}
+
+// 使用多种方式确保在所有资源加载完成后初始化
+// 1. DOMContentLoaded - 当DOM准备好时
+document.addEventListener("DOMContentLoaded", function () {
+  // 延迟一小段时间，确保CSS和字体已应用
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      initCodeBlocks();
+    });
+  });
+});
+
+// 2. load事件 - 当所有资源（包括字体）加载完成时
+window.addEventListener("load", function () {
+  // 如果还没有初始化或者布局有问题，再次初始化
+  // 这可以修复字体加载延迟导致的位置问题
+  const buttons = document.querySelectorAll('.clipboard-button, .collapse-button');
+  if (buttons.length === 0) {
+    initCodeBlocks();
+  }
 });
