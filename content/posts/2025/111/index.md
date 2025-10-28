@@ -1,6 +1,6 @@
 +++
 title = "组织工作中的观察"
-date = 2025-01-28
+date = 2025-10-28
 description = "从认知科学、组织理论和权力动力学的角度，深入探讨组织工作中的任务难度差异、权力结构对知识流动的影响，以及跨学科协作中的认识论鸿沟与身份冲突。"
 slug = "organizational-observations-cognition-power-collaboration"
 
