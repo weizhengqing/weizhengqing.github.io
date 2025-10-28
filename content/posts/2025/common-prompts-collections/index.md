@@ -3,6 +3,10 @@ title = "Prompts"
 date = 2025-08-18
 description = "Common Prompts Collection"
 slug = "common-prompts-collections"
+
+[extra]
+toc = true
+
 [taxonomies]
 tags = ["prompt"]
 categories = ["AI"]

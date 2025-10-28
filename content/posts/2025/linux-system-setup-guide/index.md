@@ -3,6 +3,8 @@ title = "Complete Guide to Setting Up a Fresh Linux System"
 date = 2025-09-30
 description = "A comprehensive step-by-step guide to configuring a new Ubuntu Linux system, from basic setup to advanced security hardening and development environment configuration."
 slug = "linux-system-setup-guide"
+[extra]
+toc = true
 [taxonomies]
 tags = ["Linux", "Ubuntu", "System Administration", "DevOps", "Tutorial"]
 categories = ["Linux", "System Configuration"]
@@ -17,38 +19,6 @@ Setting up a new Linux system can be overwhelming, especially when you want to e
 Whether you're setting up a new server, a development workstation, or a virtual machine, having a systematic approach to system configuration is crucial. This guide covers everything from basic system updates to advanced security hardening, development tools installation, and environment customization.
 
 This tutorial uses Ubuntu as an example, but most steps are applicable to other Debian-based distributions with minor modifications.
-
-## Table of Contents
-
-- [Introduction](#introduction)
-- [Table of Contents](#table-of-contents)
-- [1. System Update and Upgrade](#1-system-update-and-upgrade)
-- [2. Install Essential Development Tools](#2-install-essential-development-tools)
-- [3. Create a Regular User Account](#3-create-a-regular-user-account)
-  - [Setting Root Password (Optional)](#setting-root-password-optional)
-  - [Changing Your User Password](#changing-your-user-password)
-- [4. Install Essential System Utilities](#4-install-essential-system-utilities)
-- [5. Configure SSH Service](#5-configure-ssh-service)
-- [6. Configure Firewall](#6-configure-firewall)
-- [7. Install Programming Languages and Runtimes](#7-install-programming-languages-and-runtimes)
-- [8. System Security Hardening](#8-system-security-hardening)
-- [9. Configure Timezone and Time Synchronization](#9-configure-timezone-and-time-synchronization)
-- [10. Install Additional Useful Software](#10-install-additional-useful-software)
-- [11. Install AI-Powered CLI Tools](#11-install-ai-powered-cli-tools)
-- [12. Configure Shell Environment](#12-configure-shell-environment)
-- [13. System Backup and Monitoring](#13-system-backup-and-monitoring)
-- [14. Documentation and Help System](#14-documentation-and-help-system)
-- [15. Install Miniconda for Package Management](#15-install-miniconda-for-package-management)
-- [16. Install Homebrew (Linuxbrew) Package Manager](#16-install-homebrew-linuxbrew-package-manager)
-  - [Prerequisites](#prerequisites)
-  - [Official Installation Command](#official-installation-command)
-  - [Configure Environment Variables](#configure-environment-variables)
-  - [Verify Installation](#verify-installation)
-- [17. Install x-cmd Toolkit](#17-install-x-cmd-toolkit)
-- [18. Post-Configuration Verification](#18-post-configuration-verification)
-- [19. Maintenance Best Practices](#19-maintenance-best-practices)
-- [Conclusion](#conclusion)
-- [Additional Resources](#additional-resources)
 
 ## 1. System Update and Upgrade
 
