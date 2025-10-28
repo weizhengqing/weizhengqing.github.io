@@ -40,7 +40,7 @@ sudo apt autoclean
 
 **Why this matters:** Keeping your system updated protects against known vulnerabilities and ensures compatibility with newer software.
 
-**Note:** If you encounter errors related to system language and locale settings (such as "locale: Cannot set LC_* to default locale" or "perl: warning: Setting locale failed"), please refer to the comprehensive guide: [Guide to Configuring Multi-Language Locale Support on Ubuntu Linux](https://weizhengqing.github.io/posts/configuration-multi-language-local/).
+**Note:** If you encounter errors related to system language and locale settings (such as "locale: Cannot set LC_* to default locale" or "perl: warning: Setting locale failed"), please refer to the comprehensive guide: [Guide to Configuring Multi-Language Locale Support on Ubuntu Linux](https://weizhengqing.github.io/posts/2025/configuration-multi-language-local/).
 
 ## 2. Install Essential Development Tools
 
