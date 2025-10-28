@@ -12,7 +12,7 @@ This article is a collection of commonly used prompts.
 
 <!-- more --> 
 
-## 写文章
+## Writing Articles
 ```
 Please translate the provided text, then rephrase it in a formal academic/scientific writing style. Finally, convert the rephrased version into properly formatted LaTeX code. Only output the final LaTeX result – don't include any additional explanations or the intermediate steps.
 ```
@@ -49,7 +49,7 @@ Output Requirements:
 - If fields are missing or formatting is unrecognizable, retain the original content and add a comment `% NOTE: Check this field`.
 ```
 
-## 图像转文字
+## Image to Text Conversion
 ```
 Please perform the following tasks:
 1. Conduct OCR text recognition on the provided image to accurately extract all textual content.
@@ -73,8 +73,8 @@ Please perform the following tasks:
 Output only the converted LaTeX code directly, without any explanatory text. The output of the answer must ne wrapped in a code box.
 ```
 
-## 查文献
-### 检索话题
+## Literature Search
+### Topic Research
 ```
 You are an expert deep researcher with unlimited computational resources. Your goal is to conduct the most thorough, in-depth research on the above provided topic, statement or questions. Maximize your use of computing power by performing extensive searches, analyzing multiple layers of information, and citing the maximum number of highly relevant sources.
 
@@ -93,19 +93,19 @@ Output format:
 
 Ensure the research is comprehensive, unbiased, and backed by evidence from high-quality academic sources. If needed, perform multiple iterations to deepen the results.
 ```
-### 观点验证
+### Statement Verification
 ```
 I have provided you above with a statement. Your task is to verify whether this statement is correct by performing a literature search. If the statement is correct, provide supporting evidence from peer-reviewed sources, including direct citations (with author, year, and title/journal). If the statement is not correct, explain what the scientific literature actually says, again with proper citations. Always include at least 2–3 references, and ensure the citations are specific and verifiable.
 ```
 
-### 提取音频内容
+### Audio Transcription
 ```
 Extract the full transcript from the provided audio file and output only the raw text content inside a markdown code block. Do not include any summaries, translations, interpretations, or additional commentary. Preserve the exact wording, including fillers, pauses, or errors if present in the audio. Output nothing but the transcribed text in a code block.
 ```
 
 
-## 翻译
-### 英文
+## Translation
+### English
 ```
 Please translate the above provided text into English while adhering to the following requirements:
 - Maintain professional accuracy while employing natural native English expressions
@@ -117,12 +117,34 @@ Please translate the above provided text into English while adhering to the foll
   - Ensure terminological consistency.
 ```
 
-## 学德语
-### 语法详解
+## Learning German
+
+### Grammar Explanation
 ```
-你是一位经验丰富的德语老师。请帮我详细解释以上提供的句子（或话语）中的所有语法点。请按语法结构、时态、句法成分、重点词汇详解、从句类型等分类说明，并举例说明其用法。请用通俗易懂的语言回答。
+You are an experienced German language teacher. Please help me explain all grammar points in the sentence (or utterance) provided above in detail. Please categorize by grammatical structure, tense, syntactic components, key vocabulary explanation, and clause types, and illustrate their usage with examples. Please answer in clear and easy-to-understand language.
 ```
-### 构词与造词分析
+
+### Word Formation and Etymology Analysis
 ```
-请对以上提供的单词进行构词分析，解释造词原因，并给出其近义词和反义词。
+Please analyze the word formation of the word provided above, explain the etymology, and provide its synonyms and antonyms.
+```
+
+## Nonviolent Communication
+```
+You are a "Nonviolent Communication (NVC) Coach."  
+Please use the four core steps of NVC: **Observation, Feeling, Need, Request** to help me better understand and express my feelings and needs.  
+Task Description:  
+1. Based on the specific situation, dialogue, or problem encountered in daily life provided above.  
+2. You need to unfold according to the four NVC steps in sequence:  
+   - Observation: Objectively describe what happened without evaluation or judgment.  
+   - Feeling: Identify the speaker's current emotions or emotional state.  
+   - Need: Point out the internal needs or values that cause these feelings.  
+   - Request: Propose a clear, positive, and actionable request to help improve communication or meet needs.  
+3. After the analysis, please provide suggestions or example sentences on how to express your feelings and needs more gently and clearly.  
+Output Format Example:  
+Observation: ……  
+Feeling: ……  
+Need: ……  
+Request: ……  
+Suggested Expression: …… 
 ```
