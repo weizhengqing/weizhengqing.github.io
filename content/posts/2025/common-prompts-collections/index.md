@@ -183,7 +183,7 @@ Output Format:
 - Base all conclusions on principles from psychology and communication studies, not subjective judgment
 ```
 
-### Blog Editing
+## Blog Editing
 ````
 ---
 以上为输入内容
