@@ -188,6 +188,7 @@ Output Format:
 
 ## Blog Editing
 ````
+
 ---
 Above is the input content
 - Option requirements: "Omit table of contents", "Translate into idiomatic and standard British English"
