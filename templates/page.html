@@ -25,7 +25,7 @@
             {{ page.summary | safe }}
 
             {% if page.extra.toc | default(value=false) and page.toc %}
-                <details class="toc-container">
+                <details class="toc-container" open>
                     <summary class="toc-title">Table of Contents</summary>
                     <ul class="toc-list">
                         {% for h1 in page.toc %}
