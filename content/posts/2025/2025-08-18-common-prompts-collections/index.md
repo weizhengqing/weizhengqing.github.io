@@ -18,16 +18,25 @@ This article is a collection of commonly used prompts.
 
 ## Writing Articles
 ### Translate and Rephrase
+Shortcut name: `translate-rephrase-latex`
+
+Prompt:
 ```
 Please translate the provided text, then rephrase it in a formal academic/scientific writing style. Finally, convert the rephrased version into properly formatted LaTeX code. Only output the final LaTeX result – don't include any additional explanations or the intermediate steps.
 ```
 
 ### Convert to LaTeX
+Shortcut name: `convert-to-latex`
+
+Prompt:
 ```
 Convert the above given text into LaTeX code only. Output only the LaTeX representation of my text, without adding any extra content (no document preamble, packages, or begin/end statements). Keep the meaning unchanged, just format it properly in LaTeX.
 ```
 
 ### BibTeX Entry Formatting
+Shortcut name: `bibtex-formatting`
+
+Prompt:
 ```
 You are a professional academic literature assistant with expertise in LaTeX syntax and BibTeX specifications. Please correct the provided BibTeX entry according to the following rules:
 1. Title Formatting  
@@ -57,6 +66,9 @@ Output Requirements:
 ```
 
 ## Image to LaTeX Text Conversion
+Shortcut name: `image-to-latex-ocr`
+
+Prompt:
 ```
 Please perform the following tasks:
 1. Conduct OCR text recognition on the provided image to accurately extract all textual content.
@@ -82,6 +94,9 @@ Output only the converted LaTeX code directly, without any explanatory text. The
 
 ## Literature Search
 ### Topic Research
+Shortcut name: `deep-topic-research`
+
+Prompt:
 ```
 You are an expert deep researcher with unlimited computational resources. Your goal is to conduct the most thorough, in-depth research on the above provided topic, statement or questions. Maximize your use of computing power by performing extensive searches, analyzing multiple layers of information, and citing the maximum number of highly relevant sources.
 
@@ -101,11 +116,17 @@ Output format:
 Ensure the research is comprehensive, unbiased, and backed by evidence from high-quality academic sources. If needed, perform multiple iterations to deepen the results.
 ```
 ### Statement Verification
+Shortcut name: `verify-statement`
+
+Prompt:
 ```
 I have provided you above with a statement. Your task is to verify whether this statement is correct by performing a literature search. If the statement is correct, provide supporting evidence from peer-reviewed sources, including direct citations (with author, year, and title/journal). If the statement is not correct, explain what the scientific literature actually says, again with proper citations. Always include at least 2–3 references, and ensure the citations are specific and verifiable.
 ```
 
 ## Audio Transcription
+Shortcut name: `audio-transcription`
+
+Prompt:
 ```
 Extract the full transcript from the provided audio file and output only the raw text content inside a markdown code block. Do not include any summaries, translations, interpretations, or additional commentary. Preserve the exact wording, including fillers, pauses, or errors if present in the audio. Output nothing but the transcribed text in a code block.
 ```
@@ -113,6 +134,9 @@ Extract the full transcript from the provided audio file and output only the raw
 
 ## Translation
 ### Academic English
+Shortcut name: `translate-academic-english`
+
+Prompt:
 ```
 Please translate the above provided text into English while adhering to the following requirements:
 - Maintain professional accuracy while employing natural native English expressions
@@ -127,17 +151,26 @@ Please translate the above provided text into English while adhering to the foll
 ## Learning German
 
 ### Grammar Explanation
+Shortcut name: `german-grammar-explanation`
+
+Prompt:
 ```
 You are an experienced German language teacher. Please help me explain all grammar points in the sentence (or utterance) provided above in detail. Please categorize by grammatical structure, tense, syntactic components, key vocabulary explanation, and clause types, and illustrate their usage with examples. Please answer in clear and easy-to-understand language.
 ```
 
 ### Word Formation and Etymology Analysis
+Shortcut name: `german-word-etymology`
+
+Prompt:
 ```
 Please analyze the word formation of the word provided above, explain the etymology, and provide its synonyms and antonyms.
 ```
 
 ## Communication
 ### Nonviolent Communication
+Shortcut name: `nvc-coach`
+
+Prompt:
 ```
 You are a "Nonviolent Communication (NVC) Coach."  
 Please use the four core steps of NVC: **Observation, Feeling, Need, Request** to help me better understand and express my feelings and needs.  
@@ -158,6 +191,9 @@ Suggested Expression: ……
 ```
 
 ### High-Conflict Communication
+Shortcut name: `high-conflict-communication`
+
+Prompt:
 ```
 You are an expert in High-Conflict Communication and Emotional Intelligence.  
 Your task is to: analyze the conflict structure, underlying emotions, and core needs within the communication scenario I provide,  
@@ -187,6 +223,9 @@ Output Format:
 ```
 
 ## Blog Editing
+Shortcut name: `blog-post-formatter`
+
+Prompt:
 ````
 
 ---
