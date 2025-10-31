@@ -229,30 +229,43 @@
       <header><h1>{{ config.title }}</h1></header>
       {% endif %} 
       
-      {# 收集所有子部分的页面 #}
-      {% set posts_section = get_section(path="posts/_index.md") %}
-      {% set all_posts = [] %}
+      {# Introduction Section #}
+      <section class="introduction">
+        <h2>Introduction</h2>
+        {% if section.content %}
+        {{ section.content | safe }}
+        {% endif %}
+      </section>
       
-      {# 只收集posts子目录中的页面，不包括posts根目录的直接页面 #}
-      {% for subsection_path in posts_section.subsections %}
-        {% set subsection = get_section(path=subsection_path) %}
-        {% set_global all_posts = all_posts | concat(with=subsection.pages) %}
-      {% endfor %}
-      
-      {# 按日期排序，最新的在前面，只显示最新的6篇 #}
-      {% set sorted_posts = all_posts | sort(attribute="date") | reverse | slice(end=6) %}
-      
-      {# 显示最新的6篇文章 #}
-      {% for page in sorted_posts %}
-        {{ post_macros::page_in_list(page=page) }}
-      {% endfor %}
-      
-      {# 如果有更多文章，显示查看更多链接 #}
-      {% if all_posts | length > 6 %}
-      <div class="more-posts">
-        <a href="{{ get_url(path='posts') }}" class="view-all-posts">View All Posts &raquo;</a>
-      </div>
-      {% endif %}
+      {# Featured Posts Section #}
+      <section class="featured-posts">
+        <h2>Featured Posts</h2>
+        
+        {# 从当前页面的 extra 配置读取 #}
+        {% set featured_slugs = section.extra.featured_posts | default(value=[]) %}
+        
+        {% if featured_slugs %}
+          {% for slug in featured_slugs %}
+            {% set page = get_page(path=slug) %}
+            {{ post_macros::page_in_list(page=page) }}
+          {% endfor %}
+        {% else %}
+          {# 如果没有配置featured_posts，则显示最新的3篇 #}
+          {% set posts_section = get_section(path="posts/_index.md") %}
+          {% set all_posts = [] %}
+          
+          {% for subsection_path in posts_section.subsections %}
+            {% set subsection = get_section(path=subsection_path) %}
+            {% set_global all_posts = all_posts | concat(with=subsection.pages) %}
+          {% endfor %}
+          
+          {% set sorted_posts = all_posts | sort(attribute="date") | reverse | slice(end=3) %}
+          
+          {% for page in sorted_posts %}
+            {{ post_macros::page_in_list(page=page) }}
+          {% endfor %}
+        {% endif %}
+      </section>
     </main>
     {% endblock content %}
   </body>

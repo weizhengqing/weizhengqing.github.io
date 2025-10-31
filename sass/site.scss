@@ -81,3 +81,21 @@ html.light {
   background-color: var(--accent);
   color: white;
 }
+
+/* 首页 Introduction 和 Featured Posts 区域样式 */
+.introduction,
+.featured-posts {
+  margin-bottom: 3rem;
+}
+
+.introduction h2,
+.featured-posts h2 {
+  margin-bottom: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Introduction 内容段落样式 */
+.introduction p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}

@@ -59,4 +59,3 @@ theme = "toggle" # options: {light, dark, auto, toggle}
 # Whether to display favicon
 favicon = true
 
-
