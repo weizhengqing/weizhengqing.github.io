@@ -15,6 +15,7 @@
 /* Input field styling */
 #search {
   width: 100%;
+  min-width: 80px;  /* 设置最小宽度，防止过小 */
   padding: 10px 10px 10px 40px;
   /* Left padding for the icon */
   font-size: 14px;
@@ -25,7 +26,23 @@
   color: var(--text-color, #000);
   outline: none;
   height: 35px;
-  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif
+  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+  box-sizing: border-box;  /* 确保padding包含在宽度内 */
+}
+
+/* 小屏幕上的搜索框样式 */
+@media only screen and (max-width: 30em) {
+  #search {
+    font-size: 12px;  /* 在小屏幕上使用更小的字体 */
+    padding: 8px 8px 8px 35px;  /* 减小内边距 */
+    min-width: 60px;  /* 在小屏幕上允许更小的最小宽度 */
+  }
+  
+  .search-icon {
+    left: 8px;  /* 调整图标位置 */
+    width: 20px;  /* 减小图标大小 */
+    height: 20px;
+  }
 }
 
 .light #search {

@@ -65,6 +65,19 @@ footer {
   display: flex;  /* 使用弹性布局 */
   justify-content: space-between;  /* 两端对齐 */
   align-items: center;  /* 垂直居中 */
+  flex-wrap: nowrap;  /* 禁止换行 */
+  gap: 20px;  /* 元素间距，在宽页面时保持足够距离 */
+}
+
+/* 导航链接容器样式 */
+.nav-links {
+  flex-shrink: 0;  /* 不允许收缩，保持导航链接不换行 */
+  white-space: nowrap;  /* 禁止文本换行 */
+}
+
+/* 导航栏样式 */
+.navbar {
+  flex-shrink: 0;  /* 不允许导航栏收缩 */
 }
 
 /* 在页脚时间前添加破折号 */
@@ -79,9 +92,24 @@ footer time[datetime$="M"]:before {
     display: none;
   }
 
-  /* 在小屏幕上导航头部改为纵向排列 */
+  /* 在小屏幕上导航头部保持横向排列，不换行 */
   .nav-header {
-    flex-direction: column;
+    flex-wrap: nowrap;  /* 强制不换行 */
+    gap: 8px;  /* 在小屏幕上减小间距 */
+  }
+  
+  /* 导航链接容器保持紧凑 */
+  .nav-links {
+    flex-shrink: 0;  /* 不允许收缩 */
+    white-space: nowrap;  /* 不换行 */
+  }
+  
+  /* 用户操作容器可以收缩 */
+  .user-actions-container {
+    flex-shrink: 1;  /* 允许收缩 */
+    min-width: 0;  /* 允许缩小到最小尺寸 */
+    margin-left: 5px;
+    margin-right: 5px;
   }
 }
 
@@ -244,9 +272,10 @@ article [itemprop="summary"] p {
 .user-actions-container {
   position: relative;  /* 相对定位 */
   flex-grow: 1;  /* 允许容器增长填充空间 */
-  max-width: 400px;  /* 限制最大宽度以适应更多导航项 */
-  margin-left: 15px;  /* 左侧外边距 */
-  margin-right: 15px;  /* 右侧外边距 */
+  flex-shrink: 1;  /* 允许容器收缩 */
+  min-width: 150px;  /* 设置最小宽度，确保搜索框不会过小 */
+  margin-left: 0;  /* 移除左侧外边距 */
+  margin-right: 0;  /* 移除右侧外边距 */
   display: flex;  /* 弹性布局 */
   align-items: center;  /* 垂直居中 */
   gap: 15px;  /* 元素间间距 */
@@ -255,7 +284,10 @@ article [itemprop="summary"] p {
 /* 小屏幕适配 */
 @media only screen and (max-width: 30em) {
   .user-actions-container {
-    margin: 15px;  /* 在小屏幕上四周都有相同的外边距 */
+    margin-left: 5px;  /* 在小屏幕上缩小左侧外边距 */
+    margin-right: 5px;  /* 在小屏幕上缩小右侧外边距 */
+    min-width: 100px;  /* 在小屏幕上允许更小的最小宽度 */
+    gap: 8px;  /* 减小元素间距 */
   }
 }
 
