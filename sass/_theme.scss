@@ -244,7 +244,7 @@ article [itemprop="summary"] p {
 .user-actions-container {
   position: relative;  /* 相对定位 */
   flex-grow: 1;  /* 允许容器增长填充空间 */
-  max-width: 100%;  /* 最大宽度限制 */
+  max-width: 400px;  /* 限制最大宽度以适应更多导航项 */
   margin-left: 15px;  /* 左侧外边距 */
   margin-right: 15px;  /* 右侧外边距 */
   display: flex;  /* 弹性布局 */
