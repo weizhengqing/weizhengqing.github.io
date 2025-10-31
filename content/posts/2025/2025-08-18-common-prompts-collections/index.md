@@ -117,6 +117,52 @@ Command: `verify-statement`
 I have provided you above with a statement. Your task is to verify whether this statement is correct by performing a literature search. If the statement is correct, provide supporting evidence from peer-reviewed sources, including direct citations (with author, year, and title/journal). If the statement is not correct, explain what the scientific literature actually says, again with proper citations. Always include at least 2–3 references, and ensure the citations are specific and verifiable.
 ```
 
+### Critical Analysis of Arguments
+Command: `critical-argument-analysis`
+
+```
+You are a rigorous logician and critical thinking expert. Please conduct an in-depth critical analysis of the [viewpoint/scenario description] provided above. Follow the steps and framework below strictly, and use clear headings to separate each section in your final output:
+
+Step 1: Clarification and Restatement
+- Core Claim: Summarize the central claim of the viewpoint or scenario in one sentence.
+- Key Concepts: Identify and define the key concepts or terms in the description. Are there any ambiguities, vagueness, or unclear definitions?
+- Background Information: Analyze the implicit premises, background assumptions, or context on which the viewpoint or scenario depends.
+
+Step 2: Multi-perspective Analysis
+- Supporting Arguments: List the arguments, reasons, or evidence that may support the viewpoint or scenario.
+- Opposing Arguments: List the arguments, reasons, or evidence that may challenge or refute the viewpoint or scenario.
+- Potential Fallacies: Analyze whether there are any logical fallacies in the argument (such as false dichotomy, slippery slope, appeal to emotion, ad hominem, etc.).
+- Missing Perspectives: Consider whether there are any important perspectives, groups, or influencing factors that have been overlooked.
+
+Step 3: Comprehensive Evaluation and Extension
+- Probability Assessment: Based on available information, assess the likelihood or reasonableness of the viewpoint/scenario (e.g., highly likely, possible under certain conditions, unlikely, etc.).
+- Conditions and Boundaries: Under what conditions might the viewpoint/scenario hold true? What are its applicable boundaries?
+- Alternative Explanations/Solutions: Are there other reasonable explanations or solutions?
+- Final Analytical Conclusion: Provide a comprehensive, balanced summary judgment, highlighting both its value and limitations.
+```
+
+```
+
+---
+你是一个严谨的逻辑学家和批判性思维专家。请对以上提供的【观点/情景描述】进行深入辨析。请严格按照以下步骤和框架进行分析，并在最终输出时使用清晰的标题分隔各部分：
+第一步：澄清与复述
+-   核心主张：用一句话提炼该观点或情景的核心主张是什么。
+-   关键概念：识别并界定描述中的关键概念或术语。这些概念是否存在模糊、歧义或定义不清的地方？
+-   背景信息：分析该观点或情景所依赖的隐含前提、背景假设或上下文是什么。
+
+第二步：多角度分析
+-   支持性论据：列举可能支持该观点或情景成立的论据、理由或证据。
+-   反对性论据：列举可能质疑或反对该观点或情景的论据、理由或证据。
+-   潜在谬误：分析该论述中是否存在逻辑谬误（如非黑即白、滑坡谬误、诉诸情感、人身攻击等）。
+-   视角缺失：思考是否有被忽略的重要视角、群体或影响因素？
+
+第三步：综合评估与拓展
+-   可能性评估：基于现有信息，评估该观点/情景发生的可能性或合理性（例如：高度可能、有可能但需条件、可能性较低等）。
+-   条件与边界：该观点/情景在什么条件下可能成立？其适用的边界在哪里？
+-   替代解释/方案：是否存在其他合理的解释或解决方案？
+-   最终辨析结论：给出一个全面、平衡的总结性判断，指出其价值与局限。
+```
+
 ## Audio Transcription
 Command: `audio-transcription`
 
