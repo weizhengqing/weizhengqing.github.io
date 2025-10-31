@@ -10,6 +10,16 @@
   font-feature-settings: "liga" 0, "calt" 0;
 }
 
+/* 段落文本两端对齐和连字符换行 */
+p {
+  text-align: justify;  /* 两端对齐 */
+  word-break: break-word;  /* 确保长单词可以断行 */
+  -webkit-hyphens: auto;  /* Safari 支持 */
+  -moz-hyphens: auto;  /* Firefox 支持 */
+  -ms-hyphens: auto;  /* IE 支持 */
+  hyphens: auto;  /* 自动使用连字符断行 */
+}
+
 /* 页面淡入动画效果 */
 @keyframes intro {
   0% {
